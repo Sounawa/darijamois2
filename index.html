@@ -3,56 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self';">
   <title>Apprentissage Darija - Mois 2</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     [x-cloak] { display: none !important; }
-    .arabic-text {
-      font-family: 'Amiri', 'Noto Naskh Arabic', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      direction: rtl;
-      line-height: 1.6;
-    }
-    .tab-active {
-      background-color: #166534;
-      color: white;
-    }
-    .theme-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-    }
-    .word-card:hover {
-      background-color: #f0fdf4;
-    }
-    .progress-bar {
-      transition: width 0.5s ease-in-out;
-    }
-    .quiz-option:disabled {
-      cursor: not-allowed;
-      opacity: 0.8;
-    }
-    /* Animation douce pour les transitions */
-    .tab-content {
-      transition: opacity 0.3s ease;
-    }
-    .tab-content.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-    .tab-content:not(.hidden) {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .arabic-text { font-family: 'Amiri', 'Noto Naskh Arabic', sans-serif; direction: rtl; line-height: 1.6; }
+    .tab-active { background-color: #166534; color: white; }
+    .theme-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+    .word-card:hover { background-color: #f0fdf4; }
+    .progress-bar { transition: width 0.5s ease-in-out; }
+    .quiz-option:disabled { cursor: not-allowed; opacity: 0.8; }
+    .tab-content.hidden { display: none; }
+    .tab-content:not(.hidden) { display: block; }
   </style>
 </head>
-<body class="bg-gradient-to-br from-green-50 to-emerald-100 min-h-screen">
-  <div id="app">
+<body class="bg-gradient-to-br from-green-50 to-emerald-100 min-h-screen flex flex-col">
+  <div id="app" class="flex-grow">
     <!-- Header -->
     <header class="bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg sticky top-0 z-50">
       <div class="max-w-6xl mx-auto px-4 py-4">
         <h1 class="text-2xl md:text-3xl font-bold text-center">📚 Apprentissage Darija - Mois 2</h1>
-        <p class="text-center text-green-100 mt-1 text-sm md:text-base">Vocabulaire, Dialogues, Verbes et Nombres</p>
+        <p class="text-center text-green-100 mt-1 text-sm md:text-base">École • Animaux • Vêtements • Corps</p>
       </div>
     </header>
 
@@ -69,7 +41,7 @@
       </div>
     </div>
 
-    <!-- Tabs Navigation -->
+    <!-- Tabs -->
     <div class="max-w-6xl mx-auto px-4">
       <div class="flex flex-wrap gap-2 justify-center mb-4 sticky top-20 z-40 bg-green-50/90 backdrop-blur-sm py-2 rounded-xl">
         <button onclick="showTab('accueil')" id="tab-accueil" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all tab-active">🏠 Accueil</button>
@@ -84,30 +56,30 @@
     <!-- Main Content -->
     <main class="max-w-6xl mx-auto px-4 pb-8">
       
-      <!-- Accueil Tab -->
+      <!-- Accueil -->
       <div id="content-accueil" class="tab-content">
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          <div class="bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center theme-card transition-all cursor-pointer hover:shadow-xl" onclick="showTab('lecons')" role="button" tabindex="0">
+          <div class="bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center theme-card transition-all cursor-pointer" onclick="showTab('lecons')">
             <div class="text-4xl md:text-5xl mb-3">📖</div>
             <h3 class="text-lg md:text-xl font-bold text-gray-800">Leçons</h3>
             <p class="text-gray-500 mt-2 text-sm">4 thèmes • 80 mots</p>
           </div>
-          <div class="bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center theme-card transition-all cursor-pointer hover:shadow-xl" onclick="showTab('dialogues')" role="button" tabindex="0">
+          <div class="bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center theme-card transition-all cursor-pointer" onclick="showTab('dialogues')">
             <div class="text-4xl md:text-5xl mb-3">💬</div>
             <h3 class="text-lg md:text-xl font-bold text-gray-800">Dialogues</h3>
             <p class="text-gray-500 mt-2 text-sm">5 dialogues</p>
           </div>
-          <div class="bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center theme-card transition-all cursor-pointer hover:shadow-xl" onclick="showTab('verbes')" role="button" tabindex="0">
+          <div class="bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center theme-card transition-all cursor-pointer" onclick="showTab('verbes')">
             <div class="text-4xl md:text-5xl mb-3">🔤</div>
             <h3 class="text-lg md:text-xl font-bold text-gray-800">Verbes</h3>
             <p class="text-gray-500 mt-2 text-sm">20 verbes conjugués</p>
           </div>
-          <div class="bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center theme-card transition-all cursor-pointer hover:shadow-xl" onclick="showTab('nombres')" role="button" tabindex="0">
+          <div class="bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center theme-card transition-all cursor-pointer" onclick="showTab('nombres')">
             <div class="text-4xl md:text-5xl mb-3">🔢</div>
             <h3 class="text-lg md:text-xl font-bold text-gray-800">Nombres</h3>
             <p class="text-gray-500 mt-2 text-sm">1 à 9000</p>
           </div>
-          <div class="bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center theme-card transition-all cursor-pointer hover:shadow-xl" onclick="showTab('revision')" role="button" tabindex="0">
+          <div class="bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center theme-card transition-all cursor-pointer" onclick="showTab('revision')">
             <div class="text-4xl md:text-5xl mb-3">🎯</div>
             <h3 class="text-lg md:text-xl font-bold text-gray-800">Révision</h3>
             <p class="text-gray-500 mt-2 text-sm">Quiz interactif</p>
@@ -115,10 +87,9 @@
         </div>
       </div>
 
-      <!-- Leçons Tab -->
+      <!-- Leçons -->
       <div id="content-lecons" class="tab-content hidden">
         <div class="grid md:grid-cols-2 gap-4 md:gap-6">
-          <!-- Thème École -->
           <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4">
               <h3 class="text-xl font-bold text-white">🏫 École</h3>
@@ -127,7 +98,6 @@
               <div class="space-y-3" id="theme-ecole"></div>
             </div>
           </div>
-          <!-- Thème Animaux -->
           <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-4">
               <h3 class="text-xl font-bold text-white">🐾 Animaux</h3>
@@ -136,7 +106,6 @@
               <div class="space-y-3" id="theme-animaux"></div>
             </div>
           </div>
-          <!-- Thème Vêtements -->
           <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-4">
               <h3 class="text-xl font-bold text-white">👔 Vêtements</h3>
@@ -145,7 +114,6 @@
               <div class="space-y-3" id="theme-vetements"></div>
             </div>
           </div>
-          <!-- Thème Corps -->
           <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div class="bg-gradient-to-r from-blue-500 to-cyan-500 p-4">
               <h3 class="text-xl font-bold text-white">🫀 Corps</h3>
@@ -157,24 +125,24 @@
         </div>
       </div>
 
-      <!-- Dialogues Tab -->
+      <!-- Dialogues -->
       <div id="content-dialogues" class="tab-content hidden">
         <div class="space-y-4 md:space-y-6" id="dialogues-container"></div>
       </div>
 
-      <!-- Verbes Tab -->
+      <!-- Verbes -->
       <div id="content-verbes" class="tab-content hidden">
         <div class="space-y-4" id="verbes-container"></div>
       </div>
 
-      <!-- Nombres Tab -->
+      <!-- Nombres -->
       <div id="content-nombres" class="tab-content hidden">
         <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6">
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4" id="nombres-container"></div>
         </div>
       </div>
 
-      <!-- Révision Tab -->
+      <!-- Révision -->
       <div id="content-revision" class="tab-content hidden">
         <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6">
           <div id="quiz-container">
@@ -183,9 +151,9 @@
               <p class="text-gray-500 text-sm md:text-base">Testez vos connaissances !</p>
             </div>
             <div class="flex flex-wrap justify-center gap-3 mb-4 md:mb-6">
-              <button onclick="startQuiz('vocabulaire')" class="px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold text-sm md:text-base hover:bg-green-600 transition-all">📚 Vocabulaire</button>
-              <button onclick="startQuiz('verbes')" class="px-4 py-2 md:px-6 md:py-3 bg-blue-500 text-white rounded-full font-semibold text-sm md:text-base hover:bg-blue-600 transition-all">🔤 Verbes</button>
-              <button onclick="startQuiz('nombres')" class="px-4 py-2 md:px-6 md:py-3 bg-purple-500 text-white rounded-full font-semibold text-sm md:text-base hover:bg-purple-600 transition-all">🔢 Nombres</button>
+              <button onclick="startQuiz('vocabulaire')" class="px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-all">📚 Vocabulaire</button>
+              <button onclick="startQuiz('verbes')" class="px-4 py-2 md:px-6 md:py-3 bg-blue-500 text-white rounded-full font-semibold hover:bg-blue-600 transition-all">🔤 Verbes</button>
+              <button onclick="startQuiz('nombres')" class="px-4 py-2 md:px-6 md:py-3 bg-purple-500 text-white rounded-full font-semibold hover:bg-purple-600 transition-all">🔢 Nombres</button>
             </div>
             <div id="quiz-area" class="hidden">
               <div class="text-center mb-4">
@@ -195,14 +163,14 @@
               <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
               <div id="quiz-result" class="text-center mt-4 text-lg md:text-xl font-bold hidden"></div>
               <div class="text-center mt-4 md:mt-6">
-                <button onclick="nextQuestion()" id="next-btn" class="px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold text-sm md:text-base hover:bg-green-600 transition-all hidden">Suivant →</button>
+                <button onclick="nextQuestion()" id="next-btn" class="px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-all hidden">Suivant →</button>
               </div>
             </div>
             <div id="quiz-end" class="hidden text-center">
               <div class="text-4xl md:text-5xl mb-4">🎉</div>
               <h3 class="text-xl md:text-2xl font-bold text-gray-800">Quiz terminé !</h3>
               <p class="text-gray-500 mt-2">Score : <span id="quiz-score">0</span> / <span id="quiz-total-end">10</span></p>
-              <button onclick="resetQuiz()" class="mt-4 px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold text-sm md:text-base hover:bg-green-600 transition-all">Rejouer</button>
+              <button onclick="resetQuiz()" class="mt-4 px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-all">Rejouer</button>
             </div>
           </div>
         </div>
@@ -210,14 +178,13 @@
 
     </main>
 
-    <!-- Footer -->
     <footer class="bg-gray-800 text-white text-center py-4 mt-auto">
       <p class="text-sm">📚 Apprentissage Darija - Mois 2 | Créé pour les enfants</p>
     </footer>
   </div>
 
   <script>
-    // ==================== DONNÉES ====================
+    // DONNÉES - MOIS 2
     const vocabulaire = {
       ecole: [
         { fr: "école", arabe: "مَدْرَسَة", latin: "madrasa", phrase_latin: "Madrasa f hadak", phrase_fr: "L'école est à côté" },
@@ -295,8 +262,8 @@
         { fr: "oreille", arabe: "لْوُدْن", latin: "loudn", phrase_latin: "Loudni katsma3", phrase_fr: "Mon oreille entend" },
         { fr: "cheveux", arabe: "شَّعْر", latin: "cha3r", phrase_latin: "Cha3ri k7el", phrase_fr: "Mes cheveux sont noirs" },
         { fr: "dent", arabe: "سْنَّة", latin: "senna", phrase_latin: "Sennati bayda", phrase_fr: "Ma dent est blanche" },
-        { fr: "ventre", arabe: "كَرْش", latin: "kerch", phrase_latin: "Kerchi jaw3an", phrase_fr: "J'ai faim (litt. mon ventre a faim)" },
-        { fr: "dos", arabe: "ضَّهْر", latin: "dher", phrase_latin: "Dheri mchawi", phrase_fr: "Mon dos est brûlé (par le soleil)" },
+        { fr: "ventre", arabe: "كَرْش", latin: "kerch", phrase_latin: "Kerchi jaw3an", phrase_fr: "J'ai faim" },
+        { fr: "dos", arabe: "ضَّهْر", latin: "dher", phrase_latin: "Dheri mchawi", phrase_fr: "Mon dos est brûlé" },
         { fr: "bras", arabe: "لْعَضُود", latin: "l3adoud", phrase_latin: "3adoudi qawi", phrase_fr: "Mon bras est fort" },
         { fr: "jambe", arabe: "سَّاق", latin: "saq", phrase_latin: "Sa9i tawil", phrase_fr: "Ma jambe est longue" },
         { fr: "genou", arabe: "لْرُكْبَة", latin: "lrokba", phrase_latin: "Rokbti majrou7a", phrase_fr: "Mon genou est blessé" },
@@ -310,275 +277,170 @@
     };
 
     const dialogues = [
-      {
-        titre: "À l'école",
-        personnages: ["Élève", "Maîtresse"],
-        repliques: [
-          { role: "Élève", latin: "Salam, m3allima.", francais: "Bonjour, maîtresse.", arabe: "سَلَام، مْعَلِّمَة" },
-          { role: "Maîtresse", latin: "Salam, smitek?", francais: "Bonjour, comment t'appelles-tu?", arabe: "سَلَام، سْمِيتَك؟" },
-          { role: "Élève", latin: "Smiti Youssef.", francais: "Je m'appelle Youssef.", arabe: "سْمِيتِي يُوسُف" },
-          { role: "Maîtresse", latin: "Ahla bih, Youssef.", francais: "Bienvenue, Youssef.", arabe: "أَهْلَا بِيه، يُوسُف" }
-        ]
-      },
-      {
-        titre: "Les animaux",
-        personnages: ["Enfant1", "Enfant2"],
-        repliques: [
-          { role: "Enfant1", latin: "3ndek qett?", francais: "Tu as un chat?", arabe: "عَنْدَك قَط؟" },
-          { role: "Enfant2", latin: "Ih, 3ndi qett kbir.", francais: "Oui, j'ai un gros chat.", arabe: "إيْه، عَنْدِي قَط كْبِير" },
-          { role: "Enfant1", latin: "Ana 3ndi kelb sghir.", francais: "Moi j'ai un petit chien.", arabe: "أَنَا عَنْدِي كَلْب صْغِير" }
-        ]
-      },
-      {
-        titre: "S'habiller",
-        personnages: ["Maman", "Enfant"],
-        repliques: [
-          { role: "Maman", latin: "Lbes serwalek.", francais: "Mets ton pantalon.", arabe: "لْبَسْ سِرْوَالَك" },
-          { role: "Enfant", latin: "La, bghit lqamisa l7mer.", francais: "Non, je veux la chemise rouge.", arabe: "لَا، بْغِيتْ لْقَمِيصَة لْحْمَر" },
-          { role: "Maman", latin: "Tfaddel.", francais: "Tiens.", arabe: "تْفَضَّل" }
-        ]
-      },
-      {
-        titre: "Parties du corps",
-        personnages: ["Enfant", "Papa"],
-        repliques: [
-          { role: "Enfant", latin: "Baba, rasi kaywajja3ni.", francais: "Papa, j'ai mal à la tête.", arabe: "بَابَا، رَاسِي كَيْوَجَّعْنِي" },
-          { role: "Papa", latin: "Smehli, ghadi n3tik dwa.", francais: "Attends, je vais te donner un médicament.", arabe: "سْمَحْلِي، غَادِي نْعْطِيك دْوَاء" }
-        ]
-      },
-      {
-        titre: "À la récré",
-        personnages: ["Enfant1", "Enfant2"],
-        repliques: [
-          { role: "Enfant1", latin: "Nl3abo kora?", francais: "On joue au ballon?", arabe: "نْلْعَبُو كُورَة؟" },
-          { role: "Enfant2", latin: "Ih, jib lkora.", francais: "Oui, apporte le ballon.", arabe: "إيْه، جِيب لْكُورَة" },
-          { role: "Enfant1", latin: "Wakha, jri!", francais: "D'accord, cours!", arabe: "وَاخَا، جْرِي!" }
-        ]
-      }
+      { titre: "À l'école", personnages: ["Élève", "Maîtresse"], repliques: [
+        { role: "Élève", latin: "Salam, m3allima.", francais: "Bonjour, maîtresse.", arabe: "سَلَام، مْعَلِّمَة" },
+        { role: "Maîtresse", latin: "Salam, smitek?", francais: "Bonjour, comment t'appelles-tu?", arabe: "سَلَام، سْمِيتَك؟" },
+        { role: "Élève", latin: "Smiti Youssef.", francais: "Je m'appelle Youssef.", arabe: "سْمِيتِي يُوسُف" },
+        { role: "Maîtresse", latin: "Ahla bih, Youssef.", francais: "Bienvenue, Youssef.", arabe: "أَهْلَا بِيه، يُوسُف" }
+      ]},
+      { titre: "Les animaux", personnages: ["Enfant1", "Enfant2"], repliques: [
+        { role: "Enfant1", latin: "3ndek qett?", francais: "Tu as un chat?", arabe: "عَنْدَك قَط؟" },
+        { role: "Enfant2", latin: "Ih, 3ndi qett kbir.", francais: "Oui, j'ai un gros chat.", arabe: "إيْه، عَنْدِي قَط كْبِير" },
+        { role: "Enfant1", latin: "Ana 3ndi kelb sghir.", francais: "Moi j'ai un petit chien.", arabe: "أَنَا عَنْدِي كَلْب صْغِير" }
+      ]},
+      { titre: "S'habiller", personnages: ["Maman", "Enfant"], repliques: [
+        { role: "Maman", latin: "Lbes serwalek.", francais: "Mets ton pantalon.", arabe: "لْبَسْ سِرْوَالَك" },
+        { role: "Enfant", latin: "La, bghit lqamisa l7mer.", francais: "Non, je veux la chemise rouge.", arabe: "لَا، بْغِيتْ لْقَمِيصَة لْحْمَر" },
+        { role: "Maman", latin: "Tfaddel.", francais: "Tiens.", arabe: "تْفَضَّل" }
+      ]},
+      { titre: "Parties du corps", personnages: ["Enfant", "Papa"], repliques: [
+        { role: "Enfant", latin: "Baba, rasi kaywajja3ni.", francais: "Papa, j'ai mal à la tête.", arabe: "بَابَا، رَاسِي كَيْوَجَّعْنِي" },
+        { role: "Papa", latin: "Smehli, ghadi n3tik dwa.", francais: "Attends, je vais te donner un médicament.", arabe: "سْمَحْلِي، غَادِي نْعْطِيك دْوَاء" }
+      ]},
+      { titre: "À la récré", personnages: ["Enfant1", "Enfant2"], repliques: [
+        { role: "Enfant1", latin: "Nl3abo kora?", francais: "On joue au ballon?", arabe: "نْلْعَبُو كُورَة؟" },
+        { role: "Enfant2", latin: "Ih, jib lkora.", francais: "Oui, apporte le ballon.", arabe: "إيْه، جِيب لْكُورَة" },
+        { role: "Enfant1", latin: "Wakha, jri!", francais: "D'accord, cours!", arabe: "وَاخَا، جْرِي!" }
+      ]}
     ];
 
+    // VERBES CORRIGÉS - 8 PERSONNES
     const verbes = [
-      {
-        verbe: "se lever", racine: "noud",
-        present: { ana: "kanoud", nta: "katoud", houwa: "kayoud", hna: "kanoudou", ntuma: "katoudou", houma: "kayoudou" },
-        passe: { ana: "nout", nta: "nouti", houwa: "nad", hna: "noudna", ntuma: "noutou", houma: "nadou" },
-        futur: { ana: "ghadi noud", nta: "ghadi toud", houwa: "ghadi youd", hna: "ghadi noudou", ntuma: "ghadi toudou", houma: "ghadi youdou" }
+      { verbe: "se lever", racine: "nôD",
+        present: { ana: "kannôD", nta: "katnôD", nti: "katnôDi", houwa: "kaynôD", hiya: "katnôD", 7na: "kannôDo", ntouma: "katnôDo", houma: "kaynôDo" },
+        passe: { ana: "nôDt", nta: "nôDti", nti: "nôDti", houwa: "nôD", hiya: "nôDet", 7na: "nôDna", ntouma: "nôDtu", houma: "nôDou" },
+        futur: { ana: "ghadi nnôD", nta: "ghadi tnôD", nti: "ghadi tnôDi", houwa: "ghadi ynôD", hiya: "ghadi tnôD", 7na: "ghadi nnôDo", ntouma: "ghadi tnôDo", houma: "ghadi ynôDo" }
       },
-      {
-        verbe: "s'asseoir", racine: "gles",
-        present: { ana: "kangles", nta: "katgles", houwa: "kaygles", hna: "kanglesou", ntuma: "katglesou", houma: "kayglesou" },
-        passe: { ana: "glest", nta: "glesti", houwa: "gles", hna: "glesna", ntuma: "glestu", houma: "glesou" },
-        futur: { ana: "ghadi ngles", nta: "ghadi tgles", houwa: "ghadi ygles", hna: "ghadi nglesou", ntuma: "ghadi tglesou", houma: "ghadi yglesou" }
+      { verbe: "s'asseoir", racine: "gles",
+        present: { ana: "kangles", nta: "katgles", nti: "katglesi", houwa: "kaygles", hiya: "katgles", 7na: "kangleso", ntouma: "katgleso", houma: "kaygleso" },
+        passe: { ana: "glest", nta: "glesti", nti: "glesti", houwa: "gles", hiya: "gleset", 7na: "glesna", ntouma: "glestu", houma: "glesou" },
+        futur: { ana: "ghadi ngles", nta: "ghadi tgles", nti: "ghadi tglesi", houwa: "ghadi ygles", hiya: "ghadi tgles", 7na: "ghadi ngleso", ntouma: "ghadi tgleso", houma: "ghadi ygleso" }
       },
-      {
-        verbe: "courir", racine: "jra",
-        present: { ana: "kanjri", nta: "kadjri", houwa: "kayjri", hna: "kanjriw", ntuma: "kadjriw", houma: "kayjriw" },
-        passe: { ana: "jrit", nta: "jriti", houwa: "jra", hna: "jrina", ntuma: "jritu", houma: "jraw" },
-        futur: { ana: "ghadi njri", nta: "ghadi tjri", houwa: "ghadi yjri", hna: "ghadi njriw", ntuma: "ghadi tjriw", houma: "ghadi yjriw" }
+      { verbe: "courir", racine: "jri",
+        present: { ana: "kanjri", nta: "katjri", nti: "katjri", houwa: "kayjri", hiya: "katjri", 7na: "kanjriw", ntouma: "katjriw", houma: "kayjriw" },
+        passe: { ana: "jrit", nta: "jriti", nti: "jriti", houwa: "jra", hiya: "jret", 7na: "jrina", ntouma: "jritu", houma: "jraw" },
+        futur: { ana: "ghadi njri", nta: "ghadi tjri", nti: "ghadi tjri", houwa: "ghadi yjri", hiya: "ghadi tjri", 7na: "ghadi njriw", ntouma: "ghadi tjriw", houma: "ghadi yjriw" }
       },
-      {
-        verbe: "sauter", racine: "naqez",
-        present: { ana: "kanaqez", nta: "katnaqez", houwa: "kaynaqez", hna: "kannaqzu", ntuma: "katnaqzu", houma: "kaynaqzu" },
-        passe: { ana: "naqezt", nta: "naqezti", houwa: "naqez", hna: "naqezna", ntuma: "naqeztu", houma: "naqzou" },
-        futur: { ana: "ghadi naqez", nta: "ghadi tnaqez", houwa: "ghadi ynaqez", hna: "ghadi nnaqzu", ntuma: "ghadi tnaqzu", houma: "ghadi ynaqzu" }
+      { verbe: "sauter", racine: "naqez",
+        present: { ana: "kanaqez", nta: "katnaqez", nti: "katnaqezi", houwa: "kaynaqez", hiya: "katnaqez", 7na: "kannaqzu", ntouma: "katnaqzu", houma: "kaynaqzu" },
+        passe: { ana: "naqezt", nta: "naqezti", nti: "naqezti", houwa: "naqez", hiya: "naqezet", 7na: "naqezna", ntouma: "naqeztu", houma: "naqzou" },
+        futur: { ana: "ghadi nnaqez", nta: "ghadi tnaqez", nti: "ghadi tnaqezi", houwa: "ghadi ynaqez", hiya: "ghadi tnaqez", 7na: "ghadi nnaqzu", ntouma: "ghadi tnaqzu", houma: "ghadi ynaqzu" }
       },
-      {
-        verbe: "danser", racine: "chtah",
-        present: { ana: "kanechtah", nta: "katechtah", houwa: "kayechtah", hna: "kanechtahou", ntuma: "katechtahou", houma: "kayechtahou" },
-        passe: { ana: "chtah", nta: "chtahi", houwa: "chtah", hna: "chtahna", ntuma: "chtahou", houma: "chtahou" },
-        futur: { ana: "ghadi nechtah", nta: "ghadi techtah", houwa: "ghadi yechtah", hna: "ghadi nechtahou", ntuma: "ghadi techtahou", houma: "ghadi yechtahou" }
+      { verbe: "danser", racine: "chtah",
+        present: { ana: "kanchtah", nta: "katchtah", nti: "katchtahi", houwa: "kaychtah", hiya: "katchtah", 7na: "kanchtahu", ntouma: "katchtahu", houma: "kaychtahu" },
+        passe: { ana: "chtah", nta: "chtahi", nti: "chtahi", houwa: "chtah", hiya: "chtahet", 7na: "chtahna", ntouma: "chtahu", houma: "chtahu" },
+        futur: { ana: "ghadi nchtah", nta: "ghadi tchtah", nti: "ghadi tchtahi", houwa: "ghadi ychtah", hiya: "ghadi tchtah", 7na: "ghadi nchtahu", ntouma: "ghadi tchtahu", houma: "ghadi ychtahu" }
       },
-      {
-        verbe: "chanter", racine: "ghanna",
-        present: { ana: "kanghanna", nta: "katghanna", houwa: "kayghanna", hna: "kanghanniw", ntuma: "katghanniw", houma: "kayghanniw" },
-        passe: { ana: "ghannit", nta: "ghanniti", houwa: "ghanna", hna: "ghannina", ntuma: "ghannitu", houma: "ghannaw" },
-        futur: { ana: "ghadi nghanna", nta: "ghadi tghanna", houwa: "ghadi yghanna", hna: "ghadi nghanniw", ntuma: "ghadi tghanniw", houma: "ghadi yghanniw" }
+      { verbe: "chanter", racine: "ghanna",
+        present: { ana: "kanghanna", nta: "katghanna", nti: "katghannay", houwa: "kayghanna", hiya: "katghanna", 7na: "kanghanniw", ntouma: "katghanniw", houma: "kayghanniw" },
+        passe: { ana: "ghannit", nta: "ghanniti", nti: "ghanniti", houwa: "ghanna", hiya: "ghannat", 7na: "ghannina", ntouma: "ghannitu", houma: "ghannaw" },
+        futur: { ana: "ghadi nghanna", nta: "ghadi tghanna", nti: "ghadi tghannay", houwa: "ghadi yghanna", hiya: "ghadi tghanna", 7na: "ghadi nghanniw", ntouma: "ghadi tghanniw", houma: "ghadi yghanniw" }
       },
-      {
-        verbe: "nager", racine: "3oum",
-        present: { ana: "kana3oum", nta: "kata3oum", houwa: "kaya3oum", hna: "kana3oumou", ntuma: "kata3oumou", houma: "kaya3oumou" },
-        passe: { ana: "3omt", nta: "3omti", houwa: "3am", hna: "3omna", ntuma: "3omtou", houma: "3amou" },
-        futur: { ana: "ghadi na3oum", nta: "ghadi ta3oum", houwa: "ghadi ya3oum", hna: "ghadi na3oumou", ntuma: "ghadi ta3oumou", houma: "ghadi ya3oumou" }
+      { verbe: "nager", racine: "3um",
+        present: { ana: "kana3um", nta: "kata3um", nti: "kata3umi", houwa: "kaya3um", hiya: "kata3um", 7na: "kana3umu", ntouma: "kata3umu", houma: "kaya3umu" },
+        passe: { ana: "3umt", nta: "3umti", nti: "3umti", houwa: "3am", hiya: "3amet", 7na: "3umna", ntouma: "3umtu", houma: "3amu" },
+        futur: { ana: "ghadi na3um", nta: "ghadi ta3um", nti: "ghadi ta3umi", houwa: "ghadi ya3um", hiya: "ghadi ta3um", 7na: "ghadi na3umu", ntouma: "ghadi ta3umu", houma: "ghadi ya3umu" }
       },
-      {
-        verbe: "dessiner", racine: "rsem",
-        present: { ana: "kanrasem", nta: "katrasem", houwa: "kayrasem", hna: "kanrasmou", ntuma: "katrasmou", houma: "kayrasmou" },
-        passe: { ana: "rsemt", nta: "rsemti", houwa: "rsem", hna: "rsemna", ntuma: "rsemtu", houma: "rsmou" },
-        futur: { ana: "ghadi nrasem", nta: "ghadi trasem", houwa: "ghadi yrasem", hna: "ghadi nrasmou", ntuma: "ghadi trasmou", houma: "ghadi yrasmou" }
+      { verbe: "dessiner", racine: "rsem",
+        present: { ana: "kanrsem", nta: "katrsem", nti: "katrsemi", houwa: "kayrsem", hiya: "katrsem", 7na: "kanrsemu", ntouma: "katrsemu", houma: "kayrsemu" },
+        passe: { ana: "rsemt", nta: "rsemti", nti: "rsemti", houwa: "rsem", hiya: "rsemet", 7na: "rsemna", ntouma: "rsemtu", houma: "rsemou" },
+        futur: { ana: "ghadi nrsem", nta: "ghadi trsem", nti: "ghadi trsemi", houwa: "ghadi yrsem", hiya: "ghadi trsem", 7na: "ghadi nrsemu", ntouma: "ghadi trsemu", houma: "ghadi yrsemu" }
       },
-      {
-        verbe: "porter (vêtement)", racine: "lbes",
-        present: { ana: "kanlbes", nta: "katlbes", houwa: "kaylbes", hna: "kanlbsou", ntuma: "katlbsou", houma: "kaylbsou" },
-        passe: { ana: "lbest", nta: "lbesti", houwa: "lbes", hna: "lbesna", ntuma: "lbestu", houma: "lbsou" },
-        futur: { ana: "ghadi nlbes", nta: "ghadi tlbes", houwa: "ghadi ylbes", hna: "ghadi nlbsou", ntuma: "ghadi tlbsou", houma: "ghadi ylbsou" }
+      { verbe: "porter", racine: "lbes",
+        present: { ana: "kanlbes", nta: "katlbes", nti: "katlbesi", houwa: "kaylbes", hiya: "katlbes", 7na: "kanlbesu", ntouma: "katlbesu", houma: "kaylbesu" },
+        passe: { ana: "lbest", nta: "lbesti", nti: "lbesti", houwa: "lbes", hiya: "lbeset", 7na: "lbesna", ntouma: "lbestu", houma: "lbesou" },
+        futur: { ana: "ghadi nlbes", nta: "ghadi tlbes", nti: "ghadi tlbesi", houwa: "ghadi ylbes", hiya: "ghadi tlbes", 7na: "ghadi nlbesu", ntouma: "ghadi tlbesu", houma: "ghadi ylbesu" }
       },
-      {
-        verbe: "enlever (vêtement)", racine: "khla3",
-        present: { ana: "kanakhla3", nta: "katakhla3", houwa: "kayakhla3", hna: "kanakhla3ou", ntuma: "katakhla3ou", houma: "kayakhla3ou" },
-        passe: { ana: "khla3t", nta: "khla3ti", houwa: "khla3", hna: "khla3na", ntuma: "khla3tu", houma: "khla3ou" },
-        futur: { ana: "ghadi nakhla3", nta: "ghadi takhla3", houwa: "ghadi yakhla3", hna: "ghadi nakhla3ou", ntuma: "ghadi takhla3ou", houma: "ghadi yakhla3ou" }
+      { verbe: "enlever", racine: "khla3",
+        present: { ana: "kanakhla3", nta: "katakhla3", nti: "katakhla3i", houwa: "kayakhla3", hiya: "katakhla3", 7na: "kanakhla3u", ntouma: "katakhla3u", houma: "kayakhla3u" },
+        passe: { ana: "khla3t", nta: "khla3ti", nti: "khla3ti", houwa: "khla3", hiya: "khla3et", 7na: "khla3na", ntouma: "khla3tu", houma: "khla3ou" },
+        futur: { ana: "ghadi nakhla3", nta: "ghadi takhla3", nti: "ghadi takhla3i", houwa: "ghadi yakhla3", hiya: "ghadi takhla3", 7na: "ghadi nakhla3u", ntouma: "ghadi takhla3u", houma: "ghadi yakhla3u" }
       },
-      {
-        verbe: "mettre (poser)", racine: "7ett",
-        present: { ana: "kana7ett", nta: "kata7ett", houwa: "kaya7ett", hna: "kana7ettou", ntuma: "kata7ettou", houma: "kaya7ettou" },
-        passe: { ana: "7ettit", nta: "7ettiti", houwa: "7ett", hna: "7ettina", ntuma: "7ettitu", houma: "7ettou" },
-        futur: { ana: "ghadi na7ett", nta: "ghadi ta7ett", houwa: "ghadi ya7ett", hna: "ghadi na7ettou", ntuma: "ghadi ta7ettou", houma: "ghadi ya7ettou" }
+      { verbe: "mettre", racine: "7ett",
+        present: { ana: "kana7ett", nta: "kata7ett", nti: "kata7etti", houwa: "kaya7ett", hiya: "kata7ett", 7na: "kana7ettu", ntouma: "kata7ettu", houma: "kaya7ettu" },
+        passe: { ana: "7ettit", nta: "7ettiti", nti: "7ettiti", houwa: "7ett", hiya: "7ettet", 7na: "7ettina", ntouma: "7ettitu", houma: "7ettou" },
+        futur: { ana: "ghadi na7ett", nta: "ghadi ta7ett", nti: "ghadi ta7etti", houwa: "ghadi ya7ett", hiya: "ghadi ta7ett", 7na: "ghadi na7ettu", ntouma: "ghadi ta7ettu", houma: "ghadi ya7ettu" }
       },
-      {
-        verbe: "sortir", racine: "khrj",
-        present: { ana: "kanakhrej", nta: "katakhrej", houwa: "kayakhrej", hna: "kanakhrejou", ntuma: "katakhrejou", houma: "kayakhrejou" },
-        passe: { ana: "khrejt", nta: "khrejti", houwa: "khrej", hna: "khrejna", ntuma: "khrejtu", houma: "khrejou" },
-        futur: { ana: "ghadi nakhrej", nta: "ghadi takhrej", houwa: "ghadi yakhrej", hna: "ghadi nakhrejou", ntuma: "ghadi takhrejou", houma: "ghadi yakhrejou" }
+      { verbe: "sortir", racine: "khrej",
+        present: { ana: "kanakhrej", nta: "katakhrej", nti: "katakhreji", houwa: "kayakhrej", hiya: "katakhrej", 7na: "kanakhreju", ntouma: "katakhreju", houma: "kayakhreju" },
+        passe: { ana: "khrejt", nta: "khrejti", nti: "khrejti", houwa: "khrej", hiya: "khrejet", 7na: "khrejna", ntouma: "khrejtu", houma: "khrejou" },
+        futur: { ana: "ghadi nakhrej", nta: "ghadi takhrej", nti: "ghadi takhreji", houwa: "ghadi yakhrej", hiya: "ghadi takhrej", 7na: "ghadi nakhreju", ntouma: "ghadi takhreju", houma: "ghadi yakhreju" }
       },
-      {
-        verbe: "entrer", racine: "dkhl",
-        present: { ana: "kanadkhel", nta: "katadkhel", houwa: "kayadkhel", hna: "kanadkhlo", ntuma: "katadkhlo", houma: "kayadkhlo" },
-        passe: { ana: "dkhelt", nta: "dkhelti", houwa: "dkhel", hna: "dkhelna", ntuma: "dkheltu", houma: "dkhlo" },
-        futur: { ana: "ghadi nadkhel", nta: "ghadi tadkhel", houwa: "ghadi yadkhel", hna: "ghadi nadkhlo", ntuma: "ghadi tadkhlo", houma: "ghadi yadkhlo" }
+      { verbe: "entrer", racine: "dkhel",
+        present: { ana: "kanadkhel", nta: "katadkhel", nti: "katadkheli", houwa: "kayadkhel", hiya: "katadkhel", 7na: "kanadkhelu", ntouma: "katadkhelu", houma: "kayadkhelu" },
+        passe: { ana: "dkhelt", nta: "dkhelti", nti: "dkhelti", houwa: "dkhel", hiya: "dkhelet", 7na: "dkhelna", ntouma: "dkheltu", houma: "dkhelou" },
+        futur: { ana: "ghadi nadkhel", nta: "ghadi tadkhel", nti: "ghadi tadkheli", houwa: "ghadi yadkhel", hiya: "ghadi tadkhel", 7na: "ghadi nadkhelu", ntouma: "ghadi tadkhelu", houma: "ghadi yadkhelu" }
       },
-      {
-        verbe: "attendre", racine: "tsanna",
-        present: { ana: "kanatsanna", nta: "katatsanna", houwa: "kayatsanna", hna: "kanatsannaw", ntuma: "katatsannaw", houma: "kayatsannaw" },
-        passe: { ana: "tsannit", nta: "tsanniti", houwa: "tsanna", hna: "tsannina", ntuma: "tsannitu", houma: "tsannaw" },
-        futur: { ana: "ghadi natsanna", nta: "ghadi tatsanna", houwa: "ghadi yatsanna", hna: "ghadi natsannaw", ntuma: "ghadi tatsannaw", houma: "ghadi yatsannaw" }
+      { verbe: "attendre", racine: "tsenna",
+        present: { ana: "kanatsenna", nta: "katatsenna", nti: "katatsennay", houwa: "kayatsenna", hiya: "katatsenna", 7na: "kanatsennaw", ntouma: "katatsennaw", houma: "kayatsennaw" },
+        passe: { ana: "tsennit", nta: "tsenniti", nti: "tsenniti", houwa: "tsenna", hiya: "tsennat", 7na: "tsennina", ntouma: "tsennitu", houma: "tsennaw" },
+        futur: { ana: "ghadi natsenna", nta: "ghadi tatsenna", nti: "ghadi tatsennay", houwa: "ghadi yatsenna", hiya: "ghadi tatsenna", 7na: "ghadi natsennaw", ntouma: "ghadi tatsennaw", houma: "ghadi yatsennaw" }
       },
-      {
-        verbe: "monter", racine: "tla3",
-        present: { ana: "kanatla3", nta: "katatla3", houwa: "kayatla3", hna: "kanatla3ou", ntuma: "katatla3ou", houma: "kayatla3ou" },
-        passe: { ana: "tla3t", nta: "tla3ti", houwa: "tla3", hna: "tla3na", ntuma: "tla3tu", houma: "tla3ou" },
-        futur: { ana: "ghadi natla3", nta: "ghadi tatla3", houwa: "ghadi yatla3", hna: "ghadi natla3ou", ntuma: "ghadi tatla3ou", houma: "ghadi yatla3ou" }
+      { verbe: "monter", racine: "tla3",
+        present: { ana: "kanatla3", nta: "katatla3", nti: "katatla3i", houwa: "kayatla3", hiya: "katatla3", 7na: "kanatla3u", ntouma: "katatla3u", houma: "kayatla3u" },
+        passe: { ana: "tla3t", nta: "tla3ti", nti: "tla3ti", houwa: "tla3", hiya: "tla3et", 7na: "tla3na", ntouma: "tla3tu", houma: "tla3ou" },
+        futur: { ana: "ghadi natla3", nta: "ghadi tatla3", nti: "ghadi tatla3i", houwa: "ghadi yatla3", hiya: "ghadi tatla3", 7na: "ghadi natla3u", ntouma: "ghadi tatla3u", houma: "ghadi yatla3u" }
       },
-      {
-        verbe: "descendre", racine: "nzel",
-        present: { ana: "kananzel", nta: "katanzel", houwa: "kayanzel", hna: "kananzlou", ntuma: "katanzlou", houma: "kayanzlou" },
-        passe: { ana: "nzelt", nta: "nzelti", houwa: "nzel", hna: "nzelna", ntuma: "nzeltu", houma: "nzlou" },
-        futur: { ana: "ghadi nanzel", nta: "ghadi tanzel", houwa: "ghadi yanzel", hna: "ghadi nanzlou", ntuma: "ghadi tanzlou", houma: "ghadi yanzlou" }
+      { verbe: "descendre", racine: "nzel",
+        present: { ana: "kananzel", nta: "katanzel", nti: "katanzeli", houwa: "kayanzel", hiya: "katanzel", 7na: "kananzelu", ntouma: "katanzelu", houma: "kayanzelu" },
+        passe: { ana: "nzelt", nta: "nzelti", nti: "nzelti", houwa: "nzel", hiya: "nzelet", 7na: "nzelna", ntouma: "nzeltu", houma: "nzelou" },
+        futur: { ana: "ghadi nanzel", nta: "ghadi tanzel", nti: "ghadi tanzeli", houwa: "ghadi yanzel", hiya: "ghadi tanzel", 7na: "ghadi nanzelu", ntouma: "ghadi tanzelu", houma: "ghadi yanzelu" }
       },
-      {
-        verbe: "chercher", racine: "qleb",
-        present: { ana: "kanqaleb", nta: "katqaleb", houwa: "kayqaleb", hna: "kanqalbu", ntuma: "katqalbu", houma: "kayqalbu" },
-        passe: { ana: "qlebt", nta: "qlebti", houwa: "qleb", hna: "qlebna", ntuma: "qlebtu", houma: "qelbu" },
-        futur: { ana: "ghadi nqaleb", nta: "ghadi tqaleb", houwa: "ghadi yqaleb", hna: "ghadi nqalbu", ntuma: "ghadi tqalbu", houma: "ghadi yqalbu" }
+      { verbe: "chercher", racine: "qaleb",
+        present: { ana: "kanqaleb", nta: "katqaleb", nti: "katqalebi", houwa: "kayqaleb", hiya: "katqaleb", 7na: "kanqalebu", ntouma: "katqalebu", houma: "kayqalebu" },
+        passe: { ana: "qlebt", nta: "qlebti", nti: "qlebti", houwa: "qleb", hiya: "qlebet", 7na: "qlebna", ntouma: "qlebtu", houma: "qlebou" },
+        futur: { ana: "ghadi nqaleb", nta: "ghadi tqaleb", nti: "ghadi tqalebi", houwa: "ghadi yqaleb", hiya: "ghadi tqaleb", 7na: "ghadi nqalebu", ntouma: "ghadi tqalebu", houma: "ghadi yqalebu" }
       },
-      {
-        verbe: "trouver", racine: "lqa",
-        present: { ana: "kanalqa", nta: "katalqa", houwa: "kayalqa", hna: "kanalqaw", ntuma: "katalqaw", houma: "kayalqaw" },
-        passe: { ana: "lqit", nta: "lqiti", houwa: "lqa", hna: "lqina", ntuma: "lqitu", houma: "lqaw" },
-        futur: { ana: "ghadi nalqa", nta: "ghadi talqa", houwa: "ghadi yalqa", hna: "ghadi nalqaw", ntuma: "ghadi talqaw", houma: "ghadi yalqaw" }
+      { verbe: "trouver", racine: "lqa",
+        present: { ana: "kanalqa", nta: "katalqa", nti: "katalqay", houwa: "kayalqa", hiya: "katalqa", 7na: "kanalqaw", ntouma: "katalqaw", houma: "kayalqaw" },
+        passe: { ana: "lqit", nta: "lqiti", nti: "lqiti", houwa: "lqa", hiya: "lqat", 7na: "lqina", ntouma: "lqitu", houma: "lqaw" },
+        futur: { ana: "ghadi nalqa", nta: "ghadi talqa", nti: "ghadi talqay", houwa: "ghadi yalqa", hiya: "ghadi talqa", 7na: "ghadi nalqaw", ntouma: "ghadi talqaw", houma: "ghadi yalqaw" }
       },
-      {
-        verbe: "montrer", racine: "wra",
-        present: { ana: "kanawri", nta: "katawri", houwa: "kayawri", hna: "kanawriw", ntuma: "katawriw", houma: "kayawriw" },
-        passe: { ana: "writ", nta: "writi", houwa: "wra", hna: "wrina", ntuma: "writu", houma: "wraw" },
-        futur: { ana: "ghadi nawri", nta: "ghadi tawri", houwa: "ghadi yawri", hna: "ghadi nawriw", ntuma: "ghadi tawriw", houma: "ghadi yawriw" }
+      { verbe: "montrer", racine: "wri",
+        present: { ana: "kanawri", nta: "katawri", nti: "katawri", houwa: "kayawri", hiya: "katawri", 7na: "kanawriw", ntouma: "katawriw", houma: "kayawriw" },
+        passe: { ana: "writ", nta: "writi", nti: "writi", houwa: "wra", hiya: "wrat", 7na: "wrina", ntouma: "writu", houma: "wraw" },
+        futur: { ana: "ghadi nawri", nta: "ghadi tawri", nti: "ghadi tawri", houwa: "ghadi yawri", hiya: "ghadi tawri", 7na: "ghadi nawriw", ntouma: "ghadi tawriw", houma: "ghadi yawriw" }
       },
-      {
-        verbe: "cacher", racine: "khabba",
-        present: { ana: "kanakhabbi", nta: "katakhabbi", houwa: "kayakhabbi", hna: "kanakhabbiw", ntuma: "katakhabbiw", houma: "kayakhabbiw" },
-        passe: { ana: "khabbit", nta: "khabbiti", houwa: "khabba", hna: "khabbina", ntuma: "khabbitu", houma: "khabbaw" },
-        futur: { ana: "ghadi nakhabbi", nta: "ghadi takhabbi", houwa: "ghadi yakhabbi", hna: "ghadi nakhabbiw", ntuma: "ghadi takhabbiw", houma: "ghadi yakhabbiw" }
+      { verbe: "cacher", racine: "khabba",
+        present: { ana: "kanakhabbi", nta: "katakhabbi", nti: "katakhabbi", houwa: "kayakhabbi", hiya: "katakhabbi", 7na: "kanakhabbiw", ntouma: "katakhabbiw", houma: "kayakhabbiw" },
+        passe: { ana: "khabbit", nta: "khabbiti", nti: "khabbiti", houwa: "khabba", hiya: "khabbat", 7na: "khabbina", ntouma: "khabbitu", houma: "khabbaw" },
+        futur: { ana: "ghadi nakhabbi", nta: "ghadi takhabbi", nti: "ghadi takhabbi", houwa: "ghadi yakhabbi", hiya: "ghadi takhabbi", 7na: "ghadi nakhabbiw", ntouma: "ghadi takhabbiw", houma: "ghadi yakhabbiw" }
       }
     ];
 
     const nombres = [
-      { chiffre: 1, latin: "wa7ed", arabe: "وَاحَد" },
-      { chiffre: 2, latin: "jouj", arabe: "جُوج" },
-      { chiffre: 3, latin: "tlata", arabe: "تْلَاتَة" },
-      { chiffre: 4, latin: "rb3a", arabe: "رْبْعَة" },
-      { chiffre: 5, latin: "khamsa", arabe: "خَمْسَة" },
-      { chiffre: 6, latin: "setta", arabe: "سْتَّة" },
-      { chiffre: 7, latin: "sb3a", arabe: "سْبْعَة" },
-      { chiffre: 8, latin: "tmenya", arabe: "تْمْنْيَة" },
-      { chiffre: 9, latin: "ts3oud", arabe: "تْسْعُود" },
-      { chiffre: 10, latin: "3achra", arabe: "عَشْرَة" },
-      { chiffre: 11, latin: "7dach", arabe: "حْدَاش" },
-      { chiffre: 12, latin: "tnach", arabe: "طْنَاش" },
-      { chiffre: 13, latin: "tltach", arabe: "تْلْطَاش" },
-      { chiffre: 14, latin: "rb3tach", arabe: "رْبْعْطَاش" },
-      { chiffre: 15, latin: "khmstach", arabe: "خْمْسْطَاش" },
-      { chiffre: 16, latin: "settach", arabe: "سْتَاش" },
-      { chiffre: 17, latin: "sbetach", arabe: "سْبْعْطَاش" },
-      { chiffre: 18, latin: "tmntach", arabe: "تْمْنْطَاش" },
-      { chiffre: 19, latin: "ts3tach", arabe: "تْسْعْطَاش" },
-      { chiffre: 20, latin: "3chrine", arabe: "عَشْرِين" },
-      { chiffre: 21, latin: "wa7ed w 3chrine", arabe: "وَاحَد و عَشْرِين" },
-      { chiffre: 22, latin: "jouj w 3chrine", arabe: "جُوج و عَشْرِين" },
-      { chiffre: 23, latin: "tlata w 3chrine", arabe: "تْلَاتَة و عَشْرِين" },
-      { chiffre: 24, latin: "rb3a w 3chrine", arabe: "رْبْعَة و عَشْرِين" },
-      { chiffre: 25, latin: "khamsa w 3chrine", arabe: "خَمْسَة و عَشْرِين" },
-      { chiffre: 26, latin: "setta w 3chrine", arabe: "سْتَّة و عَشْرِين" },
-      { chiffre: 27, latin: "sb3a w 3chrine", arabe: "سْبْعَة و عَشْرِين" },
-      { chiffre: 28, latin: "tmenya w 3chrine", arabe: "تْمْنْيَة و عَشْرِين" },
-      { chiffre: 29, latin: "ts3oud w 3chrine", arabe: "تْسْعُود و عَشْرِين" },
-      { chiffre: 30, latin: "tlatin", arabe: "تْلَاتِين" },
-      { chiffre: 40, latin: "rb3in", arabe: "رْبْعِين" },
-      { chiffre: 50, latin: "khmsin", arabe: "خَمْسِين" },
-      { chiffre: 60, latin: "settin", arabe: "سَتِّين" },
-      { chiffre: 70, latin: "sb3in", arabe: "سَبْعِين" },
-      { chiffre: 80, latin: "tmanin", arabe: "تْمَانِين" },
-      { chiffre: 90, latin: "ts3in", arabe: "تِسْعِين" },
-      { chiffre: 100, latin: "mya", arabe: "مْيَة" },
-      { chiffre: 101, latin: "mya w wa7ed", arabe: "مْيَة و وَاحَد" },
-      { chiffre: 110, latin: "mya w 3achra", arabe: "مْيَة و عَشْرَة" },
-      { chiffre: 120, latin: "mya w 3chrine", arabe: "مْيَة و عَشْرِين" },
-      { chiffre: 130, latin: "mya w tlatin", arabe: "مْيَة و تْلَاتِين" },
-      { chiffre: 140, latin: "mya w rb3in", arabe: "مْيَة و رْبْعِين" },
-      { chiffre: 150, latin: "mya w khmsin", arabe: "مْيَة و خَمْسِين" },
-      { chiffre: 160, latin: "mya w settin", arabe: "مْيَة و سَتِّين" },
-      { chiffre: 170, latin: "mya w sb3in", arabe: "مْيَة و سَبْعِين" },
-      { chiffre: 180, latin: "mya w tmanin", arabe: "مْيَة و تْمَانِين" },
-      { chiffre: 190, latin: "mya w ts3in", arabe: "مْيَة و تِسْعِين" },
-      { chiffre: 200, latin: "miten", arabe: "مِيتَيْن" },
-      { chiffre: 205, latin: "miten w khamsa", arabe: "مِيتَيْن و خَمْسَة" },
-      { chiffre: 312, latin: "tlata mya w tnach", arabe: "تْلَاتَة مْيَة و طْنَاش" },
-      { chiffre: 450, latin: "rb3a mya w khmsin", arabe: "رْبْعَة مْيَة و خَمْسِين" },
-      { chiffre: 300, latin: "tlata mya", arabe: "تْلَاتَة مْيَة" },
-      { chiffre: 400, latin: "rb3a mya", arabe: "رْبْعَة مْيَة" },
-      { chiffre: 500, latin: "khamsa mya", arabe: "خَمْسَة مْيَة" },
-      { chiffre: 600, latin: "setta mya", arabe: "سْتَّة مْيَة" },
-      { chiffre: 700, latin: "sb3a mya", arabe: "سْبْعَة مْيَة" },
-      { chiffre: 800, latin: "tmenya mya", arabe: "تْمْنْيَة مْيَة" },
-      { chiffre: 900, latin: "ts3oud mya", arabe: "تْسْعُود مْيَة" },
-      { chiffre: 1000, latin: "alf", arabe: "أَلْف" },
-      { chiffre: 1100, latin: "alf w mya", arabe: "أَلْف و مْيَة" },
-      { chiffre: 1200, latin: "alf w miten", arabe: "أَلْف و مِيتَيْن" },
-      { chiffre: 1232, latin: "alf w miten w jouj w tlatin", arabe: "أَلْف و مِيتَيْن و جُوج و تْلَاتِين" },
-      { chiffre: 1500, latin: "alf w khamsa mya", arabe: "أَلْف و خَمْسَة مْيَة" },
-      { chiffre: 2000, latin: "alfayn", arabe: "أَلْفَيْن" },
-      { chiffre: 3000, latin: "tlata alaf", arabe: "تْلَاتَة آلاَف" },
-      { chiffre: 4000, latin: "rb3a alaf", arabe: "رْبْعَة آلاَف" },
-      { chiffre: 5000, latin: "khamsa alaf", arabe: "خَمْسَة آلاَف" },
-      { chiffre: 6000, latin: "setta alaf", arabe: "سْتَّة آلاَف" },
-      { chiffre: 7000, latin: "sb3a alaf", arabe: "سْبْعَة آلاَف" },
-      { chiffre: 8000, latin: "tmenya alaf", arabe: "تْمْنْيَة آلاَف" },
-      { chiffre: 9000, latin: "ts3oud alaf", arabe: "تْسْعُود آلاَف" }
+      { chiffre: 1, latin: "wa7ed", arabe: "وَاحَد" }, { chiffre: 2, latin: "jouj", arabe: "جُوج" },
+      { chiffre: 3, latin: "tlata", arabe: "تْلَاتَة" }, { chiffre: 4, latin: "rb3a", arabe: "رْبْعَة" },
+      { chiffre: 5, latin: "khamsa", arabe: "خَمْسَة" }, { chiffre: 6, latin: "setta", arabe: "سْتَّة" },
+      { chiffre: 7, latin: "sb3a", arabe: "سْبْعَة" }, { chiffre: 8, latin: "tmenya", arabe: "تْمْنْيَة" },
+      { chiffre: 9, latin: "ts3oud", arabe: "تْسْعُود" }, { chiffre: 10, latin: "3achra", arabe: "عَشْرَة" },
+      { chiffre: 20, latin: "3chrine", arabe: "عَشْرِين" }, { chiffre: 30, latin: "tlatin", arabe: "تْلَاتِين" },
+      { chiffre: 40, latin: "rb3in", arabe: "رْبْعِين" }, { chiffre: 50, latin: "khmsin", arabe: "خَمْسِين" },
+      { chiffre: 60, latin: "settin", arabe: "سَتِّين" }, { chiffre: 70, latin: "sb3in", arabe: "سَبْعِين" },
+      { chiffre: 80, latin: "tmanin", arabe: "تْمَانِين" }, { chiffre: 90, latin: "ts3in", arabe: "تِسْعِين" },
+      { chiffre: 100, latin: "mya", arabe: "مْيَة" }, { chiffre: 200, latin: "miten", arabe: "مِيتَيْن" },
+      { chiffre: 300, latin: "tlata mya", arabe: "تْلَاتَة مْيَة" }, { chiffre: 400, latin: "rb3a mya", arabe: "رْبْعَة مْيَة" },
+      { chiffre: 500, latin: "khamsa mya", arabe: "خَمْسَة مْيَة" }, { chiffre: 600, latin: "setta mya", arabe: "سْتَّة مْيَة" },
+      { chiffre: 700, latin: "sb3a mya", arabe: "سْبْعَة مْيَة" }, { chiffre: 800, latin: "tmenya mya", arabe: "تْمْنْيَة مْيَة" },
+      { chiffre: 900, latin: "ts3oud mya", arabe: "تْسْعُود مْيَة" }, { chiffre: 1000, latin: "alf", arabe: "أَلْف" },
+      { chiffre: 2000, latin: "alfayn", arabe: "أَلْفَيْن" }, { chiffre: 3000, latin: "tlata alaf", arabe: "تْلَاتَة آلاَف" },
+      { chiffre: 4000, latin: "rb3a alaf", arabe: "رْبْعَة آلاَف" }, { chiffre: 5000, latin: "khamsa alaf", arabe: "خَمْسَة آلاَف" },
+      { chiffre: 6000, latin: "setta alaf", arabe: "سْتَّة آلاَف" }, { chiffre: 7000, latin: "sb3a alaf", arabe: "سْبْعَة آلاَف" },
+      { chiffre: 8000, latin: "tmenya alaf", arabe: "تْمْنْيَة آلاَف" }, { chiffre: 9000, latin: "ts3oud alaf", arabe: "تْسْعُود آلاَف" }
     ];
 
     const personLabels = [
-      { key: "ana", label: "ana (je)" },
-      { key: "nta", label: "nta (tu)" },
-      { key: "houwa", label: "houwa (il)" },
-      { key: "hna", label: "hna (nous)" },
-      { key: "ntuma", label: "ntuma (vous)" },
-      { key: "houma", label: "houma (ils)" }
+      { key: "ana", label: "ana (je)" }, { key: "nta", label: "nta (tu masc.)" },
+      { key: "nti", label: "nti (tu fém.)" }, { key: "houwa", label: "houwa (il)" },
+      { key: "hiya", label: "hiya (elle)" }, { key: "7na", label: "7na (nous)" },
+      { key: "ntouma", label: "ntouma (vous)" }, { key: "houma", label: "houma (ils/elles)" }
     ];
 
-    // ==================== ÉTAT DU QUIZ ====================
-    let quizQuestions = [];
-    let currentQuestion = 0;
-    let score = 0;
-    let quizType = '';
+    let quizQuestions = [], currentQuestion = 0, score = 0, quizType = '';
 
-    // ==================== GESTION DES TABS ====================
     function showTab(tabName) {
-      // Cacher tout le contenu
-      document.querySelectorAll('.tab-content').forEach(el => {
-        el.classList.add('hidden');
-      });
-      // Afficher le contenu sélectionné
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
       document.getElementById('content-' + tabName).classList.remove('hidden');
-      
-      // Mettre à jour le style des boutons
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('tab-active');
         btn.classList.add('bg-white', 'text-gray-700', 'hover:bg-green-100');
@@ -586,34 +448,29 @@
       const activeTab = document.getElementById('tab-' + tabName);
       activeTab.classList.add('tab-active');
       activeTab.classList.remove('bg-white', 'text-gray-700', 'hover:bg-green-100');
-      
-      // Scroll vers le haut pour mobile
-      if (window.innerWidth < 768) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      if (window.innerWidth < 768) window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // ==================== RENDU DU VOCABULAIRE ====================
+    function escapeHtml(text) {
+      if (typeof text !== 'string') return text;
+      return text.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+    }
+
     function renderVocab() {
       const themes = [
-        { id: 'ecole', data: vocabulaire.ecole },
-        { id: 'animaux', data: vocabulaire.animaux },
-        { id: 'vetements', data: vocabulaire.vetements },
-        { id: 'corps', data: vocabulaire.corps }
+        { id: 'ecole', data: vocabulaire.ecole }, { id: 'animaux', data: vocabulaire.animaux },
+        { id: 'vetements', data: vocabulaire.vetements }, { id: 'corps', data: vocabulaire.corps }
       ];
-
       themes.forEach(theme => {
         const container = document.getElementById('theme-' + theme.id);
         if (!container) return;
         container.innerHTML = theme.data.map(word => `
-          <div class="word-card p-3 rounded-lg border border-gray-200 transition-all cursor-pointer hover:border-green-300">
+          <div class="word-card p-3 rounded-lg border border-gray-200 transition-all">
             <div class="flex justify-between items-center mb-2">
               <span class="font-semibold text-gray-800">${escapeHtml(word.fr)}</span>
               <span class="text-green-600 font-semibold">${escapeHtml(word.latin)}</span>
             </div>
-            <div class="text-right">
-              <span class="arabic-text text-xl text-gray-700">${escapeHtml(word.arabe)}</span>
-            </div>
+            <div class="text-right"><span class="arabic-text text-xl text-gray-700">${escapeHtml(word.arabe)}</span></div>
             <div class="mt-2 text-sm text-gray-500 border-t pt-2">
               <p><span class="text-green-600">${escapeHtml(word.phrase_latin)}</span></p>
               <p>${escapeHtml(word.phrase_fr)}</p>
@@ -623,11 +480,10 @@
       });
     }
 
-    // ==================== RENDU DES DIALOGUES ====================
     function renderDialogues() {
       const container = document.getElementById('dialogues-container');
       if (!container) return;
-      container.innerHTML = dialogues.map((dialogue) => `
+      container.innerHTML = dialogues.map(dialogue => `
         <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
           <div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4">
             <h3 class="text-xl font-bold text-white">💬 ${escapeHtml(dialogue.titre)}</h3>
@@ -635,7 +491,7 @@
           </div>
           <div class="p-4 space-y-3">
             ${dialogue.repliques.map(rep => `
-              <div class="p-3 rounded-lg ${rep.role.includes('Élève') || rep.role.includes('Enfant') ? 'bg-green-50 ml-4' : 'bg-gray-50 mr-4'}">
+              <div class="p-3 rounded-lg ${rep.role.includes('Enfant') || rep.role.includes('Élève') ? 'bg-green-50 ml-4' : 'bg-gray-50 mr-4'}">
                 <div class="font-semibold text-sm text-gray-600 mb-1">${escapeHtml(rep.role)}</div>
                 <div class="flex justify-between items-center mb-1 flex-wrap gap-2">
                   <span class="text-green-600 font-semibold">${escapeHtml(rep.latin)}</span>
@@ -649,52 +505,32 @@
       `).join('');
     }
 
-    // ==================== RENDU DES VERBES ====================
     function renderVerbs() {
       const container = document.getElementById('verbes-container');
       if (!container) return;
       container.innerHTML = verbes.map(verb => `
         <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div class="bg-gradient-to-r from-blue-500 to-indigo-500 p-4 flex justify-between items-center">
-            <div>
-              <h3 class="text-xl font-bold text-white">🔤 ${escapeHtml(verb.verbe)}</h3>
-              <p class="text-blue-100">Racine: ${escapeHtml(verb.racine)}</p>
-            </div>
+          <div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4">
+            <h3 class="text-xl font-bold text-white">🔤 ${escapeHtml(verb.verbe)}</h3>
+            <p class="text-green-100">Racine: ${escapeHtml(verb.racine)}</p>
           </div>
-          <div class="p-4">
-            <div class="grid gap-4">
-              <div>
-                <h4 class="font-bold text-green-600 mb-2">Présent</h4>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  ${personLabels.map(p => `
-                    <div class="p-2 bg-green-50 rounded">
-                      <div class="text-xs text-gray-500">${escapeHtml(p.label)}</div>
-                      <div class="font-semibold">${escapeHtml(verb.present[p.key])}</div>
-                    </div>
-                  `).join('')}
-                </div>
+          <div class="p-4 grid gap-4">
+            <div>
+              <h4 class="font-bold text-green-600 mb-2">Présent</h4>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                ${personLabels.map(p => `<div class="p-2 bg-green-50 rounded"><div class="text-xs text-gray-500">${escapeHtml(p.label)}</div><div class="font-semibold">${escapeHtml(verb.present[p.key])}</div></div>`).join('')}
               </div>
-              <div>
-                <h4 class="font-bold text-amber-600 mb-2">Passé</h4>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  ${personLabels.map(p => `
-                    <div class="p-2 bg-amber-50 rounded">
-                      <div class="text-xs text-gray-500">${escapeHtml(p.label)}</div>
-                      <div class="font-semibold">${escapeHtml(verb.passe[p.key])}</div>
-                    </div>
-                  `).join('')}
-                </div>
+            </div>
+            <div>
+              <h4 class="font-bold text-amber-600 mb-2">Passé</h4>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                ${personLabels.map(p => `<div class="p-2 bg-amber-50 rounded"><div class="text-xs text-gray-500">${escapeHtml(p.label)}</div><div class="font-semibold">${escapeHtml(verb.passe[p.key])}</div></div>`).join('')}
               </div>
-              <div>
-                <h4 class="font-bold text-purple-600 mb-2">Futur</h4>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  ${personLabels.map(p => `
-                    <div class="p-2 bg-purple-50 rounded">
-                      <div class="text-xs text-gray-500">${escapeHtml(p.label)}</div>
-                      <div class="font-semibold">${escapeHtml(verb.futur[p.key])}</div>
-                    </div>
-                  `).join('')}
-                </div>
+            </div>
+            <div>
+              <h4 class="font-bold text-purple-600 mb-2">Futur</h4>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                ${personLabels.map(p => `<div class="p-2 bg-purple-50 rounded"><div class="text-xs text-gray-500">${escapeHtml(p.label)}</div><div class="font-semibold">${escapeHtml(verb.futur[p.key])}</div></div>`).join('')}
               </div>
             </div>
           </div>
@@ -702,12 +538,11 @@
       `).join('');
     }
 
-    // ==================== RENDU DES NOMBRES ====================
     function renderNombres() {
       const container = document.getElementById('nombres-container');
       if (!container) return;
       container.innerHTML = nombres.map(n => `
-        <div class="p-3 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg text-center hover:from-green-50 hover:to-emerald-50 transition-all cursor-pointer">
+        <div class="p-3 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg text-center hover:from-green-50 hover:to-emerald-50 transition-all">
           <div class="text-2xl font-bold text-gray-800">${n.chiffre}</div>
           <div class="text-green-600 font-semibold">${escapeHtml(n.latin)}</div>
           <div class="arabic-text text-lg text-gray-700">${escapeHtml(n.arabe)}</div>
@@ -715,47 +550,26 @@
       `).join('');
     }
 
-    // ==================== FONCTION D'ÉCHAPPEMENT HTML ====================
-    function escapeHtml(text) {
-      if (typeof text !== 'string') return text;
-      const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-      };
-      return text.replace(/[&<>"']/g, m => map[m]);
-    }
-
-    // ==================== QUIZ FUNCTIONS ====================
     function startQuiz(type) {
-      quizType = type;
-      currentQuestion = 0;
-      score = 0;
-      
+      quizType = type; currentQuestion = 0; score = 0;
       if (type === 'vocabulaire') {
         const allWords = [...vocabulaire.ecole, ...vocabulaire.animaux, ...vocabulaire.vetements, ...vocabulaire.corps];
         quizQuestions = shuffleArray(allWords).slice(0, 10).map(word => ({
-          question: `Comment dit-on "${word.fr}" en darija?`,
-          answer: word.latin,
+          question: `Comment dit-on "${word.fr}" en darija?`, answer: word.latin,
           options: generateOptions(word.latin, allWords.map(w => w.latin))
         }));
       } else if (type === 'verbes') {
         quizQuestions = shuffleArray([...verbes]).slice(0, 10).map(verb => ({
-          question: `Quelle est la racine du verbe "${verb.verbe}"?`,
-          answer: verb.racine,
+          question: `Quelle est la racine du verbe "${verb.verbe}"?`, answer: verb.racine,
           options: generateOptions(verb.racine, verbes.map(v => v.racine))
         }));
       } else if (type === 'nombres') {
-        const selectedNumbers = shuffleArray([...nombres]).slice(0, 10);
-        quizQuestions = selectedNumbers.map(n => ({
-          question: `Comment dit-on ${n.chiffre} en darija?`,
-          answer: n.latin,
+        const selected = shuffleArray([...nombres]).slice(0, 10);
+        quizQuestions = selected.map(n => ({
+          question: `Comment dit-on ${n.chiffre} en darija?`, answer: n.latin,
           options: generateOptions(n.latin, nombres.map(num => num.latin))
         }));
       }
-
       document.getElementById('quiz-area').classList.remove('hidden');
       document.getElementById('quiz-end').classList.add('hidden');
       document.getElementById('quiz-total').textContent = quizQuestions.length;
@@ -763,18 +577,18 @@
     }
 
     function generateOptions(correct, allOptions) {
-      const uniqueOptions = [...new Set(allOptions)];
-      const wrong = shuffleArray(uniqueOptions.filter(o => o !== correct)).slice(0, 3);
+      const unique = [...new Set(allOptions)];
+      const wrong = shuffleArray(unique.filter(o => o !== correct)).slice(0, 3);
       return shuffleArray([correct, ...wrong]);
     }
 
     function shuffleArray(array) {
-      const newArray = [...array];
-      for (let i = newArray.length - 1; i > 0; i--) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+        [arr[i], arr[j]] = [arr[j], arr[i]];
       }
-      return newArray;
+      return arr;
     }
 
     function showQuestion() {
@@ -783,66 +597,49 @@
       document.getElementById('quiz-question').textContent = q.question;
       document.getElementById('quiz-result').classList.add('hidden');
       document.getElementById('next-btn').classList.add('hidden');
-      
-      const optionsContainer = document.getElementById('quiz-options');
-      optionsContainer.innerHTML = q.options.map((opt) => `
-        <button data-answer="${opt.replace(/"/g, '&quot;')}" 
-                class="quiz-option p-4 bg-white border-2 border-gray-200 rounded-xl font-semibold text-gray-700 hover:border-green-400 hover:bg-green-50 transition-all cursor-pointer text-sm md:text-base">
+      const container = document.getElementById('quiz-options');
+      container.innerHTML = q.options.map(opt => `
+        <button data-answer="${opt.replace(/"/g, '&quot;')}" class="quiz-option p-4 bg-white border-2 border-gray-200 rounded-xl font-semibold hover:border-green-400 hover:bg-green-50 transition-all">
           ${escapeHtml(opt)}
         </button>
       `).join('');
-      
-      // Attacher les événements après rendu
       setTimeout(() => {
         document.querySelectorAll('.quiz-option').forEach(btn => {
-          btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            checkAnswer(this.dataset.answer);
-          });
+          btn.addEventListener('click', function() { checkAnswer(this.dataset.answer); });
         });
       }, 0);
     }
 
-    function checkAnswer(selectedAnswer) {
+    function checkAnswer(selected) {
       const q = quizQuestions[currentQuestion];
-      const resultEl = document.getElementById('quiz-result');
-      const options = document.querySelectorAll('.quiz-option');
-      
-      options.forEach(opt => {
+      const result = document.getElementById('quiz-result');
+      document.querySelectorAll('.quiz-option').forEach(opt => {
         opt.disabled = true;
-        const optAnswer = opt.dataset.answer;
-        if (optAnswer === q.answer) {
-          opt.classList.add('bg-green-100', 'border-green-500', 'text-green-800');
-        } else if (optAnswer === selectedAnswer && selectedAnswer !== q.answer) {
-          opt.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
-        }
+        if (opt.dataset.answer === q.answer) opt.classList.add('bg-green-100', 'border-green-500');
+        else if (opt.dataset.answer === selected) opt.classList.add('bg-red-100', 'border-red-500');
       });
-
-      if (selectedAnswer === q.answer) {
+      if (selected === q.answer) {
         score++;
-        resultEl.textContent = '✅ Correct !';
-        resultEl.className = 'text-center mt-4 text-lg md:text-xl font-bold text-green-600';
-        
-        // Sauvegarder la progression
+        result.textContent = '✅ Correct !';
+        result.className = 'text-center mt-4 text-lg font-bold text-green-600';
         saveProgress(q.answer);
       } else {
-        resultEl.textContent = `❌ Faux ! La réponse est : ${q.answer}`;
-        resultEl.className = 'text-center mt-4 text-lg md:text-xl font-bold text-red-600';
+        result.textContent = `❌ Faux ! Réponse: ${q.answer}`;
+        result.className = 'text-center mt-4 text-lg font-bold text-red-600';
       }
-      resultEl.classList.remove('hidden');
+      result.classList.remove('hidden');
       document.getElementById('next-btn').classList.remove('hidden');
     }
 
     function nextQuestion() {
       currentQuestion++;
-      if (currentQuestion < quizQuestions.length) {
-        showQuestion();
-      } else {
+      if (currentQuestion < quizQuestions.length) showQuestion();
+      else {
         document.getElementById('quiz-area').classList.add('hidden');
         document.getElementById('quiz-end').classList.remove('hidden');
         document.getElementById('quiz-score').textContent = score;
         document.getElementById('quiz-total-end').textContent = quizQuestions.length;
-        updateProgressBar();
+        updateProgress();
       }
     }
 
@@ -851,66 +648,29 @@
       document.getElementById('quiz-end').classList.add('hidden');
     }
 
-    // ==================== GESTION DE LA PROGRESSION ====================
     function saveProgress(answer) {
       try {
-        let mastered = JSON.parse(localStorage.getItem('darijaMastered') || '[]');
+        let mastered = JSON.parse(localStorage.getItem('darijaMois2Mastered') || '[]');
         if (!mastered.includes(answer)) {
           mastered.push(answer);
-          localStorage.setItem('darijaMastered', JSON.stringify(mastered));
-          updateProgressBar();
+          localStorage.setItem('darijaMois2Mastered', JSON.stringify(mastered));
+          updateProgress();
         }
-      } catch (e) {
-        console.warn('localStorage non disponible:', e);
-      }
+      } catch (e) { console.warn(e); }
     }
 
-    function updateProgressBar() {
+    function updateProgress() {
       try {
-        const mastered = JSON.parse(localStorage.getItem('darijaMastered') || '[]');
-        const totalWords = vocabulaire.ecole.length + vocabulaire.animaux.length + 
-                          vocabulaire.vetements.length + vocabulaire.corps.length;
-        const progress = Math.min(100, Math.round((mastered.length / totalWords) * 100));
+        const mastered = JSON.parse(localStorage.getItem('darijaMois2Mastered') || '[]');
+        const total = vocabulaire.ecole.length + vocabulaire.animaux.length + vocabulaire.vetements.length + vocabulaire.corps.length;
+        const progress = Math.min(100, Math.round((mastered.length / total) * 100));
         document.getElementById('progress-bar').style.width = progress + '%';
         document.getElementById('progress-text').textContent = progress + '%';
-      } catch (e) {
-        console.warn('Erreur mise à jour progression:', e);
-      }
+      } catch (e) { console.warn(e); }
     }
 
-    function initProgress() {
-      updateProgressBar();
-    }
-
-    // ==================== INITIALISATION ====================
     document.addEventListener('DOMContentLoaded', () => {
-      renderVocab();
-      renderDialogues();
-      renderVerbs();
-      renderNombres();
-      initProgress();
-      
-      // Support clavier pour les cartes
-      document.querySelectorAll('.theme-card, .word-card').forEach(card => {
-        card.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            card.click();
-          }
-        });
-      });
-    });
-
-    // Gestion du redimensionnement pour réinitialiser les écouteurs si nécessaire
-    let resizeTimeout;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        // Réattacher les écouteurs quiz si visible
-        if (!document.getElementById('quiz-area').classList.contains('hidden')) {
-          showQuestion();
-        }
-      }, 250);
+      renderVocab(); renderDialogues(); renderVerbs(); renderNombres(); updateProgress();
     });
   </script>
 </body>
