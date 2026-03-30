@@ -3,14 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self';">
   <title>Apprentissage Darija - Mois 2</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     [x-cloak] { display: none !important; }
     .arabic-text {
-      font-family: 'Amiri', 'Noto Naskh Arabic', serif;
+      font-family: 'Amiri', 'Noto Naskh Arabic', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       direction: rtl;
+      line-height: 1.6;
     }
     .tab-active {
       background-color: #166534;
@@ -26,86 +28,102 @@
     .progress-bar {
       transition: width 0.5s ease-in-out;
     }
+    .quiz-option:disabled {
+      cursor: not-allowed;
+      opacity: 0.8;
+    }
+    /* Animation douce pour les transitions */
+    .tab-content {
+      transition: opacity 0.3s ease;
+    }
+    .tab-content.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .tab-content:not(.hidden) {
+      opacity: 1;
+      pointer-events: auto;
+    }
   </style>
 </head>
 <body class="bg-gradient-to-br from-green-50 to-emerald-100 min-h-screen">
   <div id="app">
     <!-- Header -->
-    <header class="bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg">
-      <div class="max-w-6xl mx-auto px-4 py-6">
-        <h1 class="text-3xl font-bold text-center">📚 Apprentissage Darija - Mois 2</h1>
-        <p class="text-center text-green-100 mt-2">Vocabulaire, Dialogues, Verbes et Nombres</p>
+    <header class="bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg sticky top-0 z-50">
+      <div class="max-w-6xl mx-auto px-4 py-4">
+        <h1 class="text-2xl md:text-3xl font-bold text-center">📚 Apprentissage Darija - Mois 2</h1>
+        <p class="text-center text-green-100 mt-1 text-sm md:text-base">Vocabulaire, Dialogues, Verbes et Nombres</p>
       </div>
     </header>
 
     <!-- Progress -->
-    <div class="max-w-6xl mx-auto px-4 py-4">
+    <div class="max-w-6xl mx-auto px-4 py-3">
       <div class="bg-white rounded-xl p-4 shadow-md">
         <div class="flex justify-between text-sm text-gray-600 mb-2">
-          <span>Progression</span>
+          <span>📊 Progression</span>
           <span id="progress-text">0%</span>
         </div>
-        <div class="w-full bg-gray-200 rounded-full h-3">
+        <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
           <div id="progress-bar" class="bg-gradient-to-r from-green-500 to-emerald-500 h-3 rounded-full progress-bar" style="width: 0%"></div>
         </div>
       </div>
     </div>
 
-    <!-- Tabs -->
+    <!-- Tabs Navigation -->
     <div class="max-w-6xl mx-auto px-4">
-      <div class="flex flex-wrap gap-2 justify-center mb-6">
-        <button onclick="showTab('accueil')" id="tab-accueil" class="tab-btn px-6 py-3 rounded-full font-semibold transition-all tab-active">🏠 Accueil</button>
-        <button onclick="showTab('lecons')" id="tab-lecons" class="tab-btn px-6 py-3 rounded-full font-semibold transition-all bg-white text-gray-700 hover:bg-green-100">📖 Leçons</button>
-        <button onclick="showTab('dialogues')" id="tab-dialogues" class="tab-btn px-6 py-3 rounded-full font-semibold transition-all bg-white text-gray-700 hover:bg-green-100">💬 Dialogues</button>
-        <button onclick="showTab('verbes')" id="tab-verbes" class="tab-btn px-6 py-3 rounded-full font-semibold transition-all bg-white text-gray-700 hover:bg-green-100">🔤 Verbes</button>
-        <button onclick="showTab('nombres')" id="tab-nombres" class="tab-btn px-6 py-3 rounded-full font-semibold transition-all bg-white text-gray-700 hover:bg-green-100">🔢 Nombres</button>
-        <button onclick="showTab('revision')" id="tab-revision" class="tab-btn px-6 py-3 rounded-full font-semibold transition-all bg-white text-gray-700 hover:bg-green-100">🎯 Révision</button>
+      <div class="flex flex-wrap gap-2 justify-center mb-4 sticky top-20 z-40 bg-green-50/90 backdrop-blur-sm py-2 rounded-xl">
+        <button onclick="showTab('accueil')" id="tab-accueil" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all tab-active">🏠 Accueil</button>
+        <button onclick="showTab('lecons')" id="tab-lecons" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100">📖 Leçons</button>
+        <button onclick="showTab('dialogues')" id="tab-dialogues" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100">💬 Dialogues</button>
+        <button onclick="showTab('verbes')" id="tab-verbes" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100">🔤 Verbes</button>
+        <button onclick="showTab('nombres')" id="tab-nombres" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100">🔢 Nombres</button>
+        <button onclick="showTab('revision')" id="tab-revision" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100">🎯 Révision</button>
       </div>
     </div>
 
-    <!-- Content -->
+    <!-- Main Content -->
     <main class="max-w-6xl mx-auto px-4 pb-8">
       
       <!-- Accueil Tab -->
       <div id="content-accueil" class="tab-content">
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div class="bg-white rounded-2xl p-6 shadow-lg text-center theme-card transition-all cursor-pointer" onclick="showTab('lecons')">
-            <div class="text-5xl mb-4">📖</div>
-            <h3 class="text-xl font-bold text-gray-800">Leçons</h3>
-            <p class="text-gray-500 mt-2">4 thèmes • 80 mots</p>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div class="bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center theme-card transition-all cursor-pointer hover:shadow-xl" onclick="showTab('lecons')" role="button" tabindex="0">
+            <div class="text-4xl md:text-5xl mb-3">📖</div>
+            <h3 class="text-lg md:text-xl font-bold text-gray-800">Leçons</h3>
+            <p class="text-gray-500 mt-2 text-sm">4 thèmes • 80 mots</p>
           </div>
-          <div class="bg-white rounded-2xl p-6 shadow-lg text-center theme-card transition-all cursor-pointer" onclick="showTab('dialogues')">
-            <div class="text-5xl mb-4">💬</div>
-            <h3 class="text-xl font-bold text-gray-800">Dialogues</h3>
-            <p class="text-gray-500 mt-2">5 dialogues</p>
+          <div class="bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center theme-card transition-all cursor-pointer hover:shadow-xl" onclick="showTab('dialogues')" role="button" tabindex="0">
+            <div class="text-4xl md:text-5xl mb-3">💬</div>
+            <h3 class="text-lg md:text-xl font-bold text-gray-800">Dialogues</h3>
+            <p class="text-gray-500 mt-2 text-sm">5 dialogues</p>
           </div>
-          <div class="bg-white rounded-2xl p-6 shadow-lg text-center theme-card transition-all cursor-pointer" onclick="showTab('verbes')">
-            <div class="text-5xl mb-4">🔤</div>
-            <h3 class="text-xl font-bold text-gray-800">Verbes</h3>
-            <p class="text-gray-500 mt-2">20 verbes conjugués</p>
+          <div class="bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center theme-card transition-all cursor-pointer hover:shadow-xl" onclick="showTab('verbes')" role="button" tabindex="0">
+            <div class="text-4xl md:text-5xl mb-3">🔤</div>
+            <h3 class="text-lg md:text-xl font-bold text-gray-800">Verbes</h3>
+            <p class="text-gray-500 mt-2 text-sm">20 verbes conjugués</p>
           </div>
-          <div class="bg-white rounded-2xl p-6 shadow-lg text-center theme-card transition-all cursor-pointer" onclick="showTab('nombres')">
-            <div class="text-5xl mb-4">🔢</div>
-            <h3 class="text-xl font-bold text-gray-800">Nombres</h3>
-            <p class="text-gray-500 mt-2">1 à 9000</p>
+          <div class="bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center theme-card transition-all cursor-pointer hover:shadow-xl" onclick="showTab('nombres')" role="button" tabindex="0">
+            <div class="text-4xl md:text-5xl mb-3">🔢</div>
+            <h3 class="text-lg md:text-xl font-bold text-gray-800">Nombres</h3>
+            <p class="text-gray-500 mt-2 text-sm">1 à 9000</p>
           </div>
-          <div class="bg-white rounded-2xl p-6 shadow-lg text-center theme-card transition-all cursor-pointer" onclick="showTab('revision')">
-            <div class="text-5xl mb-4">🎯</div>
-            <h3 class="text-xl font-bold text-gray-800">Révision</h3>
-            <p class="text-gray-500 mt-2">Quiz interactif</p>
+          <div class="bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center theme-card transition-all cursor-pointer hover:shadow-xl" onclick="showTab('revision')" role="button" tabindex="0">
+            <div class="text-4xl md:text-5xl mb-3">🎯</div>
+            <h3 class="text-lg md:text-xl font-bold text-gray-800">Révision</h3>
+            <p class="text-gray-500 mt-2 text-sm">Quiz interactif</p>
           </div>
         </div>
       </div>
 
       <!-- Leçons Tab -->
       <div id="content-lecons" class="tab-content hidden">
-        <div class="grid md:grid-cols-2 gap-6">
+        <div class="grid md:grid-cols-2 gap-4 md:gap-6">
           <!-- Thème École -->
           <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4">
               <h3 class="text-xl font-bold text-white">🏫 École</h3>
             </div>
-            <div class="p-4 max-h-96 overflow-y-auto">
+            <div class="p-4 max-h-80 md:max-h-96 overflow-y-auto">
               <div class="space-y-3" id="theme-ecole"></div>
             </div>
           </div>
@@ -114,7 +132,7 @@
             <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-4">
               <h3 class="text-xl font-bold text-white">🐾 Animaux</h3>
             </div>
-            <div class="p-4 max-h-96 overflow-y-auto">
+            <div class="p-4 max-h-80 md:max-h-96 overflow-y-auto">
               <div class="space-y-3" id="theme-animaux"></div>
             </div>
           </div>
@@ -123,7 +141,7 @@
             <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-4">
               <h3 class="text-xl font-bold text-white">👔 Vêtements</h3>
             </div>
-            <div class="p-4 max-h-96 overflow-y-auto">
+            <div class="p-4 max-h-80 md:max-h-96 overflow-y-auto">
               <div class="space-y-3" id="theme-vetements"></div>
             </div>
           </div>
@@ -132,7 +150,7 @@
             <div class="bg-gradient-to-r from-blue-500 to-cyan-500 p-4">
               <h3 class="text-xl font-bold text-white">🫀 Corps</h3>
             </div>
-            <div class="p-4 max-h-96 overflow-y-auto">
+            <div class="p-4 max-h-80 md:max-h-96 overflow-y-auto">
               <div class="space-y-3" id="theme-corps"></div>
             </div>
           </div>
@@ -141,7 +159,7 @@
 
       <!-- Dialogues Tab -->
       <div id="content-dialogues" class="tab-content hidden">
-        <div class="space-y-6" id="dialogues-container"></div>
+        <div class="space-y-4 md:space-y-6" id="dialogues-container"></div>
       </div>
 
       <!-- Verbes Tab -->
@@ -151,40 +169,40 @@
 
       <!-- Nombres Tab -->
       <div id="content-nombres" class="tab-content hidden">
-        <div class="bg-white rounded-2xl shadow-lg p-6">
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="nombres-container"></div>
+        <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6">
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4" id="nombres-container"></div>
         </div>
       </div>
 
       <!-- Révision Tab -->
       <div id="content-revision" class="tab-content hidden">
-        <div class="bg-white rounded-2xl shadow-lg p-6">
+        <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6">
           <div id="quiz-container">
-            <div class="text-center mb-6">
-              <h3 class="text-2xl font-bold text-gray-800">🎯 Quiz de Révision</h3>
-              <p class="text-gray-500">Testez vos connaissances!</p>
+            <div class="text-center mb-4 md:mb-6">
+              <h3 class="text-xl md:text-2xl font-bold text-gray-800">🎯 Quiz de Révision</h3>
+              <p class="text-gray-500 text-sm md:text-base">Testez vos connaissances !</p>
             </div>
-            <div class="flex justify-center gap-4 mb-6">
-              <button onclick="startQuiz('vocabulaire')" class="px-6 py-3 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-all">📚 Vocabulaire</button>
-              <button onclick="startQuiz('verbes')" class="px-6 py-3 bg-blue-500 text-white rounded-full font-semibold hover:bg-blue-600 transition-all">🔤 Verbes</button>
-              <button onclick="startQuiz('nombres')" class="px-6 py-3 bg-purple-500 text-white rounded-full font-semibold hover:bg-purple-600 transition-all">🔢 Nombres</button>
+            <div class="flex flex-wrap justify-center gap-3 mb-4 md:mb-6">
+              <button onclick="startQuiz('vocabulaire')" class="px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold text-sm md:text-base hover:bg-green-600 transition-all">📚 Vocabulaire</button>
+              <button onclick="startQuiz('verbes')" class="px-4 py-2 md:px-6 md:py-3 bg-blue-500 text-white rounded-full font-semibold text-sm md:text-base hover:bg-blue-600 transition-all">🔤 Verbes</button>
+              <button onclick="startQuiz('nombres')" class="px-4 py-2 md:px-6 md:py-3 bg-purple-500 text-white rounded-full font-semibold text-sm md:text-base hover:bg-purple-600 transition-all">🔢 Nombres</button>
             </div>
             <div id="quiz-area" class="hidden">
               <div class="text-center mb-4">
-                <span class="text-gray-500">Question <span id="quiz-current">1</span> / <span id="quiz-total">10</span></span>
+                <span class="text-gray-500 text-sm">Question <span id="quiz-current">1</span> / <span id="quiz-total">10</span></span>
               </div>
-              <div id="quiz-question" class="text-2xl text-center font-bold text-gray-800 mb-6"></div>
-              <div id="quiz-options" class="grid grid-cols-2 gap-4"></div>
-              <div id="quiz-result" class="text-center mt-4 text-xl font-bold hidden"></div>
-              <div class="text-center mt-6">
-                <button onclick="nextQuestion()" id="next-btn" class="px-6 py-3 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-all hidden">Suivant →</button>
+              <div id="quiz-question" class="text-lg md:text-2xl text-center font-bold text-gray-800 mb-4 md:mb-6"></div>
+              <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+              <div id="quiz-result" class="text-center mt-4 text-lg md:text-xl font-bold hidden"></div>
+              <div class="text-center mt-4 md:mt-6">
+                <button onclick="nextQuestion()" id="next-btn" class="px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold text-sm md:text-base hover:bg-green-600 transition-all hidden">Suivant →</button>
               </div>
             </div>
             <div id="quiz-end" class="hidden text-center">
-              <div class="text-5xl mb-4">🎉</div>
-              <h3 class="text-2xl font-bold text-gray-800">Quiz terminé!</h3>
-              <p class="text-gray-500 mt-2">Score: <span id="quiz-score">0</span> / <span id="quiz-total-end">10</span></p>
-              <button onclick="resetQuiz()" class="mt-4 px-6 py-3 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-all">Rejouer</button>
+              <div class="text-4xl md:text-5xl mb-4">🎉</div>
+              <h3 class="text-xl md:text-2xl font-bold text-gray-800">Quiz terminé !</h3>
+              <p class="text-gray-500 mt-2">Score : <span id="quiz-score">0</span> / <span id="quiz-total-end">10</span></p>
+              <button onclick="resetQuiz()" class="mt-4 px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold text-sm md:text-base hover:bg-green-600 transition-all">Rejouer</button>
             </div>
           </div>
         </div>
@@ -193,13 +211,13 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white text-center py-4">
-      <p>📚 Apprentissage Darija - Mois 2 | Created for children</p>
+    <footer class="bg-gray-800 text-white text-center py-4 mt-auto">
+      <p class="text-sm">📚 Apprentissage Darija - Mois 2 | Créé pour les enfants</p>
     </footer>
   </div>
 
   <script>
-    // Data
+    // ==================== DONNÉES ====================
     const vocabulaire = {
       ecole: [
         { fr: "école", arabe: "مَدْرَسَة", latin: "madrasa", phrase_latin: "Madrasa f hadak", phrase_fr: "L'école est à côté" },
@@ -513,7 +531,7 @@
       { chiffre: 200, latin: "miten", arabe: "مِيتَيْن" },
       { chiffre: 205, latin: "miten w khamsa", arabe: "مِيتَيْن و خَمْسَة" },
       { chiffre: 312, latin: "tlata mya w tnach", arabe: "تْلَاتَة مْيَة و طْنَاش" },
-      { chiffre: 450, latin: "rb4a mya w khmsin", arabe: "رْبْعَة مْيَة و خَمْسِين" },
+      { chiffre: 450, latin: "rb3a mya w khmsin", arabe: "رْبْعَة مْيَة و خَمْسِين" },
       { chiffre: 300, latin: "tlata mya", arabe: "تْلَاتَة مْيَة" },
       { chiffre: 400, latin: "rb3a mya", arabe: "رْبْعَة مْيَة" },
       { chiffre: 500, latin: "khamsa mya", arabe: "خَمْسَة مْيَة" },
@@ -545,19 +563,22 @@
       { key: "houma", label: "houma (ils)" }
     ];
 
-    // Quiz state
+    // ==================== ÉTAT DU QUIZ ====================
     let quizQuestions = [];
     let currentQuestion = 0;
     let score = 0;
     let quizType = '';
 
-    // Tab management
+    // ==================== GESTION DES TABS ====================
     function showTab(tabName) {
-      // Hide all content
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      // Show selected content
+      // Cacher tout le contenu
+      document.querySelectorAll('.tab-content').forEach(el => {
+        el.classList.add('hidden');
+      });
+      // Afficher le contenu sélectionné
       document.getElementById('content-' + tabName).classList.remove('hidden');
-      // Update tab styles
+      
+      // Mettre à jour le style des boutons
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('tab-active');
         btn.classList.add('bg-white', 'text-gray-700', 'hover:bg-green-100');
@@ -565,9 +586,14 @@
       const activeTab = document.getElementById('tab-' + tabName);
       activeTab.classList.add('tab-active');
       activeTab.classList.remove('bg-white', 'text-gray-700', 'hover:bg-green-100');
+      
+      // Scroll vers le haut pour mobile
+      if (window.innerWidth < 768) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
 
-    // Render vocabulary
+    // ==================== RENDU DU VOCABULAIRE ====================
     function renderVocab() {
       const themes = [
         { id: 'ecole', data: vocabulaire.ecole },
@@ -578,42 +604,44 @@
 
       themes.forEach(theme => {
         const container = document.getElementById('theme-' + theme.id);
+        if (!container) return;
         container.innerHTML = theme.data.map(word => `
           <div class="word-card p-3 rounded-lg border border-gray-200 transition-all cursor-pointer hover:border-green-300">
             <div class="flex justify-between items-center mb-2">
-              <span class="font-semibold text-gray-800">${word.fr}</span>
-              <span class="text-green-600 font-semibold">${word.latin}</span>
+              <span class="font-semibold text-gray-800">${escapeHtml(word.fr)}</span>
+              <span class="text-green-600 font-semibold">${escapeHtml(word.latin)}</span>
             </div>
             <div class="text-right">
-              <span class="arabic-text text-xl text-gray-700">${word.arabe}</span>
+              <span class="arabic-text text-xl text-gray-700">${escapeHtml(word.arabe)}</span>
             </div>
             <div class="mt-2 text-sm text-gray-500 border-t pt-2">
-              <p><span class="text-green-600">${word.phrase_latin}</span></p>
-              <p>${word.phrase_fr}</p>
+              <p><span class="text-green-600">${escapeHtml(word.phrase_latin)}</span></p>
+              <p>${escapeHtml(word.phrase_fr)}</p>
             </div>
           </div>
         `).join('');
       });
     }
 
-    // Render dialogues
+    // ==================== RENDU DES DIALOGUES ====================
     function renderDialogues() {
       const container = document.getElementById('dialogues-container');
-      container.innerHTML = dialogues.map((dialogue, idx) => `
+      if (!container) return;
+      container.innerHTML = dialogues.map((dialogue) => `
         <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
           <div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4">
-            <h3 class="text-xl font-bold text-white">💬 ${dialogue.titre}</h3>
-            <p class="text-green-100 text-sm">Personnages: ${dialogue.personnages.join(', ')}</p>
+            <h3 class="text-xl font-bold text-white">💬 ${escapeHtml(dialogue.titre)}</h3>
+            <p class="text-green-100 text-sm">Personnages: ${dialogue.personnages.map(escapeHtml).join(', ')}</p>
           </div>
           <div class="p-4 space-y-3">
             ${dialogue.repliques.map(rep => `
               <div class="p-3 rounded-lg ${rep.role.includes('Élève') || rep.role.includes('Enfant') ? 'bg-green-50 ml-4' : 'bg-gray-50 mr-4'}">
-                <div class="font-semibold text-sm text-gray-600 mb-1">${rep.role}</div>
-                <div class="flex justify-between items-center mb-1">
-                  <span class="text-green-600 font-semibold">${rep.latin}</span>
-                  <span class="arabic-text text-lg">${rep.arabe}</span>
+                <div class="font-semibold text-sm text-gray-600 mb-1">${escapeHtml(rep.role)}</div>
+                <div class="flex justify-between items-center mb-1 flex-wrap gap-2">
+                  <span class="text-green-600 font-semibold">${escapeHtml(rep.latin)}</span>
+                  <span class="arabic-text text-lg">${escapeHtml(rep.arabe)}</span>
                 </div>
-                <div class="text-gray-500 text-sm">${rep.francais}</div>
+                <div class="text-gray-500 text-sm">${escapeHtml(rep.francais)}</div>
               </div>
             `).join('')}
           </div>
@@ -621,15 +649,16 @@
       `).join('');
     }
 
-    // Render verbs
+    // ==================== RENDU DES VERBES ====================
     function renderVerbs() {
       const container = document.getElementById('verbes-container');
+      if (!container) return;
       container.innerHTML = verbes.map(verb => `
         <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
           <div class="bg-gradient-to-r from-blue-500 to-indigo-500 p-4 flex justify-between items-center">
             <div>
-              <h3 class="text-xl font-bold text-white">🔤 ${verb.verbe}</h3>
-              <p class="text-blue-100">Racine: ${verb.racine}</p>
+              <h3 class="text-xl font-bold text-white">🔤 ${escapeHtml(verb.verbe)}</h3>
+              <p class="text-blue-100">Racine: ${escapeHtml(verb.racine)}</p>
             </div>
           </div>
           <div class="p-4">
@@ -639,8 +668,8 @@
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
                   ${personLabels.map(p => `
                     <div class="p-2 bg-green-50 rounded">
-                      <div class="text-xs text-gray-500">${p.label}</div>
-                      <div class="font-semibold">${verb.present[p.key]}</div>
+                      <div class="text-xs text-gray-500">${escapeHtml(p.label)}</div>
+                      <div class="font-semibold">${escapeHtml(verb.present[p.key])}</div>
                     </div>
                   `).join('')}
                 </div>
@@ -650,8 +679,8 @@
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
                   ${personLabels.map(p => `
                     <div class="p-2 bg-amber-50 rounded">
-                      <div class="text-xs text-gray-500">${p.label}</div>
-                      <div class="font-semibold">${verb.passe[p.key]}</div>
+                      <div class="text-xs text-gray-500">${escapeHtml(p.label)}</div>
+                      <div class="font-semibold">${escapeHtml(verb.passe[p.key])}</div>
                     </div>
                   `).join('')}
                 </div>
@@ -661,8 +690,8 @@
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
                   ${personLabels.map(p => `
                     <div class="p-2 bg-purple-50 rounded">
-                      <div class="text-xs text-gray-500">${p.label}</div>
-                      <div class="font-semibold">${verb.futur[p.key]}</div>
+                      <div class="text-xs text-gray-500">${escapeHtml(p.label)}</div>
+                      <div class="font-semibold">${escapeHtml(verb.futur[p.key])}</div>
                     </div>
                   `).join('')}
                 </div>
@@ -673,19 +702,33 @@
       `).join('');
     }
 
-    // Render numbers
+    // ==================== RENDU DES NOMBRES ====================
     function renderNombres() {
       const container = document.getElementById('nombres-container');
+      if (!container) return;
       container.innerHTML = nombres.map(n => `
         <div class="p-3 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg text-center hover:from-green-50 hover:to-emerald-50 transition-all cursor-pointer">
           <div class="text-2xl font-bold text-gray-800">${n.chiffre}</div>
-          <div class="text-green-600 font-semibold">${n.latin}</div>
-          <div class="arabic-text text-lg text-gray-700">${n.arabe}</div>
+          <div class="text-green-600 font-semibold">${escapeHtml(n.latin)}</div>
+          <div class="arabic-text text-lg text-gray-700">${escapeHtml(n.arabe)}</div>
         </div>
       `).join('');
     }
 
-    // Quiz functions
+    // ==================== FONCTION D'ÉCHAPPEMENT HTML ====================
+    function escapeHtml(text) {
+      if (typeof text !== 'string') return text;
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // ==================== QUIZ FUNCTIONS ====================
     function startQuiz(type) {
       quizType = type;
       currentQuestion = 0;
@@ -720,7 +763,8 @@
     }
 
     function generateOptions(correct, allOptions) {
-      const wrong = shuffleArray(allOptions.filter(o => o !== correct)).slice(0, 3);
+      const uniqueOptions = [...new Set(allOptions)];
+      const wrong = shuffleArray(uniqueOptions.filter(o => o !== correct)).slice(0, 3);
       return shuffleArray([correct, ...wrong]);
     }
 
@@ -741,34 +785,49 @@
       document.getElementById('next-btn').classList.add('hidden');
       
       const optionsContainer = document.getElementById('quiz-options');
-      optionsContainer.innerHTML = q.options.map(opt => `
-        <button onclick="checkAnswer('${opt}')" class="quiz-option p-4 bg-white border-2 border-gray-200 rounded-xl font-semibold text-gray-700 hover:border-green-400 hover:bg-green-50 transition-all">
-          ${opt}
+      optionsContainer.innerHTML = q.options.map((opt) => `
+        <button data-answer="${opt.replace(/"/g, '&quot;')}" 
+                class="quiz-option p-4 bg-white border-2 border-gray-200 rounded-xl font-semibold text-gray-700 hover:border-green-400 hover:bg-green-50 transition-all cursor-pointer text-sm md:text-base">
+          ${escapeHtml(opt)}
         </button>
       `).join('');
+      
+      // Attacher les événements après rendu
+      setTimeout(() => {
+        document.querySelectorAll('.quiz-option').forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            checkAnswer(this.dataset.answer);
+          });
+        });
+      }, 0);
     }
 
-    function checkAnswer(answer) {
+    function checkAnswer(selectedAnswer) {
       const q = quizQuestions[currentQuestion];
       const resultEl = document.getElementById('quiz-result');
       const options = document.querySelectorAll('.quiz-option');
       
       options.forEach(opt => {
         opt.disabled = true;
-        if (opt.textContent.trim() === q.answer) {
-          opt.classList.add('bg-green-100', 'border-green-500');
-        } else if (opt.textContent.trim() === answer && answer !== q.answer) {
-          opt.classList.add('bg-red-100', 'border-red-500');
+        const optAnswer = opt.dataset.answer;
+        if (optAnswer === q.answer) {
+          opt.classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+        } else if (optAnswer === selectedAnswer && selectedAnswer !== q.answer) {
+          opt.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
         }
       });
 
-      if (answer === q.answer) {
+      if (selectedAnswer === q.answer) {
         score++;
-        resultEl.textContent = '✅ Correct!';
-        resultEl.className = 'text-center mt-4 text-xl font-bold text-green-600';
+        resultEl.textContent = '✅ Correct !';
+        resultEl.className = 'text-center mt-4 text-lg md:text-xl font-bold text-green-600';
+        
+        // Sauvegarder la progression
+        saveProgress(q.answer);
       } else {
-        resultEl.textContent = `❌ Faux! La réponse est: ${q.answer}`;
-        resultEl.className = 'text-center mt-4 text-xl font-bold text-red-600';
+        resultEl.textContent = `❌ Faux ! La réponse est : ${q.answer}`;
+        resultEl.className = 'text-center mt-4 text-lg md:text-xl font-bold text-red-600';
       }
       resultEl.classList.remove('hidden');
       document.getElementById('next-btn').classList.remove('hidden');
@@ -783,7 +842,7 @@
         document.getElementById('quiz-end').classList.remove('hidden');
         document.getElementById('quiz-score').textContent = score;
         document.getElementById('quiz-total-end').textContent = quizQuestions.length;
-        updateProgress();
+        updateProgressBar();
       }
     }
 
@@ -792,19 +851,66 @@
       document.getElementById('quiz-end').classList.add('hidden');
     }
 
-    function updateProgress() {
-      const totalWords = vocabulaire.ecole.length + vocabulaire.animaux.length + vocabulaire.vetements.length + vocabulaire.corps.length;
-      const progress = Math.min(100, Math.round((score / totalWords) * 100));
-      document.getElementById('progress-bar').style.width = progress + '%';
-      document.getElementById('progress-text').textContent = progress + '%';
+    // ==================== GESTION DE LA PROGRESSION ====================
+    function saveProgress(answer) {
+      try {
+        let mastered = JSON.parse(localStorage.getItem('darijaMastered') || '[]');
+        if (!mastered.includes(answer)) {
+          mastered.push(answer);
+          localStorage.setItem('darijaMastered', JSON.stringify(mastered));
+          updateProgressBar();
+        }
+      } catch (e) {
+        console.warn('localStorage non disponible:', e);
+      }
     }
 
-    // Initialize
+    function updateProgressBar() {
+      try {
+        const mastered = JSON.parse(localStorage.getItem('darijaMastered') || '[]');
+        const totalWords = vocabulaire.ecole.length + vocabulaire.animaux.length + 
+                          vocabulaire.vetements.length + vocabulaire.corps.length;
+        const progress = Math.min(100, Math.round((mastered.length / totalWords) * 100));
+        document.getElementById('progress-bar').style.width = progress + '%';
+        document.getElementById('progress-text').textContent = progress + '%';
+      } catch (e) {
+        console.warn('Erreur mise à jour progression:', e);
+      }
+    }
+
+    function initProgress() {
+      updateProgressBar();
+    }
+
+    // ==================== INITIALISATION ====================
     document.addEventListener('DOMContentLoaded', () => {
       renderVocab();
       renderDialogues();
       renderVerbs();
       renderNombres();
+      initProgress();
+      
+      // Support clavier pour les cartes
+      document.querySelectorAll('.theme-card, .word-card').forEach(card => {
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            card.click();
+          }
+        });
+      });
+    });
+
+    // Gestion du redimensionnement pour réinitialiser les écouteurs si nécessaire
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        // Réattacher les écouteurs quiz si visible
+        if (!document.getElementById('quiz-area').classList.contains('hidden')) {
+          showQuestion();
+        }
+      }, 250);
     });
   </script>
 </body>
