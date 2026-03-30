@@ -4,225 +4,326 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apprentissage Darija - Mois 2</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    [x-cloak] { display: none !important; }
-    .arabic-text { 
-      font-family: 'Amiri', 'Noto Naskh Arabic', sans-serif; 
-      direction: rtl; 
-      line-height: 1.6; 
+    /* === Fallback CSS critique (si Tailwind CDN ne charge pas) === */
+    body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0fdf4; min-height: 100vh; display: flex; flex-direction: column; }
+    .fallback-header { background: linear-gradient(to right, #16a34a, #059669); color: white; padding: 1rem; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+    .fallback-header h1 { margin: 0; font-size: 1.5rem; }
+    .fallback-header p { margin: 4px 0 0; opacity: 0.8; font-size: 0.875rem; }
+    .fallback-tabs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 8px; position: sticky; z-index: 40; background: rgba(240,253,244,0.95); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+    .fallback-tab { padding: 8px 16px; border-radius: 9999px; font-weight: 600; font-size: 0.875rem; border: none; cursor: pointer; background: white; color: #374151; }
+    .fallback-tab.active { background: #166534; color: white; }
+    .fallback-content { display: none; padding: 16px; max-width: 1152px; margin: 0 auto; width: 100%; box-sizing: border-box; flex: 1; }
+    .fallback-content.active { display: block; }
+    .fallback-card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.07); margin-bottom: 16px; text-align: center; cursor: pointer; }
+    .fallback-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media(min-width:768px) { .fallback-grid { grid-template-columns: 1fr 1fr; } .fallback-header h1 { font-size: 1.875rem; } }
+    @media(min-width:1024px) { .fallback-grid.home { grid-template-columns: 1fr 1fr 1fr; } }
+    .fallback-btn { padding: 10px 24px; border-radius: 9999px; font-weight: 600; border: none; cursor: pointer; color: white; font-size: 0.875rem; }
+    .fallback-btn-green { background: #22c55e; }
+    .fallback-btn-blue { background: #3b82f6; }
+    .fallback-btn-purple { background: #a855f7; }
+    .fallback-footer { background: #1f2937; color: white; text-align: center; padding: 16px; margin-top: auto; font-size: 0.875rem; }
+    #tailwind-fail { display: none; }
+    .no-tailwind #tailwind-fail { display: flex !important; flex-direction: column; }
+    .no-tailwind #app-root { display: none !important; }
+
+    /* === Styles principaux (utilisés avec ou sans Tailwind) === */
+    .arabic-text {
+      font-family: 'Amiri', 'Noto Naskh Arabic', serif;
+      direction: rtl;
+      line-height: 1.6;
     }
-    .tab-active { 
-      background-color: #166534; 
-      color: white; 
+    .tab-active {
+      background-color: #166534 !important;
+      color: white !important;
     }
-    .tab-btn {
+    .tab-btn { cursor: pointer; user-select: none; }
+    .theme-card { cursor: pointer; user-select: none; }
+    .word-card { cursor: pointer; user-select: none; }
+    .word-card:hover { background-color: #f0fdf4; }
+    .progress-bar { transition: width 0.5s ease-in-out; }
+    .quiz-option { cursor: pointer; user-select: none; }
+    .quiz-option:disabled { cursor: not-allowed; opacity: 0.8; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Remplacement de bg-green-50/90 (non fiable) */
+    .tabs-sticky-bg {
+      background-color: rgba(240, 253, 244, 0.95);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+    }
+
+    /* Styles quiz robustes (pas de dépendance Tailwind) */
+    .quiz-opt {
+      padding: 16px;
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-weight: 600;
       cursor: pointer;
-      user-select: none;
+      transition: all 0.2s;
+      text-align: center;
+      font-size: 1rem;
     }
-    .theme-card {
-      cursor: pointer;
-      user-select: none;
-    }
-    .word-card {
-      cursor: pointer;
-      user-select: none;
-    }
-    .word-card:hover { 
-      background-color: #f0fdf4; 
-    }
-    .progress-bar { 
-      transition: width 0.5s ease-in-out; 
-    }
-    .quiz-option {
-      cursor: pointer;
-      user-select: none;
-    }
-    .quiz-option:disabled { 
-      cursor: not-allowed; 
-      opacity: 0.8; 
-    }
-    .tab-content {
-      display: none;
-    }
-    .tab-content.active {
-      display: block;
-    }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    .quiz-opt:hover:not(:disabled) { border-color: #4ade80; background-color: #f0fdf4; }
+    .quiz-opt:disabled { cursor: not-allowed; opacity: 0.85; }
+    .quiz-opt.correct { background-color: #dcfce7; border-color: #22c55e; }
+    .quiz-opt.wrong { background-color: #fee2e2; border-color: #ef4444; }
   </style>
+  <script>
+    // Détecter si Tailwind a chargé correctement
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        var testEl = document.createElement('div');
+        testEl.className = 'hidden';
+        document.body.appendChild(testEl);
+        if (window.getComputedStyle(testEl).display !== 'none') {
+          document.documentElement.classList.add('no-tailwind');
+        }
+        document.body.removeChild(testEl);
+      }, 2000);
+    });
+  </script>
 </head>
-<body class="bg-gradient-to-br from-green-50 to-emerald-100 min-h-screen flex flex-col">
-  
-  <!-- Header -->
-  <header class="bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 py-4">
-      <h1 class="text-2xl md:text-3xl font-bold text-center">📚 Apprentissage Darija - Mois 2</h1>
-      <p class="text-center text-green-100 mt-1 text-sm md:text-base">École • Animaux • Vêtements • Corps</p>
-    </div>
-  </header>
+<body>
 
-  <!-- Progress -->
-  <div class="max-w-6xl mx-auto px-4 py-3">
-    <div class="bg-white rounded-xl p-4 shadow-md">
-      <div class="flex justify-between text-sm text-gray-600 mb-2">
-        <span>📊 Progression</span>
-        <span id="progress-text">0%</span>
-      </div>
-      <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-        <div id="progress-bar" class="bg-gradient-to-r from-green-500 to-emerald-500 h-3 rounded-full progress-bar" style="width: 0%"></div>
-      </div>
+  <!-- FALLBACK complet si Tailwind ne charge pas -->
+  <div id="tailwind-fail">
+    <div class="fallback-header">
+      <h1>📚 Apprentissage Darija - Mois 2</h1>
+      <p>École • Animaux • Vêtements • Corps</p>
     </div>
+    <div class="fallback-tabs" id="fallback-tabs">
+      <button class="fallback-tab active" data-fb="accueil">Accueil</button>
+      <button class="fallback-tab" data-fb="lecons">Leçons</button>
+      <button class="fallback-tab" data-fb="dialogues">Dialogues</button>
+      <button class="fallback-tab" data-fb="verbes">Verbes</button>
+      <button class="fallback-tab" data-fb="nombres">Nombres</button>
+      <button class="fallback-tab" data-fb="revision">Révision</button>
+    </div>
+    <div id="fallback-accueil" class="fallback-content active">
+      <div class="fallback-grid home">
+        <div class="fallback-card" onclick="document.querySelector('[data-fb=lecons]').click()"><div style="font-size:2.5rem">📖</div><h3 style="margin:8px 0 4px">Leçons</h3><p style="color:#6b7280;font-size:0.875rem">4 thèmes • 80 mots</p></div>
+        <div class="fallback-card" onclick="document.querySelector('[data-fb=dialogues]').click()"><div style="font-size:2.5rem">💬</div><h3 style="margin:8px 0 4px">Dialogues</h3><p style="color:#6b7280;font-size:0.875rem">5 dialogues</p></div>
+        <div class="fallback-card" onclick="document.querySelector('[data-fb=verbes]').click()"><div style="font-size:2.5rem">🔤</div><h3 style="margin:8px 0 4px">Verbes</h3><p style="color:#6b7280;font-size:0.875rem">20 verbes conjugués</p></div>
+        <div class="fallback-card" onclick="document.querySelector('[data-fb=nombres]').click()"><div style="font-size:2.5rem">🔢</div><h3 style="margin:8px 0 4px">Nombres</h3><p style="color:#6b7280;font-size:0.875rem">1 à 9000</p></div>
+        <div class="fallback-card" onclick="document.querySelector('[data-fb=revision]').click()"><div style="font-size:2.5rem">🎯</div><h3 style="margin:8px 0 4px">Révision</h3><p style="color:#6b7280;font-size:0.875rem">Quiz interactif</p></div>
+      </div>
+      <p style="text-align:center;margin-top:24px;color:#9ca3af;font-size:0.8rem">Mode dégradé : Tailwind CSS n'a pas pu se charger. L'interface complète est disponible avec une connexion optimale.</p>
+    </div>
+    <div id="fallback-lecons" class="fallback-content"><div class="fallback-card"><p style="color:#6b7280">Les leçons nécessitent le chargement complet de Tailwind CSS. Vérifiez votre connexion internet et rechargez la page.</p></div></div>
+    <div id="fallback-dialogues" class="fallback-content"><div class="fallback-card"><p style="color:#6b7280">Les dialogues nécessitent le chargement complet de Tailwind CSS.</p></div></div>
+    <div id="fallback-verbes" class="fallback-content"><div class="fallback-card"><p style="color:#6b7280">Les verbes nécessitent le chargement complet de Tailwind CSS.</p></div></div>
+    <div id="fallback-nombres" class="fallback-content"><div class="fallback-card"><p style="color:#6b7280">Les nombres nécessitent le chargement complet de Tailwind CSS.</p></div></div>
+    <div id="fallback-revision" class="fallback-content"><div class="fallback-card"><p style="color:#6b7280">Le quiz nécessite le chargement complet de Tailwind CSS.</p></div></div>
+    <div class="fallback-footer">📚 Apprentissage Darija - Mois 2 | Créé pour les enfants</div>
   </div>
 
-  <!-- Tabs Navigation -->
-  <div class="max-w-6xl mx-auto px-4">
-    <div class="flex flex-wrap gap-2 justify-center mb-4 sticky top-20 z-40 bg-green-50/90 backdrop-blur-sm py-2 rounded-xl">
-      <button id="tab-accueil" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="accueil">🏠 Accueil</button>
-      <button id="tab-lecons" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="lecons">📖 Leçons</button>
-      <button id="tab-dialogues" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="dialogues">💬 Dialogues</button>
-      <button id="tab-verbes" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="verbes">🔤 Verbes</button>
-      <button id="tab-nombres" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="nombres">🔢 Nombres</button>
-      <button id="tab-revision" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="revision">🎯 Révision</button>
+  <!-- APPLICATION PRINCIPALE -->
+  <div id="app-root" class="bg-gradient-to-br from-green-50 to-emerald-100 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg sticky top-0 z-50">
+      <div class="max-w-6xl mx-auto px-4 py-4">
+        <h1 class="text-2xl md:text-3xl font-bold text-center">📚 Apprentissage Darija - Mois 2</h1>
+        <p class="text-center text-green-100 mt-1 text-sm md:text-base">École • Animaux • Vêtements • Corps</p>
+      </div>
+    </header>
+
+    <!-- Progress -->
+    <div class="max-w-6xl mx-auto w-full px-4 py-3">
+      <div class="bg-white rounded-xl p-4 shadow-md">
+        <div class="flex justify-between text-sm text-gray-600 mb-2">
+          <span>📊 Progression</span>
+          <span id="progress-text">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+          <div id="progress-bar" class="bg-gradient-to-r from-green-500 to-emerald-500 h-3 rounded-full progress-bar" style="width:0%"></div>
+        </div>
+      </div>
     </div>
+
+    <!-- Tabs Navigation -->
+    <div class="max-w-6xl mx-auto w-full px-4">
+      <div class="flex flex-wrap gap-2 justify-center mb-4 sticky z-40 tabs-sticky-bg py-2 rounded-xl" style="top:72px">
+        <button id="tab-accueil" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="accueil">🏠 Accueil</button>
+        <button id="tab-lecons" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="lecons">📖 Leçons</button>
+        <button id="tab-dialogues" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="dialogues">💬 Dialogues</button>
+        <button id="tab-verbes" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="verbes">🔤 Verbes</button>
+        <button id="tab-nombres" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="nombres">🔢 Nombres</button>
+        <button id="tab-revision" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="revision">🎯 Révision</button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto w-full px-4 pb-8 flex-grow">
+
+      <!-- Accueil -->
+      <div id="content-accueil" class="tab-content active">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div class="theme-card bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center transition-all hover:shadow-xl" data-tab="lecons">
+            <div class="text-4xl md:text-5xl mb-3">📖</div>
+            <h3 class="text-lg md:text-xl font-bold text-gray-800">Leçons</h3>
+            <p class="text-gray-500 mt-2 text-sm">4 thèmes • 80 mots</p>
+          </div>
+          <div class="theme-card bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center transition-all hover:shadow-xl" data-tab="dialogues">
+            <div class="text-4xl md:text-5xl mb-3">💬</div>
+            <h3 class="text-lg md:text-xl font-bold text-gray-800">Dialogues</h3>
+            <p class="text-gray-500 mt-2 text-sm">5 dialogues</p>
+          </div>
+          <div class="theme-card bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center transition-all hover:shadow-xl" data-tab="verbes">
+            <div class="text-4xl md:text-5xl mb-3">🔤</div>
+            <h3 class="text-lg md:text-xl font-bold text-gray-800">Verbes</h3>
+            <p class="text-gray-500 mt-2 text-sm">20 verbes conjugués</p>
+          </div>
+          <div class="theme-card bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center transition-all hover:shadow-xl" data-tab="nombres">
+            <div class="text-4xl md:text-5xl mb-3">🔢</div>
+            <h3 class="text-lg md:text-xl font-bold text-gray-800">Nombres</h3>
+            <p class="text-gray-500 mt-2 text-sm">1 à 9000</p>
+          </div>
+          <div class="theme-card bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center transition-all hover:shadow-xl" data-tab="revision">
+            <div class="text-4xl md:text-5xl mb-3">🎯</div>
+            <h3 class="text-lg md:text-xl font-bold text-gray-800">Révision</h3>
+            <p class="text-gray-500 mt-2 text-sm">Quiz interactif</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leçons -->
+      <div id="content-lecons" class="tab-content">
+        <div class="grid md:grid-cols-2 gap-4 md:gap-6">
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4">
+              <h3 class="text-xl font-bold text-white">🏫 École</h3>
+            </div>
+            <div class="p-4 max-h-80 md:max-h-96 overflow-y-auto">
+              <div class="space-y-3" id="theme-ecole"></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-4">
+              <h3 class="text-xl font-bold text-white">🐾 Animaux</h3>
+            </div>
+            <div class="p-4 max-h-80 md:max-h-96 overflow-y-auto">
+              <div class="space-y-3" id="theme-animaux"></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-4">
+              <h3 class="text-xl font-bold text-white">👔 Vêtements</h3>
+            </div>
+            <div class="p-4 max-h-80 md:max-h-96 overflow-y-auto">
+              <div class="space-y-3" id="theme-vetements"></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-500 to-cyan-500 p-4">
+              <h3 class="text-xl font-bold text-white">🫀 Corps</h3>
+            </div>
+            <div class="p-4 max-h-80 md:max-h-96 overflow-y-auto">
+              <div class="space-y-3" id="theme-corps"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dialogues -->
+      <div id="content-dialogues" class="tab-content">
+        <div class="space-y-4 md:space-y-6" id="dialogues-container"></div>
+      </div>
+
+      <!-- Verbes -->
+      <div id="content-verbes" class="tab-content">
+        <div class="space-y-4" id="verbes-container"></div>
+      </div>
+
+      <!-- Nombres -->
+      <div id="content-nombres" class="tab-content">
+        <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6">
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4" id="nombres-container"></div>
+        </div>
+      </div>
+
+      <!-- Révision -->
+      <div id="content-revision" class="tab-content">
+        <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6">
+          <div id="quiz-container">
+            <div class="text-center mb-4 md:mb-6">
+              <h3 class="text-xl md:text-2xl font-bold text-gray-800">🎯 Quiz de Révision</h3>
+              <p class="text-gray-500 text-sm md:text-base">Testez vos connaissances !</p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-3 mb-4 md:mb-6">
+              <button id="quiz-btn-vocab" class="px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-all">📚 Vocabulaire</button>
+              <button id="quiz-btn-verbes" class="px-4 py-2 md:px-6 md:py-3 bg-blue-500 text-white rounded-full font-semibold hover:bg-blue-600 transition-all">🔤 Verbes</button>
+              <button id="quiz-btn-nombres" class="px-4 py-2 md:px-6 md:py-3 bg-purple-500 text-white rounded-full font-semibold hover:bg-purple-600 transition-all">🔢 Nombres</button>
+            </div>
+            <div id="quiz-area" class="hidden">
+              <div class="text-center mb-4">
+                <span class="text-gray-500 text-sm">Question <span id="quiz-current">1</span> / <span id="quiz-total">10</span></span>
+              </div>
+              <div id="quiz-question" class="text-lg md:text-2xl text-center font-bold text-gray-800 mb-4 md:mb-6"></div>
+              <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+              <div id="quiz-result" class="text-center mt-4 text-lg md:text-xl font-bold hidden"></div>
+              <div class="text-center mt-4 md:mt-6">
+                <button id="next-btn" class="px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-all hidden">Suivant →</button>
+              </div>
+            </div>
+            <div id="quiz-end" class="hidden text-center">
+              <div class="text-4xl md:text-5xl mb-4">🎉</div>
+              <h3 class="text-xl md:text-2xl font-bold text-gray-800">Quiz terminé !</h3>
+              <p class="text-gray-500 mt-2">Score : <span id="quiz-score">0</span> / <span id="quiz-total-end">10</span></p>
+              <button id="reset-quiz-btn" class="mt-4 px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-all">Rejouer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center py-4 mt-auto">
+      <p class="text-sm">📚 Apprentissage Darija - Mois 2 | Créé pour les enfants</p>
+    </footer>
   </div>
-
-  <!-- Main Content -->
-  <main class="max-w-6xl mx-auto px-4 pb-8 flex-grow">
-    
-    <!-- Accueil -->
-    <div id="content-accueil" class="tab-content active">
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        <div class="theme-card bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center transition-all hover:shadow-xl" data-tab="lecons">
-          <div class="text-4xl md:text-5xl mb-3">📖</div>
-          <h3 class="text-lg md:text-xl font-bold text-gray-800">Leçons</h3>
-          <p class="text-gray-500 mt-2 text-sm">4 thèmes • 80 mots</p>
-        </div>
-        <div class="theme-card bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center transition-all hover:shadow-xl" data-tab="dialogues">
-          <div class="text-4xl md:text-5xl mb-3">💬</div>
-          <h3 class="text-lg md:text-xl font-bold text-gray-800">Dialogues</h3>
-          <p class="text-gray-500 mt-2 text-sm">5 dialogues</p>
-        </div>
-        <div class="theme-card bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center transition-all hover:shadow-xl" data-tab="verbes">
-          <div class="text-4xl md:text-5xl mb-3">🔤</div>
-          <h3 class="text-lg md:text-xl font-bold text-gray-800">Verbes</h3>
-          <p class="text-gray-500 mt-2 text-sm">20 verbes conjugués</p>
-        </div>
-        <div class="theme-card bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center transition-all hover:shadow-xl" data-tab="nombres">
-          <div class="text-4xl md:text-5xl mb-3">🔢</div>
-          <h3 class="text-lg md:text-xl font-bold text-gray-800">Nombres</h3>
-          <p class="text-gray-500 mt-2 text-sm">1 à 9000</p>
-        </div>
-        <div class="theme-card bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center transition-all hover:shadow-xl" data-tab="revision">
-          <div class="text-4xl md:text-5xl mb-3">🎯</div>
-          <h3 class="text-lg md:text-xl font-bold text-gray-800">Révision</h3>
-          <p class="text-gray-500 mt-2 text-sm">Quiz interactif</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Leçons -->
-    <div id="content-lecons" class="tab-content">
-      <div class="grid md:grid-cols-2 gap-4 md:gap-6">
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4">
-            <h3 class="text-xl font-bold text-white">🏫 École</h3>
-          </div>
-          <div class="p-4 max-h-80 md:max-h-96 overflow-y-auto">
-            <div class="space-y-3" id="theme-ecole"></div>
-          </div>
-        </div>
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-4">
-            <h3 class="text-xl font-bold text-white">🐾 Animaux</h3>
-          </div>
-          <div class="p-4 max-h-80 md:max-h-96 overflow-y-auto">
-            <div class="space-y-3" id="theme-animaux"></div>
-          </div>
-        </div>
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-4">
-            <h3 class="text-xl font-bold text-white">👔 Vêtements</h3>
-          </div>
-          <div class="p-4 max-h-80 md:max-h-96 overflow-y-auto">
-            <div class="space-y-3" id="theme-vetements"></div>
-          </div>
-        </div>
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div class="bg-gradient-to-r from-blue-500 to-cyan-500 p-4">
-            <h3 class="text-xl font-bold text-white">🫀 Corps</h3>
-          </div>
-          <div class="p-4 max-h-80 md:max-h-96 overflow-y-auto">
-            <div class="space-y-3" id="theme-corps"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Dialogues -->
-    <div id="content-dialogues" class="tab-content">
-      <div class="space-y-4 md:space-y-6" id="dialogues-container"></div>
-    </div>
-
-    <!-- Verbes -->
-    <div id="content-verbes" class="tab-content">
-      <div class="space-y-4" id="verbes-container"></div>
-    </div>
-
-    <!-- Nombres -->
-    <div id="content-nombres" class="tab-content">
-      <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6">
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4" id="nombres-container"></div>
-      </div>
-    </div>
-
-    <!-- Révision -->
-    <div id="content-revision" class="tab-content">
-      <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6">
-        <div id="quiz-container">
-          <div class="text-center mb-4 md:mb-6">
-            <h3 class="text-xl md:text-2xl font-bold text-gray-800">🎯 Quiz de Révision</h3>
-            <p class="text-gray-500 text-sm md:text-base">Testez vos connaissances !</p>
-          </div>
-          <div class="flex flex-wrap justify-center gap-3 mb-4 md:mb-6">
-            <button id="quiz-btn-vocab" class="px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-all">📚 Vocabulaire</button>
-            <button id="quiz-btn-verbes" class="px-4 py-2 md:px-6 md:py-3 bg-blue-500 text-white rounded-full font-semibold hover:bg-blue-600 transition-all">🔤 Verbes</button>
-            <button id="quiz-btn-nombres" class="px-4 py-2 md:px-6 md:py-3 bg-purple-500 text-white rounded-full font-semibold hover:bg-purple-600 transition-all">🔢 Nombres</button>
-          </div>
-          <div id="quiz-area" class="hidden">
-            <div class="text-center mb-4">
-              <span class="text-gray-500 text-sm">Question <span id="quiz-current">1</span> / <span id="quiz-total">10</span></span>
-            </div>
-            <div id="quiz-question" class="text-lg md:text-2xl text-center font-bold text-gray-800 mb-4 md:mb-6"></div>
-            <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
-            <div id="quiz-result" class="text-center mt-4 text-lg md:text-xl font-bold hidden"></div>
-            <div class="text-center mt-4 md:mt-6">
-              <button id="next-btn" class="px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-all hidden">Suivant →</button>
-            </div>
-          </div>
-          <div id="quiz-end" class="hidden text-center">
-            <div class="text-4xl md:text-5xl mb-4">🎉</div>
-            <h3 class="text-xl md:text-2xl font-bold text-gray-800">Quiz terminé !</h3>
-            <p class="text-gray-500 mt-2">Score : <span id="quiz-score">0</span> / <span id="quiz-total-end">10</span></p>
-            <button id="reset-quiz-btn" class="mt-4 px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-all">Rejouer</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </main>
-
-  <footer class="bg-gray-800 text-white text-center py-4 mt-auto">
-    <p class="text-sm">📚 Apprentissage Darija - Mois 2 | Créé pour les enfants</p>
-  </footer>
 
   <script>
     // ============================================
+    // FONCTIONS D'ÉCHAPPEMENT HTML
+    // ============================================
+    function escapeHtml(text) {
+      if (typeof text !== 'string') return String(text);
+      return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    // Échappement pour les valeurs d'attributs HTML (idempotent avec getAttribute)
+    function escapeAttr(text) {
+      if (typeof text !== 'string') return String(text);
+      return text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // ============================================
+    // UTILITAIRES
+    // ============================================
+    function shuffleArray(array) {
+      var arr = array.slice();
+      for (var i = arr.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+      }
+      return arr;
+    }
+
+    // ============================================
     // DONNÉES - MOIS 2
     // ============================================
-    const vocabulaire = {
+    var vocabulaire = {
       ecole: [
         { fr: "école", arabe: "مَدْرَسَة", latin: "madrasa", phrase_latin: "Madrasa f hadak", phrase_fr: "L'école est à côté" },
         { fr: "livre", arabe: "كْتَاب", latin: "ktab", phrase_latin: "Hada ktabi", phrase_fr: "C'est mon livre" },
@@ -235,7 +336,7 @@
         { fr: "gomme", arabe: "مَحَّايَة", latin: "ma7aya", phrase_latin: "Ma7aya f lqlam", phrase_fr: "La gomme est sur le crayon" },
         { fr: "règle", arabe: "مِسْطَرَة", latin: "mistara", phrase_latin: "Mistara tawila", phrase_fr: "Une règle longue" },
         { fr: "trousse", arabe: "مْحْفَظَة", latin: "m7fada", phrase_latin: "M7fada diali", phrase_fr: "Ma trousse" },
-        { fr: "cartable", arabe: "مْحْفَظَة", latin: "m7fada", phrase_latin: "M7fada kbira", phrase_fr: "Un grand cartable" },
+        { fr: "cartable", arabe: "كَرْطَاب", latin: "kartab", phrase_latin: "Kartab kbir", phrase_fr: "Un grand cartable" },
         { fr: "classe", arabe: "قِسْم", latin: "qism", phrase_latin: "Qism sghir", phrase_fr: "Une petite classe" },
         { fr: "ami", arabe: "صَاحِب", latin: "sa7eb", phrase_latin: "Sa7ebi f lmadrasa", phrase_fr: "Mon ami est à l'école" },
         { fr: "amie", arabe: "صَاحْبَة", latin: "sa7ba", phrase_latin: "Sa7bti m3aya", phrase_fr: "Mon amie est avec moi" },
@@ -306,14 +407,14 @@
         { fr: "genou", arabe: "لْرُكْبَة", latin: "lrokba", phrase_latin: "Rokbti majrou7a", phrase_fr: "Mon genou est blessé" },
         { fr: "cou", arabe: "لْعَنْق", latin: "l3enq", phrase_latin: "3enqi 7lo", phrase_fr: "Mon cou est beau" },
         { fr: "épaule", arabe: "لْكْتَف", latin: "lketf", phrase_latin: "Ketfi ywajja3ni", phrase_fr: "J'ai mal à l'épaule" },
-        { fr: "doigt", arabe: "صْبَع", latin: "sba3", phrase_latin: "Sba3i sghir", phrase_fr: "Mon doigt est petit" },
+        { fr: "doigt", arabe: "صْبَع", latin: "sbe3", phrase_latin: "Sbe3i sghir", phrase_fr: "Mon doigt est petit" },
         { fr: "ongle", arabe: "ظُفْر", latin: "dofr", phrase_latin: "Dofri tawil", phrase_fr: "Mon ongle est long" },
         { fr: "cœur", arabe: "لْقَلْب", latin: "lqalb", phrase_latin: "Qalbi kaydwi", phrase_fr: "Mon cœur bat" },
         { fr: "langue", arabe: "لْسَان", latin: "lsan", phrase_latin: "Lsani kayhder", phrase_fr: "Ma langue parle" }
       ]
     };
 
-    const dialogues = [
+    var dialogues = [
       { titre: "À l'école", personnages: ["Élève", "Maîtresse"], repliques: [
         { role: "Élève", latin: "Salam, m3allima.", francais: "Bonjour, maîtresse.", arabe: "سَلَام، مْعَلِّمَة" },
         { role: "Maîtresse", latin: "Salam, smitek?", francais: "Bonjour, comment t'appelles-tu?", arabe: "سَلَام، سْمِيتَك؟" },
@@ -341,110 +442,110 @@
       ]}
     ];
 
-    const verbes = [
+    var verbes = [
       { verbe: "se lever", racine: "nôD",
-        present: { ana: "kannôD", nta: "katnôD", nti: "katnôDi", houwa: "kaynôD", hiya: "katnôD", 7na: "kannôDo", ntouma: "katnôDo", houma: "kaynôDo" },
-        passe: { ana: "nôDt", nta: "nôDti", nti: "nôDti", houwa: "nôD", hiya: "nôDet", 7na: "nôDna", ntouma: "nôDtu", houma: "nôDou" },
-        futur: { ana: "ghadi nnôD", nta: "ghadi tnôD", nti: "ghadi tnôDi", houwa: "ghadi ynôD", hiya: "ghadi tnôD", 7na: "ghadi nnôDo", ntouma: "ghadi tnôDo", houma: "ghadi ynôDo" }
+        present: { ana: "kannôD", nta: "katnôD", nti: "katnôDi", houwa: "kaynôD", hiya: "katnôD", hna: "kannôDo", ntouma: "katnôDo", houma: "kaynôDo" },
+        passe: { ana: "nôDt", nta: "nôDti", nti: "nôDti", houwa: "nôD", hiya: "nôDet", hna: "nôDna", ntouma: "nôDtu", houma: "nôDou" },
+        futur: { ana: "ghadi nnôD", nta: "ghadi tnôD", nti: "ghadi tnôDi", houwa: "ghadi ynôD", hiya: "ghadi tnôD", hna: "ghadi nnôDo", ntouma: "ghadi tnôDo", houma: "ghadi ynôDo" }
       },
       { verbe: "s'asseoir", racine: "gles",
-        present: { ana: "kangles", nta: "katgles", nti: "katglesi", houwa: "kaygles", hiya: "katgles", 7na: "kangleso", ntouma: "katgleso", houma: "kaygleso" },
-        passe: { ana: "glest", nta: "glesti", nti: "glesti", houwa: "gles", hiya: "gleset", 7na: "glesna", ntouma: "glestu", houma: "glesou" },
-        futur: { ana: "ghadi ngles", nta: "ghadi tgles", nti: "ghadi tglesi", houwa: "ghadi ygles", hiya: "ghadi tgles", 7na: "ghadi ngleso", ntouma: "ghadi tgleso", houma: "ghadi ygleso" }
+        present: { ana: "kangles", nta: "katgles", nti: "katglesi", houwa: "kaygles", hiya: "katgles", hna: "kangleso", ntouma: "katgleso", houma: "kaygleso" },
+        passe: { ana: "glest", nta: "glesti", nti: "glesti", houwa: "gles", hiya: "gleset", hna: "glesna", ntouma: "glestu", houma: "glesou" },
+        futur: { ana: "ghadi ngles", nta: "ghadi tgles", nti: "ghadi tglesi", houwa: "ghadi ygles", hiya: "ghadi tgles", hna: "ghadi ngleso", ntouma: "ghadi tgleso", houma: "ghadi ygleso" }
       },
       { verbe: "courir", racine: "jri",
-        present: { ana: "kanjri", nta: "katjri", nti: "katjri", houwa: "kayjri", hiya: "katjri", 7na: "kanjriw", ntouma: "katjriw", houma: "kayjriw" },
-        passe: { ana: "jrit", nta: "jriti", nti: "jriti", houwa: "jra", hiya: "jret", 7na: "jrina", ntouma: "jritu", houma: "jraw" },
-        futur: { ana: "ghadi njri", nta: "ghadi tjri", nti: "ghadi tjri", houwa: "ghadi yjri", hiya: "ghadi tjri", 7na: "ghadi njriw", ntouma: "ghadi tjriw", houma: "ghadi yjriw" }
+        present: { ana: "kanjri", nta: "katjri", nti: "katjri", houwa: "kayjri", hiya: "katjri", hna: "kanjriw", ntouma: "katjriw", houma: "kayjriw" },
+        passe: { ana: "jrit", nta: "jriti", nti: "jriti", houwa: "jra", hiya: "jret", hna: "jrina", ntouma: "jritu", houma: "jraw" },
+        futur: { ana: "ghadi njri", nta: "ghadi tjri", nti: "ghadi tjri", houwa: "ghadi yjri", hiya: "ghadi tjri", hna: "ghadi njriw", ntouma: "ghadi tjriw", houma: "ghadi yjriw" }
       },
       { verbe: "sauter", racine: "naqez",
-        present: { ana: "kanaqez", nta: "katnaqez", nti: "katnaqezi", houwa: "kaynaqez", hiya: "katnaqez", 7na: "kannaqzu", ntouma: "katnaqzu", houma: "kaynaqzu" },
-        passe: { ana: "naqezt", nta: "naqezti", nti: "naqezti", houwa: "naqez", hiya: "naqezet", 7na: "naqezna", ntouma: "naqeztu", houma: "naqzou" },
-        futur: { ana: "ghadi nnaqez", nta: "ghadi tnaqez", nti: "ghadi tnaqezi", houwa: "ghadi ynaqez", hiya: "ghadi tnaqez", 7na: "ghadi nnaqzu", ntouma: "ghadi tnaqzu", houma: "ghadi ynaqzu" }
+        present: { ana: "kanaqez", nta: "katnaqez", nti: "katnaqezi", houwa: "kaynaqez", hiya: "katnaqez", hna: "kannaqzu", ntouma: "katnaqzu", houma: "kaynaqzu" },
+        passe: { ana: "naqezt", nta: "naqezti", nti: "naqezti", houwa: "naqez", hiya: "naqezet", hna: "naqezna", ntouma: "naqeztu", houma: "naqzou" },
+        futur: { ana: "ghadi nnaqez", nta: "ghadi tnaqez", nti: "ghadi tnaqezi", houwa: "ghadi ynaqez", hiya: "ghadi tnaqez", hna: "ghadi nnaqzu", ntouma: "ghadi tnaqzu", houma: "ghadi ynaqzu" }
       },
       { verbe: "danser", racine: "chtah",
-        present: { ana: "kanchtah", nta: "katchtah", nti: "katchtahi", houwa: "kaychtah", hiya: "katchtah", 7na: "kanchtahu", ntouma: "katchtahu", houma: "kaychtahu" },
-        passe: { ana: "chtah", nta: "chtahi", nti: "chtahi", houwa: "chtah", hiya: "chtahet", 7na: "chtahna", ntouma: "chtahu", houma: "chtahu" },
-        futur: { ana: "ghadi nchtah", nta: "ghadi tchtah", nti: "ghadi tchtahi", houwa: "ghadi ychtah", hiya: "ghadi tchtah", 7na: "ghadi nchtahu", ntouma: "ghadi tchtahu", houma: "ghadi ychtahu" }
+        present: { ana: "kanchtah", nta: "katchtah", nti: "katchtahi", houwa: "kaychtah", hiya: "katchtah", hna: "kanchtahu", ntouma: "katchtahu", houma: "kaychtahu" },
+        passe: { ana: "chtah", nta: "chtahi", nti: "chtahi", houwa: "chtah", hiya: "chtahet", hna: "chtahna", ntouma: "chtahu", houma: "chtahu" },
+        futur: { ana: "ghadi nchtah", nta: "ghadi tchtah", nti: "ghadi tchtahi", houwa: "ghadi ychtah", hiya: "ghadi tchtah", hna: "ghadi nchtahu", ntouma: "ghadi tchtahu", houma: "ghadi ychtahu" }
       },
       { verbe: "chanter", racine: "ghanna",
-        present: { ana: "kanghanna", nta: "katghanna", nti: "katghannay", houwa: "kayghanna", hiya: "katghanna", 7na: "kanghanniw", ntouma: "katghanniw", houma: "kayghanniw" },
-        passe: { ana: "ghannit", nta: "ghanniti", nti: "ghanniti", houwa: "ghanna", hiya: "ghannat", 7na: "ghannina", ntouma: "ghannitu", houma: "ghannaw" },
-        futur: { ana: "ghadi nghanna", nta: "ghadi tghanna", nti: "ghadi tghannay", houwa: "ghadi yghanna", hiya: "ghadi tghanna", 7na: "ghadi nghanniw", ntouma: "ghadi tghanniw", houma: "ghadi yghanniw" }
+        present: { ana: "kanghanna", nta: "katghanna", nti: "katghannay", houwa: "kayghanna", hiya: "katghanna", hna: "kanghanniw", ntouma: "katghanniw", houma: "kayghanniw" },
+        passe: { ana: "ghannit", nta: "ghanniti", nti: "ghanniti", houwa: "ghanna", hiya: "ghannat", hna: "ghannina", ntouma: "ghannitu", houma: "ghannaw" },
+        futur: { ana: "ghadi nghanna", nta: "ghadi tghanna", nti: "ghadi tghannay", houwa: "ghadi yghanna", hiya: "ghadi tghanna", hna: "ghadi nghanniw", ntouma: "ghadi tghanniw", houma: "ghadi yghanniw" }
       },
       { verbe: "nager", racine: "3um",
-        present: { ana: "kana3um", nta: "kata3um", nti: "kata3umi", houwa: "kaya3um", hiya: "kata3um", 7na: "kana3umu", ntouma: "kata3umu", houma: "kaya3umu" },
-        passe: { ana: "3umt", nta: "3umti", nti: "3umti", houwa: "3am", hiya: "3amet", 7na: "3umna", ntouma: "3umtu", houma: "3amu" },
-        futur: { ana: "ghadi na3um", nta: "ghadi ta3um", nti: "ghadi ta3umi", houwa: "ghadi ya3um", hiya: "ghadi ta3um", 7na: "ghadi na3umu", ntouma: "ghadi ta3umu", houma: "ghadi ya3umu" }
+        present: { ana: "kana3um", nta: "kata3um", nti: "kata3umi", houwa: "kaya3um", hiya: "kata3um", hna: "kana3umu", ntouma: "kata3umu", houma: "kaya3umu" },
+        passe: { ana: "3umt", nta: "3umti", nti: "3umti", houwa: "3am", hiya: "3amet", hna: "3umna", ntouma: "3umtu", houma: "3amu" },
+        futur: { ana: "ghadi na3um", nta: "ghadi ta3um", nti: "ghadi ta3umi", houwa: "ghadi ya3um", hiya: "ghadi ta3um", hna: "ghadi na3umu", ntouma: "ghadi ta3umu", houma: "ghadi ya3umu" }
       },
       { verbe: "dessiner", racine: "rsem",
-        present: { ana: "kanrsem", nta: "katrsem", nti: "katrsemi", houwa: "kayrsem", hiya: "katrsem", 7na: "kanrsemu", ntouma: "katrsemu", houma: "kayrsemu" },
-        passe: { ana: "rsemt", nta: "rsemti", nti: "rsemti", houwa: "rsem", hiya: "rsemet", 7na: "rsemna", ntouma: "rsemtu", houma: "rsemou" },
-        futur: { ana: "ghadi nrsem", nta: "ghadi trsem", nti: "ghadi trsemi", houwa: "ghadi yrsem", hiya: "ghadi trsem", 7na: "ghadi nrsemu", ntouma: "ghadi trsemu", houma: "ghadi yrsemu" }
+        present: { ana: "kanrsem", nta: "katrsem", nti: "katrsemi", houwa: "kayrsem", hiya: "katrsem", hna: "kanrsemu", ntouma: "katrsemu", houma: "kayrsemu" },
+        passe: { ana: "rsemt", nta: "rsemti", nti: "rsemti", houwa: "rsem", hiya: "rsemet", hna: "rsemna", ntouma: "rsemtu", houma: "rsemou" },
+        futur: { ana: "ghadi nrsem", nta: "ghadi trsem", nti: "ghadi trsemi", houwa: "ghadi yrsem", hiya: "ghadi trsem", hna: "ghadi nrsemu", ntouma: "ghadi trsemu", houma: "ghadi yrsemu" }
       },
       { verbe: "porter", racine: "lbes",
-        present: { ana: "kanlbes", nta: "katlbes", nti: "katlbesi", houwa: "kaylbes", hiya: "katlbes", 7na: "kanlbesu", ntouma: "katlbesu", houma: "kaylbesu" },
-        passe: { ana: "lbest", nta: "lbesti", nti: "lbesti", houwa: "lbes", hiya: "lbeset", 7na: "lbesna", ntouma: "lbestu", houma: "lbesou" },
-        futur: { ana: "ghadi nlbes", nta: "ghadi tlbes", nti: "ghadi tlbesi", houwa: "ghadi ylbes", hiya: "ghadi tlbes", 7na: "ghadi nlbesu", ntouma: "ghadi tlbesu", houma: "ghadi ylbesu" }
+        present: { ana: "kanlbes", nta: "katlbes", nti: "katlbesi", houwa: "kaylbes", hiya: "katlbes", hna: "kanlbesu", ntouma: "katlbesu", houma: "kaylbesu" },
+        passe: { ana: "lbest", nta: "lbesti", nti: "lbesti", houwa: "lbes", hiya: "lbeset", hna: "lbesna", ntouma: "lbestu", houma: "lbesou" },
+        futur: { ana: "ghadi nlbes", nta: "ghadi tlbes", nti: "ghadi tlbesi", houwa: "ghadi ylbes", hiya: "ghadi tlbes", hna: "ghadi nlbesu", ntouma: "ghadi tlbesu", houma: "ghadi ylbesu" }
       },
       { verbe: "enlever", racine: "khla3",
-        present: { ana: "kanakhla3", nta: "katakhla3", nti: "katakhla3i", houwa: "kayakhla3", hiya: "katakhla3", 7na: "kanakhla3u", ntouma: "katakhla3u", houma: "kayakhla3u" },
-        passe: { ana: "khla3t", nta: "khla3ti", nti: "khla3ti", houwa: "khla3", hiya: "khla3et", 7na: "khla3na", ntouma: "khla3tu", houma: "khla3ou" },
-        futur: { ana: "ghadi nakhla3", nta: "ghadi takhla3", nti: "ghadi takhla3i", houwa: "ghadi yakhla3", hiya: "ghadi takhla3", 7na: "ghadi nakhla3u", ntouma: "ghadi takhla3u", houma: "ghadi yakhla3u" }
+        present: { ana: "kanakhla3", nta: "katakhla3", nti: "katakhla3i", houwa: "kayakhla3", hiya: "katakhla3", hna: "kanakhla3u", ntouma: "katakhla3u", houma: "kayakhla3u" },
+        passe: { ana: "khla3t", nta: "khla3ti", nti: "khla3ti", houwa: "khla3", hiya: "khla3et", hna: "khla3na", ntouma: "khla3tu", houma: "khla3ou" },
+        futur: { ana: "ghadi nakhla3", nta: "ghadi takhla3", nti: "ghadi takhla3i", houwa: "ghadi yakhla3", hiya: "ghadi takhla3", hna: "ghadi nakhla3u", ntouma: "ghadi takhla3u", houma: "ghadi yakhla3u" }
       },
       { verbe: "mettre", racine: "7ett",
-        present: { ana: "kana7ett", nta: "kata7ett", nti: "kata7etti", houwa: "kaya7ett", hiya: "kata7ett", 7na: "kana7ettu", ntouma: "kata7ettu", houma: "kaya7ettu" },
-        passe: { ana: "7ettit", nta: "7ettiti", nti: "7ettiti", houwa: "7ett", hiya: "7ettet", 7na: "7ettina", ntouma: "7ettitu", houma: "7ettou" },
-        futur: { ana: "ghadi na7ett", nta: "ghadi ta7ett", nti: "ghadi ta7etti", houwa: "ghadi ya7ett", hiya: "ghadi ta7ett", 7na: "ghadi na7ettu", ntouma: "ghadi ta7ettu", houma: "ghadi ya7ettu" }
+        present: { ana: "kana7ett", nta: "kata7ett", nti: "kata7etti", houwa: "kaya7ett", hiya: "kata7ett", hna: "kana7ettu", ntouma: "kata7ettu", houma: "kaya7ettu" },
+        passe: { ana: "7ettit", nta: "7ettiti", nti: "7ettiti", houwa: "7ett", hiya: "7ettet", hna: "7ettina", ntouma: "7ettitu", houma: "7ettou" },
+        futur: { ana: "ghadi na7ett", nta: "ghadi ta7ett", nti: "ghadi ta7etti", houwa: "ghadi ya7ett", hiya: "ghadi ta7ett", hna: "ghadi na7ettu", ntouma: "ghadi ta7ettu", houma: "ghadi ya7ettu" }
       },
       { verbe: "sortir", racine: "khrej",
-        present: { ana: "kanakhrej", nta: "katakhrej", nti: "katakhreji", houwa: "kayakhrej", hiya: "katakhrej", 7na: "kanakhreju", ntouma: "katakhreju", houma: "kayakhreju" },
-        passe: { ana: "khrejt", nta: "khrejti", nti: "khrejti", houwa: "khrej", hiya: "khrejet", 7na: "khrejna", ntouma: "khrejtu", houma: "khrejou" },
-        futur: { ana: "ghadi nakhrej", nta: "ghadi takhrej", nti: "ghadi takhreji", houwa: "ghadi yakhrej", hiya: "ghadi takhrej", 7na: "ghadi nakhreju", ntouma: "ghadi takhreju", houma: "ghadi yakhreju" }
+        present: { ana: "kanakhrej", nta: "katakhrej", nti: "katakhreji", houwa: "kayakhrej", hiya: "katakhrej", hna: "kanakhreju", ntouma: "katakhreju", houma: "kayakhreju" },
+        passe: { ana: "khrejt", nta: "khrejti", nti: "khrejti", houwa: "khrej", hiya: "khrejet", hna: "khrejna", ntouma: "khrejtu", houma: "khrejou" },
+        futur: { ana: "ghadi nakhrej", nta: "ghadi takhrej", nti: "ghadi takhreji", houwa: "ghadi yakhrej", hiya: "ghadi takhrej", hna: "ghadi nakhreju", ntouma: "ghadi takhreju", houma: "ghadi yakhreju" }
       },
       { verbe: "entrer", racine: "dkhel",
-        present: { ana: "kanadkhel", nta: "katadkhel", nti: "katadkheli", houwa: "kayadkhel", hiya: "katadkhel", 7na: "kanadkhelu", ntouma: "katadkhelu", houma: "kayadkhelu" },
-        passe: { ana: "dkhelt", nta: "dkhelti", nti: "dkhelti", houwa: "dkhel", hiya: "dkhelet", 7na: "dkhelna", ntouma: "dkheltu", houma: "dkhelou" },
-        futur: { ana: "ghadi nadkhel", nta: "ghadi tadkhel", nti: "ghadi tadkheli", houwa: "ghadi yadkhel", hiya: "ghadi tadkhel", 7na: "ghadi nadkhelu", ntouma: "ghadi tadkhelu", houma: "ghadi yadkhelu" }
+        present: { ana: "kanadkhel", nta: "katadkhel", nti: "katadkheli", houwa: "kayadkhel", hiya: "katadkhel", hna: "kanadkhelu", ntouma: "katadkhelu", houma: "kayadkhelu" },
+        passe: { ana: "dkhelt", nta: "dkhelti", nti: "dkhelti", houwa: "dkhel", hiya: "dkhelet", hna: "dkhelna", ntouma: "dkheltu", houma: "dkhelou" },
+        futur: { ana: "ghadi nadkhel", nta: "ghadi tadkhel", nti: "ghadi tadkheli", houwa: "ghadi yadkhel", hiya: "ghadi tadkhel", hna: "ghadi nadkhelu", ntouma: "ghadi tadkhelu", houma: "ghadi yadkhelu" }
       },
       { verbe: "attendre", racine: "tsenna",
-        present: { ana: "kanatsenna", nta: "katatsenna", nti: "katatsennay", houwa: "kayatsenna", hiya: "katatsenna", 7na: "kanatsennaw", ntouma: "katatsennaw", houma: "kayatsennaw" },
-        passe: { ana: "tsennit", nta: "tsenniti", nti: "tsenniti", houwa: "tsenna", hiya: "tsennat", 7na: "tsennina", ntouma: "tsennitu", houma: "tsennaw" },
-        futur: { ana: "ghadi natsenna", nta: "ghadi tatsenna", nti: "ghadi tatsennay", houwa: "ghadi yatsenna", hiya: "ghadi tatsenna", 7na: "ghadi natsennaw", ntouma: "ghadi tatsennaw", houma: "ghadi yatsennaw" }
+        present: { ana: "kanatsenna", nta: "katatsenna", nti: "katatsennay", houwa: "kayatsenna", hiya: "katatsenna", hna: "kanatsennaw", ntouma: "katatsennaw", houma: "kayatsennaw" },
+        passe: { ana: "tsennit", nta: "tsenniti", nti: "tsenniti", houwa: "tsenna", hiya: "tsennat", hna: "tsennina", ntouma: "tsennitu", houma: "tsennaw" },
+        futur: { ana: "ghadi natsenna", nta: "ghadi tatsenna", nti: "ghadi tatsennay", houwa: "ghadi yatsenna", hiya: "ghadi tatsenna", hna: "ghadi natsennaw", ntouma: "ghadi tatsennaw", houma: "ghadi yatsennaw" }
       },
       { verbe: "monter", racine: "tla3",
-        present: { ana: "kanatla3", nta: "katatla3", nti: "katatla3i", houwa: "kayatla3", hiya: "katatla3", 7na: "kanatla3u", ntouma: "katatla3u", houma: "kayatla3u" },
-        passe: { ana: "tla3t", nta: "tla3ti", nti: "tla3ti", houwa: "tla3", hiya: "tla3et", 7na: "tla3na", ntouma: "tla3tu", houma: "tla3ou" },
-        futur: { ana: "ghadi natla3", nta: "ghadi tatla3", nti: "ghadi tatla3i", houwa: "ghadi yatla3", hiya: "ghadi tatla3", 7na: "ghadi natla3u", ntouma: "ghadi tatla3u", houma: "ghadi yatla3u" }
+        present: { ana: "kanatla3", nta: "katatla3", nti: "katatla3i", houwa: "kayatla3", hiya: "katatla3", hna: "kanatla3u", ntouma: "katatla3u", houma: "kayatla3u" },
+        passe: { ana: "tla3t", nta: "tla3ti", nti: "tla3ti", houwa: "tla3", hiya: "tla3et", hna: "tla3na", ntouma: "tla3tu", houma: "tla3ou" },
+        futur: { ana: "ghadi natla3", nta: "ghadi tatla3", nti: "ghadi tatla3i", houwa: "ghadi yatla3", hiya: "ghadi tatla3", hna: "ghadi natla3u", ntouma: "ghadi tatla3u", houma: "ghadi yatla3u" }
       },
       { verbe: "descendre", racine: "nzel",
-        present: { ana: "kananzel", nta: "katanzel", nti: "katanzeli", houwa: "kayanzel", hiya: "katanzel", 7na: "kananzelu", ntouma: "katanzelu", houma: "kayanzelu" },
-        passe: { ana: "nzelt", nta: "nzelti", nti: "nzelti", houwa: "nzel", hiya: "nzelet", 7na: "nzelna", ntouma: "nzeltu", houma: "nzelou" },
-        futur: { ana: "ghadi nanzel", nta: "ghadi tanzel", nti: "ghadi tanzeli", houwa: "ghadi yanzel", hiya: "ghadi tanzel", 7na: "ghadi nanzelu", ntouma: "ghadi tanzelu", houma: "ghadi yanzelu" }
+        present: { ana: "kananzel", nta: "katanzel", nti: "katanzeli", houwa: "kayanzel", hiya: "katanzel", hna: "kananzelu", ntouma: "katanzelu", houma: "kayanzelu" },
+        passe: { ana: "nzelt", nta: "nzelti", nti: "nzelti", houwa: "nzel", hiya: "nzelet", hna: "nzelna", ntouma: "nzeltu", houma: "nzelou" },
+        futur: { ana: "ghadi nanzel", nta: "ghadi tanzel", nti: "ghadi tanzeli", houwa: "ghadi yanzel", hiya: "ghadi tanzel", hna: "ghadi nanzelu", ntouma: "ghadi tanzelu", houma: "ghadi yanzelu" }
       },
       { verbe: "chercher", racine: "qaleb",
-        present: { ana: "kanqaleb", nta: "katqaleb", nti: "katqalebi", houwa: "kayqaleb", hiya: "katqaleb", 7na: "kanqalebu", ntouma: "katqalebu", houma: "kayqalebu" },
-        passe: { ana: "qlebt", nta: "qlebti", nti: "qlebti", houwa: "qleb", hiya: "qlebet", 7na: "qlebna", ntouma: "qlebtu", houma: "qlebou" },
-        futur: { ana: "ghadi nqaleb", nta: "ghadi tqaleb", nti: "ghadi tqalebi", houwa: "ghadi yqaleb", hiya: "ghadi tqaleb", 7na: "ghadi nqalebu", ntouma: "ghadi tqalebu", houma: "ghadi yqalebu" }
+        present: { ana: "kanqaleb", nta: "katqaleb", nti: "katqalebi", houwa: "kayqaleb", hiya: "katqaleb", hna: "kanqalebu", ntouma: "katqalebu", houma: "kayqalebu" },
+        passe: { ana: "qlebt", nta: "qlebti", nti: "qlebti", houwa: "qleb", hiya: "qlebet", hna: "qlebna", ntouma: "qlebtu", houma: "qlebou" },
+        futur: { ana: "ghadi nqaleb", nta: "ghadi tqaleb", nti: "ghadi tqalebi", houwa: "ghadi yqaleb", hiya: "ghadi tqaleb", hna: "ghadi nqalebu", ntouma: "ghadi tqalebu", houma: "ghadi yqalebu" }
       },
       { verbe: "trouver", racine: "lqa",
-        present: { ana: "kanalqa", nta: "katalqa", nti: "katalqay", houwa: "kayalqa", hiya: "katalqa", 7na: "kanalqaw", ntouma: "katalqaw", houma: "kayalqaw" },
-        passe: { ana: "lqit", nta: "lqiti", nti: "lqiti", houwa: "lqa", hiya: "lqat", 7na: "lqina", ntouma: "lqitu", houma: "lqaw" },
-        futur: { ana: "ghadi nalqa", nta: "ghadi talqa", nti: "ghadi talqay", houwa: "ghadi yalqa", hiya: "ghadi talqa", 7na: "ghadi nalqaw", ntouma: "ghadi talqaw", houma: "ghadi yalqaw" }
+        present: { ana: "kanalqa", nta: "katalqa", nti: "katalqay", houwa: "kayalqa", hiya: "katalqa", hna: "kanalqaw", ntouma: "katalqaw", houma: "kayalqaw" },
+        passe: { ana: "lqit", nta: "lqiti", nti: "lqiti", houwa: "lqa", hiya: "lqat", hna: "lqina", ntouma: "lqitu", houma: "lqaw" },
+        futur: { ana: "ghadi nalqa", nta: "ghadi talqa", nti: "ghadi talqay", houwa: "ghadi yalqa", hiya: "ghadi talqa", hna: "ghadi nalqaw", ntouma: "ghadi talqaw", houma: "ghadi yalqaw" }
       },
       { verbe: "montrer", racine: "wri",
-        present: { ana: "kanawri", nta: "katawri", nti: "katawri", houwa: "kayawri", hiya: "katawri", 7na: "kanawriw", ntouma: "katawriw", houma: "kayawriw" },
-        passe: { ana: "writ", nta: "writi", nti: "writi", houwa: "wra", hiya: "wrat", 7na: "wrina", ntouma: "writu", houma: "wraw" },
-        futur: { ana: "ghadi nawri", nta: "ghadi tawri", nti: "ghadi tawri", houwa: "ghadi yawri", hiya: "ghadi tawri", 7na: "ghadi nawriw", ntouma: "ghadi tawriw", houma: "ghadi yawriw" }
+        present: { ana: "kanawri", nta: "katawri", nti: "katawri", houwa: "kayawri", hiya: "katawri", hna: "kanawriw", ntouma: "katawriw", houma: "kayawriw" },
+        passe: { ana: "writ", nta: "writi", nti: "writi", houwa: "wra", hiya: "wrat", hna: "wrina", ntouma: "writu", houma: "wraw" },
+        futur: { ana: "ghadi nawri", nta: "ghadi tawri", nti: "ghadi tawri", houwa: "ghadi yawri", hiya: "ghadi tawri", hna: "ghadi nawriw", ntouma: "ghadi tawriw", houma: "ghadi yawriw" }
       },
       { verbe: "cacher", racine: "khabba",
-        present: { ana: "kanakhabbi", nta: "katakhabbi", nti: "katakhabbi", houwa: "kayakhabbi", hiya: "katakhabbi", 7na: "kanakhabbiw", ntouma: "katakhabbiw", houma: "kayakhabbiw" },
-        passe: { ana: "khabbit", nta: "khabbiti", nti: "khabbiti", houwa: "khabba", hiya: "khabbat", 7na: "khabbina", ntouma: "khabbitu", houma: "khabbaw" },
-        futur: { ana: "ghadi nakhabbi", nta: "ghadi takhabbi", nti: "ghadi takhabbi", houwa: "ghadi yakhabbi", hiya: "ghadi takhabbi", 7na: "ghadi nakhabbiw", ntouma: "ghadi takhabbiw", houma: "ghadi yakhabbiw" }
+        present: { ana: "kanakhabbi", nta: "katakhabbi", nti: "katakhabbi", houwa: "kayakhabbi", hiya: "katakhabbi", hna: "kanakhabbiw", ntouma: "katakhabbiw", houma: "kayakhabbiw" },
+        passe: { ana: "khabbit", nta: "khabbiti", nti: "khabbiti", houwa: "khabba", hiya: "khabbat", hna: "khabbina", ntouma: "khabbitu", houma: "khabbaw" },
+        futur: { ana: "ghadi nakhabbi", nta: "ghadi takhabbi", nti: "ghadi takhabbi", houwa: "ghadi yakhabbi", hiya: "ghadi takhabbi", hna: "ghadi nakhabbiw", ntouma: "ghadi takhabbiw", houma: "ghadi yakhabbiw" }
       }
     ];
 
-    const nombres = [
+    var nombres = [
       { chiffre: 1, latin: "wa7ed", arabe: "وَاحَد" }, { chiffre: 2, latin: "jouj", arabe: "جُوج" },
       { chiffre: 3, latin: "tlata", arabe: "تْلَاتَة" }, { chiffre: 4, latin: "rb3a", arabe: "رْبْعَة" },
       { chiffre: 5, latin: "khamsa", arabe: "خَمْسَة" }, { chiffre: 6, latin: "setta", arabe: "سْتَّة" },
@@ -465,70 +566,39 @@
       { chiffre: 8000, latin: "tmenya alaf", arabe: "تْمْنْيَة آلاَف" }, { chiffre: 9000, latin: "ts3oud alaf", arabe: "تْسْعُود آلاَف" }
     ];
 
-    const personLabels = [
+    var personLabels = [
       { key: "ana", label: "ana (je)" }, { key: "nta", label: "nta (tu masc.)" },
       { key: "nti", label: "nti (tu fém.)" }, { key: "houwa", label: "houwa (il)" },
-      { key: "hiya", label: "hiya (elle)" }, { key: "7na", label: "7na (nous)" },
+      { key: "hiya", label: "hiya (elle)" }, { key: "hna", label: "hna (nous)" },
       { key: "ntouma", label: "ntouma (vous)" }, { key: "houma", label: "houma (ils/elles)" }
     ];
 
     // ============================================
     // ÉTAT GLOBAL
     // ============================================
-    let quizQuestions = [];
-    let currentQuestion = 0;
-    let score = 0;
-
-    // ============================================
-    // FONCTIONS UTILITAIRES
-    // ============================================
-    function escapeHtml(text) {
-      if (typeof text !== 'string') return text;
-      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-      return text.replace(/[&<>"']/g, function(m) { return map[m]; });
-    }
-
-    function shuffleArray(array) {
-      var arr = array.slice();
-      for (var i = arr.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-      }
-      return arr;
-    }
+    var quizQuestions = [];
+    var currentQuestion = 0;
+    var score = 0;
+    var nextLocked = false;
 
     // ============================================
     // NAVIGATION TABS
     // ============================================
     function showTab(tabName) {
-      // Cacher tous les contenus
-      var contents = document.querySelectorAll('.tab-content');
+      var contents = document.querySelectorAll('#app-root .tab-content');
       for (var i = 0; i < contents.length; i++) {
         contents[i].classList.remove('active');
       }
-      
-      // Afficher le contenu sélectionné
-      var selectedContent = document.getElementById('content-' + tabName);
-      if (selectedContent) {
-        selectedContent.classList.add('active');
-      }
-      
-      // Mettre à jour les boutons
-      var buttons = document.querySelectorAll('.tab-btn');
+      var selected = document.getElementById('content-' + tabName);
+      if (selected) selected.classList.add('active');
+
+      var buttons = document.querySelectorAll('#app-root .tab-btn');
       for (var j = 0; j < buttons.length; j++) {
         buttons[j].classList.remove('tab-active');
-        buttons[j].classList.add('bg-white', 'text-gray-700', 'hover:bg-green-100');
       }
-      
       var activeBtn = document.getElementById('tab-' + tabName);
-      if (activeBtn) {
-        activeBtn.classList.add('tab-active');
-        activeBtn.classList.remove('bg-white', 'text-gray-700', 'hover:bg-green-100');
-      }
-      
-      // Scroll top sur mobile
+      if (activeBtn) activeBtn.classList.add('tab-active');
+
       if (window.innerWidth < 768) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -544,25 +614,23 @@
         { id: 'vetements', data: vocabulaire.vetements },
         { id: 'corps', data: vocabulaire.corps }
       ];
-      
       for (var t = 0; t < themes.length; t++) {
         var theme = themes[t];
         var container = document.getElementById('theme-' + theme.id);
         if (!container) continue;
-        
         var html = '';
         for (var i = 0; i < theme.data.length; i++) {
-          var word = theme.data[i];
-          html += '<div class="word-card p-3 rounded-lg border border-gray-200 transition-all">';
-          html += '<div class="flex justify-between items-center mb-2">';
-          html += '<span class="font-semibold text-gray-800">' + escapeHtml(word.fr) + '</span>';
-          html += '<span class="text-green-600 font-semibold">' + escapeHtml(word.latin) + '</span>';
-          html += '</div>';
-          html += '<div class="text-right"><span class="arabic-text text-xl text-gray-700">' + escapeHtml(word.arabe) + '</span></div>';
-          html += '<div class="mt-2 text-sm text-gray-500 border-t pt-2">';
-          html += '<p><span class="text-green-600">' + escapeHtml(word.phrase_latin) + '</span></p>';
-          html += '<p>' + escapeHtml(word.phrase_fr) + '</p>';
-          html += '</div></div>';
+          var w = theme.data[i];
+          html += '<div class="word-card p-3 rounded-lg border border-gray-200 transition-all">'
+            + '<div class="flex justify-between items-center mb-2">'
+            + '<span class="font-semibold text-gray-800">' + escapeHtml(w.fr) + '</span>'
+            + '<span class="text-green-600 font-semibold">' + escapeHtml(w.latin) + '</span>'
+            + '</div>'
+            + '<div class="text-right"><span class="arabic-text text-xl text-gray-700">' + escapeHtml(w.arabe) + '</span></div>'
+            + '<div class="mt-2 text-sm text-gray-500 border-t pt-2">'
+            + '<p><span class="text-green-600">' + escapeHtml(w.phrase_latin) + '</span></p>'
+            + '<p>' + escapeHtml(w.phrase_fr) + '</p>'
+            + '</div></div>';
         }
         container.innerHTML = html;
       }
@@ -574,25 +642,24 @@
     function renderDialogues() {
       var container = document.getElementById('dialogues-container');
       if (!container) return;
-      
       var html = '';
       for (var i = 0; i < dialogues.length; i++) {
-        var dialogue = dialogues[i];
-        html += '<div class="bg-white rounded-2xl shadow-lg overflow-hidden">';
-        html += '<div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4">';
-        html += '<h3 class="text-xl font-bold text-white">💬 ' + escapeHtml(dialogue.titre) + '</h3>';
-        html += '<p class="text-green-100 text-sm">Personnages: ' + escapeHtml(dialogue.personnages.join(', ')) + '</p>';
-        html += '</div><div class="p-4 space-y-3">';
-        
-        for (var j = 0; j < dialogue.repliques.length; j++) {
-          var rep = dialogue.repliques[j];
-          var alignClass = (rep.role.indexOf('Enfant') !== -1 || rep.role.indexOf('Élève') !== -1) ? 'bg-green-50 ml-4' : 'bg-gray-50 mr-4';
-          html += '<div class="p-3 rounded-lg ' + alignClass + '">';
-          html += '<div class="font-semibold text-sm text-gray-600 mb-1">' + escapeHtml(rep.role) + '</div>';
-          html += '<div class="flex justify-between items-center mb-1 flex-wrap gap-2">';
-          html += '<span class="text-green-600 font-semibold">' + escapeHtml(rep.latin) + '</span>';
-          html += '<span class="arabic-text text-lg">' + escapeHtml(rep.arabe) + '</span>';
-          html += '</div><div class="text-gray-500 text-sm">' + escapeHtml(rep.francais) + '</div></div>';
+        var d = dialogues[i];
+        html += '<div class="bg-white rounded-2xl shadow-lg overflow-hidden">'
+          + '<div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4">'
+          + '<h3 class="text-xl font-bold text-white">' + escapeHtml(d.titre) + '</h3>'
+          + '<p class="text-green-100 text-sm">' + escapeHtml(d.personnages.join(', ')) + '</p>'
+          + '</div><div class="p-4 space-y-3">';
+        for (var j = 0; j < d.repliques.length; j++) {
+          var r = d.repliques[j];
+          var isLeft = (r.role.indexOf('Enfant') !== -1 || r.role.indexOf('Élève') !== -1);
+          var align = isLeft ? 'bg-green-50 ml-4' : 'bg-gray-50 mr-4';
+          html += '<div class="p-3 rounded-lg ' + align + '">'
+            + '<div class="font-semibold text-sm text-gray-600 mb-1">' + escapeHtml(r.role) + '</div>'
+            + '<div class="flex justify-between items-center mb-1 flex-wrap gap-2">'
+            + '<span class="text-green-600 font-semibold">' + escapeHtml(r.latin) + '</span>'
+            + '<span class="arabic-text text-lg">' + escapeHtml(r.arabe) + '</span>'
+            + '</div><div class="text-gray-500 text-sm">' + escapeHtml(r.francais) + '</div></div>';
         }
         html += '</div></div>';
       }
@@ -605,48 +672,33 @@
     function renderVerbs() {
       var container = document.getElementById('verbes-container');
       if (!container) return;
-      
       var html = '';
+      var temps = [
+        { key: 'present', label: 'Présent', color: 'green' },
+        { key: 'passe', label: 'Passé', color: 'amber' },
+        { key: 'futur', label: 'Futur', color: 'purple' }
+      ];
       for (var i = 0; i < verbes.length; i++) {
-        var verb = verbes[i];
-        html += '<div class="bg-white rounded-2xl shadow-lg overflow-hidden">';
-        html += '<div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4">';
-        html += '<h3 class="text-xl font-bold text-white">🔤 ' + escapeHtml(verb.verbe) + '</h3>';
-        html += '<p class="text-green-100">Racine: ' + escapeHtml(verb.racine) + '</p>';
-        html += '</div><div class="p-4 grid gap-4">';
-        
-        // Présent
-        html += '<div><h4 class="font-bold text-green-600 mb-2">Présent</h4>';
-        html += '<div class="grid grid-cols-2 md:grid-cols-4 gap-2">';
-        for (var j = 0; j < personLabels.length; j++) {
-          var p = personLabels[j];
-          html += '<div class="p-2 bg-green-50 rounded">';
-          html += '<div class="text-xs text-gray-500">' + escapeHtml(p.label) + '</div>';
-          html += '<div class="font-semibold">' + escapeHtml(verb.present[p.key]) + '</div></div>';
+        var v = verbes[i];
+        html += '<div class="bg-white rounded-2xl shadow-lg overflow-hidden">'
+          + '<div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4">'
+          + '<h3 class="text-xl font-bold text-white">' + escapeHtml(v.verbe) + '</h3>'
+          + '<p class="text-green-100">Racine: ' + escapeHtml(v.racine) + '</p>'
+          + '</div><div class="p-4 grid gap-4">';
+        for (var t = 0; t < temps.length; t++) {
+          var tmp = temps[t];
+          html += '<div><h4 class="font-bold text-' + tmp.color + '-600 mb-2">' + tmp.label + '</h4>'
+            + '<div class="grid grid-cols-2 md:grid-cols-4 gap-2">';
+          for (var p = 0; p < personLabels.length; p++) {
+            var pl = personLabels[p];
+            var val = v[tmp.key][pl.key] || '-';
+            html += '<div class="p-2 bg-' + tmp.color + '-50 rounded">'
+              + '<div class="text-xs text-gray-500">' + escapeHtml(pl.label) + '</div>'
+              + '<div class="font-semibold">' + escapeHtml(val) + '</div></div>';
+          }
+          html += '</div></div>';
         }
         html += '</div></div>';
-        
-        // Passé
-        html += '<div><h4 class="font-bold text-amber-600 mb-2">Passé</h4>';
-        html += '<div class="grid grid-cols-2 md:grid-cols-4 gap-2">';
-        for (var k = 0; k < personLabels.length; k++) {
-          var p2 = personLabels[k];
-          html += '<div class="p-2 bg-amber-50 rounded">';
-          html += '<div class="text-xs text-gray-500">' + escapeHtml(p2.label) + '</div>';
-          html += '<div class="font-semibold">' + escapeHtml(verb.passe[p2.key]) + '</div></div>';
-        }
-        html += '</div></div>';
-        
-        // Futur
-        html += '<div><h4 class="font-bold text-purple-600 mb-2">Futur</h4>';
-        html += '<div class="grid grid-cols-2 md:grid-cols-4 gap-2">';
-        for (var l = 0; l < personLabels.length; l++) {
-          var p3 = personLabels[l];
-          html += '<div class="p-2 bg-purple-50 rounded">';
-          html += '<div class="text-xs text-gray-500">' + escapeHtml(p3.label) + '</div>';
-          html += '<div class="font-semibold">' + escapeHtml(verb.futur[p3.key]) + '</div></div>';
-        }
-        html += '</div></div></div></div>';
       }
       container.innerHTML = html;
     }
@@ -657,20 +709,19 @@
     function renderNombres() {
       var container = document.getElementById('nombres-container');
       if (!container) return;
-      
       var html = '';
       for (var i = 0; i < nombres.length; i++) {
         var n = nombres[i];
-        html += '<div class="p-3 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg text-center hover:from-green-50 hover:to-emerald-50 transition-all">';
-        html += '<div class="text-2xl font-bold text-gray-800">' + n.chiffre + '</div>';
-        html += '<div class="text-green-600 font-semibold">' + escapeHtml(n.latin) + '</div>';
-        html += '<div class="arabic-text text-lg text-gray-700">' + escapeHtml(n.arabe) + '</div></div>';
+        html += '<div class="p-3 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg text-center hover:from-green-50 hover:to-emerald-50 transition-all">'
+          + '<div class="text-2xl font-bold text-gray-800">' + n.chiffre + '</div>'
+          + '<div class="text-green-600 font-semibold">' + escapeHtml(n.latin) + '</div>'
+          + '<div class="arabic-text text-lg text-gray-700">' + escapeHtml(n.arabe) + '</div></div>';
       }
       container.innerHTML = html;
     }
 
     // ============================================
-    // QUIZ FUNCTIONS
+    // QUIZ
     // ============================================
     function generateOptions(correct, allOptions) {
       var unique = [];
@@ -683,131 +734,161 @@
       }
       var wrong = [];
       for (var j = 0; j < unique.length && wrong.length < 3; j++) {
-        if (unique[j] !== correct) {
-          wrong.push(unique[j]);
-        }
+        if (unique[j] !== correct) wrong.push(unique[j]);
       }
       wrong = shuffleArray(wrong).slice(0, 3);
-      var options = shuffleArray([correct].concat(wrong));
-      return options;
+      return shuffleArray([correct].concat(wrong));
     }
 
     function startQuiz(type) {
       currentQuestion = 0;
       score = 0;
-      
-      if (type === 'vocabulaire') {
-        var allWords = vocabulaire.ecole.concat(vocabulaire.animaux, vocabulaire.vetements, vocabulaire.corps);
-        var shuffled = shuffleArray(allWords).slice(0, 10);
-        quizQuestions = [];
-        for (var i = 0; i < shuffled.length; i++) {
-          var word = shuffled[i];
-          quizQuestions.push({
-            question: 'Comment dit-on "' + word.fr + '" en darija?',
-            answer: word.latin,
-            options: generateOptions(word.latin, allWords.map(function(w) { return w.latin; }))
-          });
+      nextLocked = false;
+      quizQuestions = [];
+
+      try {
+        if (type === 'vocabulaire') {
+          var allWords = vocabulaire.ecole.concat(vocabulaire.animaux, vocabulaire.vetements, vocabulaire.corps);
+          var shuffled = shuffleArray(allWords).slice(0, 10);
+          var allLatin = allWords.map(function(w) { return w.latin; });
+          for (var i = 0; i < shuffled.length; i++) {
+            var w = shuffled[i];
+            quizQuestions.push({
+              question: 'Comment dit-on "' + w.fr + '" en darija ?',
+              answer: w.latin,
+              options: generateOptions(w.latin, allLatin)
+            });
+          }
+        } else if (type === 'verbes') {
+          var shuffledV = shuffleArray(verbes).slice(0, 10);
+          var allRacines = verbes.map(function(v) { return v.racine; });
+          for (var j = 0; j < shuffledV.length; j++) {
+            var vb = shuffledV[j];
+            quizQuestions.push({
+              question: 'Quelle est la racine du verbe "' + vb.verbe + '" ?',
+              answer: vb.racine,
+              options: generateOptions(vb.racine, allRacines)
+            });
+          }
+        } else if (type === 'nombres') {
+          var shuffledN = shuffleArray(nombres).slice(0, 10);
+          var allLatinN = nombres.map(function(n) { return n.latin; });
+          for (var k = 0; k < shuffledN.length; k++) {
+            var nb = shuffledN[k];
+            quizQuestions.push({
+              question: 'Comment dit-on ' + nb.chiffre + ' en darija ?',
+              answer: nb.latin,
+              options: generateOptions(nb.latin, allLatinN)
+            });
+          }
         }
-      } else if (type === 'verbes') {
-        var shuffledVerbs = shuffleArray(verbes).slice(0, 10);
-        quizQuestions = [];
-        for (var j = 0; j < shuffledVerbs.length; j++) {
-          var verb = shuffledVerbs[j];
-          quizQuestions.push({
-            question: 'Quelle est la racine du verbe "' + verb.verbe + '"?',
-            answer: verb.racine,
-            options: generateOptions(verb.racine, verbes.map(function(v) { return v.racine; }))
-          });
-        }
-      } else if (type === 'nombres') {
-        var shuffledNombres = shuffleArray(nombres).slice(0, 10);
-        quizQuestions = [];
-        for (var k = 0; k < shuffledNombres.length; k++) {
-          var n = shuffledNombres[k];
-          quizQuestions.push({
-            question: 'Comment dit-on ' + n.chiffre + ' en darija?',
-            answer: n.latin,
-            options: generateOptions(n.latin, nombres.map(function(num) { return num.latin; }))
-          });
-        }
+      } catch (e) {
+        console.error('Erreur génération quiz:', e);
+        return;
       }
-      
-      document.getElementById('quiz-area').classList.remove('hidden');
-      document.getElementById('quiz-end').classList.add('hidden');
-      document.getElementById('quiz-total').textContent = quizQuestions.length;
-      showQuestion();
+
+      var quizArea = document.getElementById('quiz-area');
+      var quizEnd = document.getElementById('quiz-end');
+      if (quizArea) quizArea.classList.remove('hidden');
+      if (quizEnd) quizEnd.classList.add('hidden');
+
+      var totalEl = document.getElementById('quiz-total');
+      if (totalEl) totalEl.textContent = quizQuestions.length;
+
+      if (quizQuestions.length > 0) showQuestion();
     }
 
     function showQuestion() {
+      if (currentQuestion >= quizQuestions.length) return;
       var q = quizQuestions[currentQuestion];
-      document.getElementById('quiz-current').textContent = (currentQuestion + 1);
-      document.getElementById('quiz-question').textContent = q.question;
-      document.getElementById('quiz-result').classList.add('hidden');
-      document.getElementById('next-btn').classList.add('hidden');
-      
-      var container = document.getElementById('quiz-options');
+      nextLocked = false;
+
+      var currentEl = document.getElementById('quiz-current');
+      var questionEl = document.getElementById('quiz-question');
+      var resultEl = document.getElementById('quiz-result');
+      var nextBtn = document.getElementById('next-btn');
+      var optionsEl = document.getElementById('quiz-options');
+
+      if (currentEl) currentEl.textContent = currentQuestion + 1;
+      if (questionEl) questionEl.textContent = q.question;
+      if (resultEl) { resultEl.classList.add('hidden'); resultEl.textContent = ''; }
+      if (nextBtn) nextBtn.classList.add('hidden');
+      if (!optionsEl) return;
+
       var html = '';
       for (var i = 0; i < q.options.length; i++) {
         var opt = q.options[i];
-        var escapedOpt = opt.replace(/"/g, '&quot;');
-        html += '<button data-answer="' + escapedOpt + '" class="quiz-option p-4 bg-white border-2 border-gray-200 rounded-xl font-semibold hover:border-green-400 hover:bg-green-50 transition-all">';
-        html += escapeHtml(opt) + '</button>';
+        html += '<button class="quiz-opt" data-answer="' + escapeAttr(opt) + '">'
+          + escapeHtml(opt) + '</button>';
       }
-      container.innerHTML = html;
-      
-      // Attacher les événements
-      var buttons = container.querySelectorAll('.quiz-option');
+      optionsEl.innerHTML = html;
+
+      var buttons = optionsEl.querySelectorAll('.quiz-opt');
       for (var j = 0; j < buttons.length; j++) {
-        buttons[j].addEventListener('click', function() {
-          checkAnswer(this.getAttribute('data-answer'));
-        });
+        (function(btn) {
+          btn.addEventListener('click', function() {
+            if (btn.disabled) return;
+            checkAnswer(btn.getAttribute('data-answer'), btn);
+          });
+        })(buttons[j]);
       }
     }
 
-    function checkAnswer(selected) {
+    function checkAnswer(selected, clickedBtn) {
+      if (currentQuestion >= quizQuestions.length) return;
       var q = quizQuestions[currentQuestion];
-      var result = document.getElementById('quiz-result');
-      var buttons = document.querySelectorAll('.quiz-option');
-      
+      var resultEl = document.getElementById('quiz-result');
+      var nextBtn = document.getElementById('next-btn');
+      var optionsEl = document.getElementById('quiz-options');
+      if (!optionsEl) return;
+
+      var buttons = optionsEl.querySelectorAll('.quiz-opt');
       for (var i = 0; i < buttons.length; i++) {
         buttons[i].disabled = true;
-        var btnAnswer = buttons[i].getAttribute('data-answer');
-        if (btnAnswer === q.answer) {
-          buttons[i].classList.add('bg-green-100', 'border-green-500');
-        } else if (btnAnswer === selected) {
-          buttons[i].classList.add('bg-red-100', 'border-red-500');
+        var btnVal = buttons[i].getAttribute('data-answer');
+        if (btnVal === q.answer) {
+          buttons[i].classList.add('correct');
+        }
+        if (buttons[i] === clickedBtn && btnVal !== q.answer) {
+          buttons[i].classList.add('wrong');
         }
       }
-      
+
       if (selected === q.answer) {
         score++;
-        result.textContent = '✅ Correct !';
-        result.className = 'text-center mt-4 text-lg font-bold text-green-600';
+        if (resultEl) { resultEl.textContent = '✅ Correct !'; resultEl.className = 'text-center mt-4 text-lg md:text-xl font-bold text-green-600'; }
         saveProgress(q.answer);
       } else {
-        result.textContent = '❌ Faux ! Réponse: ' + q.answer;
-        result.className = 'text-center mt-4 text-lg font-bold text-red-600';
+        if (resultEl) { resultEl.textContent = '❌ Faux ! Réponse : ' + q.answer; resultEl.className = 'text-center mt-4 text-lg md:text-xl font-bold text-red-600'; }
       }
-      result.classList.remove('hidden');
-      document.getElementById('next-btn').classList.remove('hidden');
+      if (resultEl) resultEl.classList.remove('hidden');
+      if (nextBtn) nextBtn.classList.remove('hidden');
     }
 
     function nextQuestion() {
+      if (nextLocked) return;
+      nextLocked = true;
       currentQuestion++;
       if (currentQuestion < quizQuestions.length) {
         showQuestion();
       } else {
-        document.getElementById('quiz-area').classList.add('hidden');
-        document.getElementById('quiz-end').classList.remove('hidden');
-        document.getElementById('quiz-score').textContent = score;
-        document.getElementById('quiz-total-end').textContent = quizQuestions.length;
+        var quizArea = document.getElementById('quiz-area');
+        var quizEnd = document.getElementById('quiz-end');
+        var scoreEl = document.getElementById('quiz-score');
+        var totalEndEl = document.getElementById('quiz-total-end');
+        if (quizArea) quizArea.classList.add('hidden');
+        if (quizEnd) quizEnd.classList.remove('hidden');
+        if (scoreEl) scoreEl.textContent = score;
+        if (totalEndEl) totalEndEl.textContent = quizQuestions.length;
         updateProgress();
       }
     }
 
     function resetQuiz() {
-      document.getElementById('quiz-area').classList.add('hidden');
-      document.getElementById('quiz-end').classList.add('hidden');
+      var quizArea = document.getElementById('quiz-area');
+      var quizEnd = document.getElementById('quiz-end');
+      if (quizArea) quizArea.classList.add('hidden');
+      if (quizEnd) quizEnd.classList.add('hidden');
     }
 
     // ============================================
@@ -819,68 +900,81 @@
         if (mastered.indexOf(answer) === -1) {
           mastered.push(answer);
           localStorage.setItem('darijaMois2Mastered', JSON.stringify(mastered));
-          updateProgress();
         }
-      } catch (e) {
-        console.warn('localStorage error:', e);
-      }
+      } catch (e) { /* localStorage indisponible */ }
     }
 
     function updateProgress() {
       try {
         var mastered = JSON.parse(localStorage.getItem('darijaMois2Mastered') || '[]');
         var total = vocabulaire.ecole.length + vocabulaire.animaux.length + vocabulaire.vetements.length + vocabulaire.corps.length;
-        var progress = Math.min(100, Math.round((mastered.length / total) * 100));
-        document.getElementById('progress-bar').style.width = progress + '%';
-        document.getElementById('progress-text').textContent = progress + '%';
-      } catch (e) {
-        console.warn('Progress error:', e);
-      }
+        var pct = Math.min(100, Math.round((mastered.length / total) * 100));
+        var bar = document.getElementById('progress-bar');
+        var txt = document.getElementById('progress-text');
+        if (bar) bar.style.width = pct + '%';
+        if (txt) txt.textContent = pct + '%';
+      } catch (e) { /* silencieux */ }
     }
 
     // ============================================
-    // INITIALISATION - TOUS LES EVENT LISTENERS
+    // INITIALISATION
     // ============================================
     document.addEventListener('DOMContentLoaded', function() {
-      // Rendu du contenu
-      renderVocab();
-      renderDialogues();
-      renderVerbs();
-      renderNombres();
-      updateProgress();
-      
-      // Navigation tabs - boutons du haut
-      var tabButtons = document.querySelectorAll('.tab-btn');
-      for (var i = 0; i < tabButtons.length; i++) {
-        tabButtons[i].addEventListener('click', function() {
-          var tabName = this.getAttribute('data-tab');
-          if (tabName) showTab(tabName);
+      try {
+        renderVocab();
+        renderDialogues();
+        renderVerbs();
+        renderNombres();
+        updateProgress();
+      } catch (e) {
+        console.error('Erreur rendu initial:', e);
+      }
+
+      // Tabs principaux
+      var tabBtns = document.querySelectorAll('#app-root .tab-btn');
+      for (var i = 0; i < tabBtns.length; i++) {
+        tabBtns[i].addEventListener('click', function() {
+          var t = this.getAttribute('data-tab');
+          if (t) showTab(t);
         });
       }
-      
-      // Navigation tabs - cartes accueil
-      var themeCards = document.querySelectorAll('.theme-card');
-      for (var j = 0; j < themeCards.length; j++) {
-        themeCards[j].addEventListener('click', function() {
-          var tabName = this.getAttribute('data-tab');
-          if (tabName) showTab(tabName);
+
+      // Cartes d'accueil
+      var cards = document.querySelectorAll('#app-root .theme-card');
+      for (var j = 0; j < cards.length; j++) {
+        cards[j].addEventListener('click', function() {
+          var t = this.getAttribute('data-tab');
+          if (t) showTab(t);
         });
       }
-      
-      // Quiz buttons
-      var quizBtnVocab = document.getElementById('quiz-btn-vocab');
-      var quizBtnVerbes = document.getElementById('quiz-btn-verbes');
-      var quizBtnNombres = document.getElementById('quiz-btn-nombres');
-      var nextBtn = document.getElementById('next-btn');
-      var resetQuizBtn = document.getElementById('reset-quiz-btn');
-      
-      if (quizBtnVocab) quizBtnVocab.addEventListener('click', function() { startQuiz('vocabulaire'); });
-      if (quizBtnVerbes) quizBtnVerbes.addEventListener('click', function() { startQuiz('verbes'); });
-      if (quizBtnNombres) quizBtnNombres.addEventListener('click', function() { startQuiz('nombres'); });
-      if (nextBtn) nextBtn.addEventListener('click', nextQuestion);
-      if (resetQuizBtn) resetQuizBtn.addEventListener('click', resetQuiz);
-      
-      console.log('✅ Application initialisée avec succès');
+
+      // Quiz
+      var el;
+      el = document.getElementById('quiz-btn-vocab');
+      if (el) el.addEventListener('click', function() { startQuiz('vocabulaire'); });
+      el = document.getElementById('quiz-btn-verbes');
+      if (el) el.addEventListener('click', function() { startQuiz('verbes'); });
+      el = document.getElementById('quiz-btn-nombres');
+      if (el) el.addEventListener('click', function() { startQuiz('nombres'); });
+      el = document.getElementById('next-btn');
+      if (el) el.addEventListener('click', nextQuestion);
+      el = document.getElementById('reset-quiz-btn');
+      if (el) el.addEventListener('click', resetQuiz);
+
+      // Fallback tabs (si Tailwind ne charge pas)
+      var fbTabs = document.querySelectorAll('#fallback-tabs .fallback-tab');
+      for (var k = 0; k < fbTabs.length; k++) {
+        fbTabs[k].addEventListener('click', function() {
+          var tabName = this.getAttribute('data-fb');
+          var allFb = document.querySelectorAll('.fallback-content');
+          for (var m = 0; m < allFb.length; m++) allFb[m].classList.remove('active');
+          var allFbBtns = document.querySelectorAll('#fallback-tabs .fallback-tab');
+          for (var n = 0; n < allFbBtns.length; n++) allFbBtns[n].classList.remove('active');
+          var target = document.getElementById('fallback-' + tabName);
+          if (target) target.classList.add('active');
+          this.classList.add('active');
+        });
+      }
     });
   </script>
 </body>
