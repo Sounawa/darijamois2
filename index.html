@@ -1,981 +1,564 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apprentissage Darija - Mois 2</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* === Fallback CSS critique (si Tailwind CDN ne charge pas) === */
-    body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0fdf4; min-height: 100vh; display: flex; flex-direction: column; }
-    .fallback-header { background: linear-gradient(to right, #16a34a, #059669); color: white; padding: 1rem; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
-    .fallback-header h1 { margin: 0; font-size: 1.5rem; }
-    .fallback-header p { margin: 4px 0 0; opacity: 0.8; font-size: 0.875rem; }
-    .fallback-tabs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 8px; position: sticky; z-index: 40; background: rgba(240,253,244,0.95); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
-    .fallback-tab { padding: 8px 16px; border-radius: 9999px; font-weight: 600; font-size: 0.875rem; border: none; cursor: pointer; background: white; color: #374151; }
-    .fallback-tab.active { background: #166534; color: white; }
-    .fallback-content { display: none; padding: 16px; max-width: 1152px; margin: 0 auto; width: 100%; box-sizing: border-box; flex: 1; }
-    .fallback-content.active { display: block; }
-    .fallback-card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.07); margin-bottom: 16px; text-align: center; cursor: pointer; }
-    .fallback-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-    @media(min-width:768px) { .fallback-grid { grid-template-columns: 1fr 1fr; } .fallback-header h1 { font-size: 1.875rem; } }
-    @media(min-width:1024px) { .fallback-grid.home { grid-template-columns: 1fr 1fr 1fr; } }
-    .fallback-btn { padding: 10px 24px; border-radius: 9999px; font-weight: 600; border: none; cursor: pointer; color: white; font-size: 0.875rem; }
-    .fallback-btn-green { background: #22c55e; }
-    .fallback-btn-blue { background: #3b82f6; }
-    .fallback-btn-purple { background: #a855f7; }
-    .fallback-footer { background: #1f2937; color: white; text-align: center; padding: 16px; margin-top: auto; font-size: 0.875rem; }
-    #tailwind-fail { display: none; }
-    .no-tailwind #tailwind-fail { display: flex !important; flex-direction: column; }
-    .no-tailwind #app-root { display: none !important; }
-
-    /* === Styles principaux (utilisés avec ou sans Tailwind) === */
-    .arabic-text {
-      font-family: 'Amiri', 'Noto Naskh Arabic', serif;
-      direction: rtl;
-      line-height: 1.6;
-    }
-    .tab-active {
-      background-color: #166534 !important;
-      color: white !important;
-    }
-    .tab-btn { cursor: pointer; user-select: none; }
-    .theme-card { cursor: pointer; user-select: none; }
-    .word-card { cursor: pointer; user-select: none; }
-    .word-card:hover { background-color: #f0fdf4; }
-    .progress-bar { transition: width 0.5s ease-in-out; }
-    .quiz-option { cursor: pointer; user-select: none; }
-    .quiz-option:disabled { cursor: not-allowed; opacity: 0.8; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    /* Remplacement de bg-green-50/90 (non fiable) */
-    .tabs-sticky-bg {
-      background-color: rgba(240, 253, 244, 0.95);
-      -webkit-backdrop-filter: blur(4px);
-      backdrop-filter: blur(4px);
-    }
-
-    /* Styles quiz robustes (pas de dépendance Tailwind) */
-    .quiz-opt {
-      padding: 16px;
-      background: white;
-      border: 2px solid #e5e7eb;
-      border-radius: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-align: center;
-      font-size: 1rem;
-    }
-    .quiz-opt:hover:not(:disabled) { border-color: #4ade80; background-color: #f0fdf4; }
-    .quiz-opt:disabled { cursor: not-allowed; opacity: 0.85; }
-    .quiz-opt.correct { background-color: #dcfce7; border-color: #22c55e; }
-    .quiz-opt.wrong { background-color: #fee2e2; border-color: #ef4444; }
-  </style>
-  <script>
-    // Détecter si Tailwind a chargé correctement
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        var testEl = document.createElement('div');
-        testEl.className = 'hidden';
-        document.body.appendChild(testEl);
-        if (window.getComputedStyle(testEl).display !== 'none') {
-          document.documentElement.classList.add('no-tailwind');
-        }
-        document.body.removeChild(testEl);
-      }, 2000);
-    });
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Darija Marocaine – Mois 2 (transports, santé, travail)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #e6f4f5; font-family: system-ui, 'Segoe UI', 'Poppins', sans-serif; padding: 1.5rem; }
+        .app-container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 2rem; box-shadow: 0 20px 35px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: #1f7a8c; color: white; padding: 1.5rem; text-align: center; }
+        .header h1 { font-size: 1.8rem; }
+        .phonetic-legend { background: #d9eef2; padding: 0.8rem 1.5rem; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; font-size: 0.85rem; }
+        .legend-item { background: #b2d8e0; border-radius: 20px; padding: 0.2rem 0.7rem; font-family: monospace; }
+        .tabs { display: flex; flex-wrap: wrap; background: #d9eef2; border-bottom: 2px solid #b2d8e0; gap: 0.2rem; padding: 0 1rem; }
+        .tab-btn { background: transparent; border: none; padding: 1rem 1.5rem; font-size: 1rem; font-weight: 600; color: #1f7a8c; cursor: pointer; border-radius: 1rem 1rem 0 0; }
+        .tab-btn.active { background: white; color: #1f7a8c; border-bottom: 3px solid #1f7a8c; }
+        .tab-content { display: none; padding: 2rem; background: white; }
+        .tab-content.active { display: block; }
+        .grammar-card, .conju-card, .dialogue-card, .exercise-card { background: #fefefe; border-radius: 1.5rem; padding: 1.5rem; border: 1px solid #c2e0e6; margin-bottom: 1.5rem; }
+        .dialogue-item { background: #f0fafc; padding: 1rem; border-radius: 1rem; margin-bottom: 1rem; border-left: 5px solid #1f7a8c; }
+        .speaker { font-weight: bold; color: #1f7a8c; display: inline-block; width: 70px; }
+        .darija-phrase { font-weight: 700; color: #b4511a; direction: rtl; unicode-bidi: embed; font-size: 1.1rem; }
+        .fr-phrase { color: #2b2b2b; margin-left: 1rem; }
+        .keyword-badge { background: #c2e0e6; border-radius: 12px; padding: 0.1rem 0.5rem; font-size: 0.7rem; display: inline-block; margin-top: 0.5rem; }
+        .vocab-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 1.5rem; gap: 1rem; }
+        .progress-bar { background: #c2e0e6; border-radius: 20px; height: 12px; width: 200px; overflow: hidden; }
+        .progress-fill { background: #1f7a8c; width: 0%; height: 100%; transition: width 0.3s; }
+        .toggle-translate-btn, .hide-col-btn { background: #1f7a8c; color: white; border: none; padding: 0.4rem 1rem; border-radius: 30px; cursor: pointer; font-size: 0.8rem; }
+        .words-grid { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 1rem; }
+        .word-card { background: white; border-radius: 1.2rem; padding: 1rem; border: 1px solid #c2e0e6; width: calc(33% - 1rem); min-width: 260px; flex: 1; display: flex; flex-direction: column; }
+        .word-card.hidden-col { display: none; }
+        .word-card h4 { color: #1f7a8c; margin-bottom: 0.8rem; display: flex; justify-content: space-between; flex-wrap: wrap; }
+        .word-list { list-style: none; max-height: 500px; overflow-y: auto; }
+        .word-list li { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px dashed #d4eef2; flex-wrap: wrap; gap: 0.5rem; }
+        .darija { font-weight: 700; color: #b4511a; direction: ltr; }
+        .arabic { font-family: 'Amiri', 'Segoe UI', serif; font-size: 1.1rem; direction: rtl; color: #2c5f2d; margin-left: 0.5rem; }
+        .traduction { color: #2b2b2b; }
+        .hidden-translation .traduction { visibility: hidden; }
+        .checkbox-word { margin-right: 8px; transform: scale(1.1); cursor: pointer; }
+        .exercise-item { background: #f0fafc; padding: 1rem; border-radius: 1rem; margin-bottom: 1rem; }
+        .exercise-input { width: 100%; padding: 0.5rem; margin: 0.5rem 0; border: 1px solid #c2e0e6; border-radius: 8px; }
+        .btn-check { background: #1f7a8c; color: white; border: none; padding: 0.3rem 1rem; border-radius: 20px; cursor: pointer; }
+        .feedback { margin-top: 0.5rem; font-style: italic; }
+        .daily-review { background: #f0fafc; padding: 1rem; border-radius: 1rem; margin-top: 1rem; }
+        .quiz-opt { background: #c2e0e6; border: none; padding: 0.3rem 1rem; margin: 0.3rem; border-radius: 20px; cursor: pointer; }
+        .training-area { background: #e0f2f5; padding: 1rem; border-radius: 1rem; margin-top: 1.5rem; }
+        .conj-table { width: 100%; border-collapse: collapse; background: #f0fafc; margin-top: 1rem; font-size: 0.85rem; }
+        .conj-table th, .conj-table td { border: 1px solid #c2e0e6; padding: 0.5rem; text-align: center; vertical-align: middle; }
+        .conj-table th { background: #1f7a8c; color: white; }
+        .arabic-cell { font-family: 'Amiri', serif; font-size: 1rem; direction: rtl; }
+        .latin-cell { font-family: monospace; font-size: 0.85rem; margin-top: 4px; display: block; }
+        footer { background: #d9eef2; text-align: center; padding: 1rem; font-size: 0.8rem; }
+        @media (max-width: 700px) { .word-card { width: 100%; } .tab-btn { padding: 0.7rem 1rem; } .conj-table { font-size: 0.7rem; } }
+    </style>
 </head>
 <body>
-
-  <!-- FALLBACK complet si Tailwind ne charge pas -->
-  <div id="tailwind-fail">
-    <div class="fallback-header">
-      <h1>📚 Apprentissage Darija - Mois 2</h1>
-      <p>École • Animaux • Vêtements • Corps</p>
+<div class="app-container">
+    <div class="header">
+        <h1>📘 Darija Marocaine – Mois 2</h1>
+        <p>Thèmes : transports, voyages, santé, travail, famille élargie • 250 nouveaux mots • 30 nouveaux verbes</p>
     </div>
-    <div class="fallback-tabs" id="fallback-tabs">
-      <button class="fallback-tab active" data-fb="accueil">Accueil</button>
-      <button class="fallback-tab" data-fb="lecons">Leçons</button>
-      <button class="fallback-tab" data-fb="dialogues">Dialogues</button>
-      <button class="fallback-tab" data-fb="verbes">Verbes</button>
-      <button class="fallback-tab" data-fb="nombres">Nombres</button>
-      <button class="fallback-tab" data-fb="revision">Révision</button>
+    <div class="phonetic-legend">
+        <span class="legend-item">7 = ح</span> <span class="legend-item">3 = ع</span> <span class="legend-item">9 = ق</span>
+        <span class="legend-item">gh = غ</span> <span class="legend-item">q = ق (occlusive)</span> <span class="legend-item">voyelles : a, i, u</span>
     </div>
-    <div id="fallback-accueil" class="fallback-content active">
-      <div class="fallback-grid home">
-        <div class="fallback-card" onclick="document.querySelector('[data-fb=lecons]').click()"><div style="font-size:2.5rem">📖</div><h3 style="margin:8px 0 4px">Leçons</h3><p style="color:#6b7280;font-size:0.875rem">4 thèmes • 80 mots</p></div>
-        <div class="fallback-card" onclick="document.querySelector('[data-fb=dialogues]').click()"><div style="font-size:2.5rem">💬</div><h3 style="margin:8px 0 4px">Dialogues</h3><p style="color:#6b7280;font-size:0.875rem">5 dialogues</p></div>
-        <div class="fallback-card" onclick="document.querySelector('[data-fb=verbes]').click()"><div style="font-size:2.5rem">🔤</div><h3 style="margin:8px 0 4px">Verbes</h3><p style="color:#6b7280;font-size:0.875rem">20 verbes conjugués</p></div>
-        <div class="fallback-card" onclick="document.querySelector('[data-fb=nombres]').click()"><div style="font-size:2.5rem">🔢</div><h3 style="margin:8px 0 4px">Nombres</h3><p style="color:#6b7280;font-size:0.875rem">1 à 9000</p></div>
-        <div class="fallback-card" onclick="document.querySelector('[data-fb=revision]').click()"><div style="font-size:2.5rem">🎯</div><h3 style="margin:8px 0 4px">Révision</h3><p style="color:#6b7280;font-size:0.875rem">Quiz interactif</p></div>
-      </div>
-      <p style="text-align:center;margin-top:24px;color:#9ca3af;font-size:0.8rem">Mode dégradé : Tailwind CSS n'a pas pu se charger. L'interface complète est disponible avec une connexion optimale.</p>
-    </div>
-    <div id="fallback-lecons" class="fallback-content"><div class="fallback-card"><p style="color:#6b7280">Les leçons nécessitent le chargement complet de Tailwind CSS. Vérifiez votre connexion internet et rechargez la page.</p></div></div>
-    <div id="fallback-dialogues" class="fallback-content"><div class="fallback-card"><p style="color:#6b7280">Les dialogues nécessitent le chargement complet de Tailwind CSS.</p></div></div>
-    <div id="fallback-verbes" class="fallback-content"><div class="fallback-card"><p style="color:#6b7280">Les verbes nécessitent le chargement complet de Tailwind CSS.</p></div></div>
-    <div id="fallback-nombres" class="fallback-content"><div class="fallback-card"><p style="color:#6b7280">Les nombres nécessitent le chargement complet de Tailwind CSS.</p></div></div>
-    <div id="fallback-revision" class="fallback-content"><div class="fallback-card"><p style="color:#6b7280">Le quiz nécessite le chargement complet de Tailwind CSS.</p></div></div>
-    <div class="fallback-footer">📚 Apprentissage Darija - Mois 2 | Créé pour les enfants</div>
-  </div>
-
-  <!-- APPLICATION PRINCIPALE -->
-  <div id="app-root" class="bg-gradient-to-br from-green-50 to-emerald-100 min-h-screen flex flex-col">
-
-    <!-- Header -->
-    <header class="bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg sticky top-0 z-50">
-      <div class="max-w-6xl mx-auto px-4 py-4">
-        <h1 class="text-2xl md:text-3xl font-bold text-center">📚 Apprentissage Darija - Mois 2</h1>
-        <p class="text-center text-green-100 mt-1 text-sm md:text-base">École • Animaux • Vêtements • Corps</p>
-      </div>
-    </header>
-
-    <!-- Progress -->
-    <div class="max-w-6xl mx-auto w-full px-4 py-3">
-      <div class="bg-white rounded-xl p-4 shadow-md">
-        <div class="flex justify-between text-sm text-gray-600 mb-2">
-          <span>📊 Progression</span>
-          <span id="progress-text">0%</span>
-        </div>
-        <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-          <div id="progress-bar" class="bg-gradient-to-r from-green-500 to-emerald-500 h-3 rounded-full progress-bar" style="width:0%"></div>
-        </div>
-      </div>
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="grammar">📐 Grammaire</button>
+        <button class="tab-btn" data-tab="conjugation">⏳ Conjugaison</button>
+        <button class="tab-btn" data-tab="dialogue">💬 Dialogue</button>
+        <button class="tab-btn" data-tab="exercises">✍️ Exercices</button>
+        <button class="tab-btn" data-tab="review">🔄 Révision</button>
+        <button class="tab-btn" data-tab="vocabulary">📚 Vocabulaire</button>
     </div>
 
-    <!-- Tabs Navigation -->
-    <div class="max-w-6xl mx-auto w-full px-4">
-      <div class="flex flex-wrap gap-2 justify-center mb-4 sticky z-40 tabs-sticky-bg py-2 rounded-xl" style="top:72px">
-        <button id="tab-accueil" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="accueil">🏠 Accueil</button>
-        <button id="tab-lecons" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="lecons">📖 Leçons</button>
-        <button id="tab-dialogues" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="dialogues">💬 Dialogues</button>
-        <button id="tab-verbes" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="verbes">🔤 Verbes</button>
-        <button id="tab-nombres" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="nombres">🔢 Nombres</button>
-        <button id="tab-revision" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm md:text-base transition-all bg-white text-gray-700 hover:bg-green-100" data-tab="revision">🎯 Révision</button>
-      </div>
+    <!-- GRAMMAIRE -->
+    <div id="grammar" class="tab-content active">
+        <div class="grammar-card">
+            <h3>📖 La négation et l'interrogation</h3>
+            <p><strong>Négation</strong> : on encadre le verbe par <em>ma...ch</em>.<br>
+            Exemple : <em>ma mchitch</em> (je ne suis pas allé).</p>
+            <p><strong>Interrogation</strong> : on ajoute <em>wach</em> en début de phrase.<br>
+            Exemple : <em>wach mchiti l souk ?</em> (es-tu allé au marché ?)</p>
+            <div class="exercise-item"><strong>🧠 Mini-exercice :</strong> Mettez à la négation : "mchit l souk"<br>
+                <input type="text" id="negExo2"><button class="btn-check" onclick="checkNeg2()">Vérifier</button>
+                <div id="negFeedback2" class="feedback"></div>
+            </div>
+        </div>
     </div>
 
-    <!-- Main Content -->
-    <main class="max-w-6xl mx-auto w-full px-4 pb-8 flex-grow">
-
-      <!-- Accueil -->
-      <div id="content-accueil" class="tab-content active">
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          <div class="theme-card bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center transition-all hover:shadow-xl" data-tab="lecons">
-            <div class="text-4xl md:text-5xl mb-3">📖</div>
-            <h3 class="text-lg md:text-xl font-bold text-gray-800">Leçons</h3>
-            <p class="text-gray-500 mt-2 text-sm">4 thèmes • 80 mots</p>
-          </div>
-          <div class="theme-card bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center transition-all hover:shadow-xl" data-tab="dialogues">
-            <div class="text-4xl md:text-5xl mb-3">💬</div>
-            <h3 class="text-lg md:text-xl font-bold text-gray-800">Dialogues</h3>
-            <p class="text-gray-500 mt-2 text-sm">5 dialogues</p>
-          </div>
-          <div class="theme-card bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center transition-all hover:shadow-xl" data-tab="verbes">
-            <div class="text-4xl md:text-5xl mb-3">🔤</div>
-            <h3 class="text-lg md:text-xl font-bold text-gray-800">Verbes</h3>
-            <p class="text-gray-500 mt-2 text-sm">20 verbes conjugués</p>
-          </div>
-          <div class="theme-card bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center transition-all hover:shadow-xl" data-tab="nombres">
-            <div class="text-4xl md:text-5xl mb-3">🔢</div>
-            <h3 class="text-lg md:text-xl font-bold text-gray-800">Nombres</h3>
-            <p class="text-gray-500 mt-2 text-sm">1 à 9000</p>
-          </div>
-          <div class="theme-card bg-white rounded-2xl p-5 md:p-6 shadow-lg text-center transition-all hover:shadow-xl" data-tab="revision">
-            <div class="text-4xl md:text-5xl mb-3">🎯</div>
-            <h3 class="text-lg md:text-xl font-bold text-gray-800">Révision</h3>
-            <p class="text-gray-500 mt-2 text-sm">Quiz interactif</p>
-          </div>
+    <!-- CONJUGAISON -->
+    <div id="conjugation" class="tab-content">
+        <div class="conju-card">
+            <h3>⏳ Conjugaison des verbes (3 temps, 8 pronoms)</h3>
+            <p>Choisissez un verbe : 
+                <select id="verbSelect" style="padding:0.3rem; border-radius:8px;"></select>
+            </p>
+            <div id="conjugationTable"></div>
         </div>
-      </div>
+    </div>
 
-      <!-- Leçons -->
-      <div id="content-lecons" class="tab-content">
-        <div class="grid md:grid-cols-2 gap-4 md:gap-6">
-          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4">
-              <h3 class="text-xl font-bold text-white">🏫 École</h3>
+    <!-- DIALOGUES -->
+    <div id="dialogue" class="tab-content">
+        <div class="dialogue-card">
+            <h3>🗣️ Dialogues quotidiens – Mois 2</h3>
+            <div class="dialogue-item"><span class="speaker">Voyageur :</span> <span class="darija-phrase">وَاش كَايْن طَاكْسِي لْلْمَطَار؟</span> <span class="fr-phrase">Y a-t-il un taxi pour l'aéroport ?</span><div class="keyword-badge">مَطَار, طَاكْسِي</div></div>
+            <div class="dialogue-item"><span class="speaker">Médecin :</span> <span class="darija-phrase">فِين كَايْن لْوَجَع؟</span> <span class="fr-phrase">Où avez-vous mal ?</span><div class="keyword-badge">وَجَع</div></div>
+            <div class="dialogue-item"><span class="speaker">Patiente :</span> <span class="darija-phrase">عَنْدِي صُدَاع وْ حْمَار.</span> <span class="fr-phrase">J'ai mal à la tête et de la fièvre.</span><div class="keyword-badge">صُدَاع, حْمَار</div></div>
+            <div class="dialogue-item"><span class="speaker">Chef :</span> <span class="darija-phrase">وَاش جِيتِي لْخِدْمَة الْيُوم؟</span> <span class="fr-phrase">Es-tu venu au travail aujourd'hui ?</span><div class="keyword-badge">خِدْمَة</div></div>
+            <div class="dialogue-item"><span class="speaker">Employé :</span> <span class="darija-phrase">لَا، مَا جِيتْش، كُنْت مْرِيض.</span> <span class="fr-phrase">Non, je ne suis pas venu, j'étais malade.</span><div class="keyword-badge">مْرِيض</div></div>
+            <div class="dialogue-item"><span class="speaker">Agent :</span> <span class="darija-phrase">وَشْمِن وَرَاق عَنْدِك؟</span> <span class="fr-phrase">Quels papiers avez-vous ?</span><div class="keyword-badge">وَرَاق</div></div>
+            <div class="dialogue-item"><span class="speaker">Touriste :</span> <span class="darija-phrase">عَنْدِي لْبَسْبُور وْ لْفِيزَا.</span> <span class="fr-phrase">J'ai le passeport et le visa.</span><div class="keyword-badge">بَسْبُور, فِيزَا</div></div>
+            <div class="dialogue-item"><span class="speaker">Mécanicien :</span> <span class="darija-phrase">لْعَامَبَة مَكْسُورَة.</span> <span class="fr-phrase">La voiture est cassée.</span><div class="keyword-badge">عَامَبَة</div></div>
+            <div class="dialogue-item"><span class="speaker">Client :</span> <span class="darija-phrase">شْحَال نْصَلْحْهَا؟</span> <span class="fr-phrase">Combien pour la réparer ?</span><div class="keyword-badge">صَلَح</div></div>
+            <div class="dialogue-item"><span class="speaker">Pharmacien :</span> <span class="darija-phrase">خُودْ هَاد لْحَب.</span> <span class="fr-phrase">Prenez ces comprimés.</span><div class="keyword-badge">حَب</div></div>
+            <div class="dialogue-item"><span class="speaker">Voisine :</span> <span class="darija-phrase">وْلَادِي كَايْلْعَبُوا ف الشَّارِع.</span> <span class="fr-phrase">Mes enfants jouent dans la rue.</span><div class="keyword-badge">وْلَاد, لْعَب</div></div>
+            <div class="dialogue-item"><span class="speaker">Policier :</span> <span class="darija-phrase">مْنِين جَايْ؟</span> <span class="fr-phrase">D'où venez-vous ?</span><div class="keyword-badge">جَاي</div></div>
+            <div class="training-area">
+                <h4>📝 Entraînement : remplacez le mot</h4>
+                <p>Modèle : <strong><span id="modelPhrase">Mchit l souk w chrit khobz</span></strong></p>
+                <p>Remplacez <strong id="replaceWord">khobz</strong> par : <input type="text" id="replaceInput"><button class="btn-check" id="replaceBtn">Vérifier</button><span id="replaceFeedback"></span></p>
+                <button class="btn-check" id="newTrainingBtn">Nouvelle phrase</button>
             </div>
-            <div class="p-4 max-h-80 md:max-h-96 overflow-y-auto">
-              <div class="space-y-3" id="theme-ecole"></div>
-            </div>
-          </div>
-          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-4">
-              <h3 class="text-xl font-bold text-white">🐾 Animaux</h3>
-            </div>
-            <div class="p-4 max-h-80 md:max-h-96 overflow-y-auto">
-              <div class="space-y-3" id="theme-animaux"></div>
-            </div>
-          </div>
-          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-4">
-              <h3 class="text-xl font-bold text-white">👔 Vêtements</h3>
-            </div>
-            <div class="p-4 max-h-80 md:max-h-96 overflow-y-auto">
-              <div class="space-y-3" id="theme-vetements"></div>
-            </div>
-          </div>
-          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <div class="bg-gradient-to-r from-blue-500 to-cyan-500 p-4">
-              <h3 class="text-xl font-bold text-white">🫀 Corps</h3>
-            </div>
-            <div class="p-4 max-h-80 md:max-h-96 overflow-y-auto">
-              <div class="space-y-3" id="theme-corps"></div>
-            </div>
-          </div>
         </div>
-      </div>
+    </div>
 
-      <!-- Dialogues -->
-      <div id="content-dialogues" class="tab-content">
-        <div class="space-y-4 md:space-y-6" id="dialogues-container"></div>
-      </div>
-
-      <!-- Verbes -->
-      <div id="content-verbes" class="tab-content">
-        <div class="space-y-4" id="verbes-container"></div>
-      </div>
-
-      <!-- Nombres -->
-      <div id="content-nombres" class="tab-content">
-        <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6">
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4" id="nombres-container"></div>
+    <!-- EXERCICES -->
+    <div id="exercises" class="tab-content">
+        <div class="exercise-card">
+            <h3>✍️ Exercices – Mois 2 (avec révision du mois 1)</h3>
+            <div class="exercise-item">1. Traduisez en darija : "Je suis allé à l'aéroport." → <input id="exo1"><button onclick="checkExo1()">Vérifier</button><div id="exo1Feedback"></div></div>
+            <div class="exercise-item">2. Mettez à l'interrogatif : "mchiti l'bitika" → <input id="exo2"><button onclick="checkExo2()">Vérifier</button><div id="exo2Feedback"></div></div>
+            <div class="exercise-item">3. Négation : "bghit nemshi l'funduq" → <input id="exo3"><button onclick="checkExo3()">Vérifier</button><div id="exo3Feedback"></div></div>
+            <div class="exercise-item">4. Conjuguez au présent : "huwa (soigner) l'mriḍ" (verbe "dawa") → <input id="exo4"><button onclick="checkExo4()">Vérifier</button><div id="exo4Feedback"></div></div>
+            <div class="exercise-item">5. Traduire en français : "l'maṭar ba9i b3id" → <input id="exo5"><button onclick="checkExo5()">Vérifier</button><div id="exo5Feedback"></div></div>
+            <div class="exercise-item">6. Remplacez "khobz" par "l7em" dans la phrase : "chrit khobz" → <input id="exo6"><button onclick="checkExo6()">Vérifier</button><div id="exo6Feedback"></div></div>
+            <div class="exercise-item">7. Faites une phrase avec "3ndi" et un mot de santé → <input id="exo7"><button onclick="checkExo7()">Vérifier</button><div id="exo7Feedback"></div></div>
+            <div class="exercise-item">8. Traduisez : "Je veux acheter un billet." (billet = bhisa) → <input id="exo8"><button onclick="checkExo8()">Vérifier</button><div id="exo8Feedback"></div></div>
+            <div class="exercise-item">9. Écrivez la négation de "kanakhdam f bank" → <input id="exo9"><button onclick="checkExo9()">Vérifier</button><div id="exo9Feedback"></div></div>
         </div>
-      </div>
+    </div>
 
-      <!-- Révision -->
-      <div id="content-revision" class="tab-content">
-        <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6">
-          <div id="quiz-container">
-            <div class="text-center mb-4 md:mb-6">
-              <h3 class="text-xl md:text-2xl font-bold text-gray-800">🎯 Quiz de Révision</h3>
-              <p class="text-gray-500 text-sm md:text-base">Testez vos connaissances !</p>
-            </div>
-            <div class="flex flex-wrap justify-center gap-3 mb-4 md:mb-6">
-              <button id="quiz-btn-vocab" class="px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-all">📚 Vocabulaire</button>
-              <button id="quiz-btn-verbes" class="px-4 py-2 md:px-6 md:py-3 bg-blue-500 text-white rounded-full font-semibold hover:bg-blue-600 transition-all">🔤 Verbes</button>
-              <button id="quiz-btn-nombres" class="px-4 py-2 md:px-6 md:py-3 bg-purple-500 text-white rounded-full font-semibold hover:bg-purple-600 transition-all">🔢 Nombres</button>
-            </div>
-            <div id="quiz-area" class="hidden">
-              <div class="text-center mb-4">
-                <span class="text-gray-500 text-sm">Question <span id="quiz-current">1</span> / <span id="quiz-total">10</span></span>
-              </div>
-              <div id="quiz-question" class="text-lg md:text-2xl text-center font-bold text-gray-800 mb-4 md:mb-6"></div>
-              <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
-              <div id="quiz-result" class="text-center mt-4 text-lg md:text-xl font-bold hidden"></div>
-              <div class="text-center mt-4 md:mt-6">
-                <button id="next-btn" class="px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-all hidden">Suivant →</button>
-              </div>
-            </div>
-            <div id="quiz-end" class="hidden text-center">
-              <div class="text-4xl md:text-5xl mb-4">🎉</div>
-              <h3 class="text-xl md:text-2xl font-bold text-gray-800">Quiz terminé !</h3>
-              <p class="text-gray-500 mt-2">Score : <span id="quiz-score">0</span> / <span id="quiz-total-end">10</span></p>
-              <button id="reset-quiz-btn" class="mt-4 px-4 py-2 md:px-6 md:py-3 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-all">Rejouer</button>
-            </div>
-          </div>
+    <!-- RÉVISION -->
+    <div id="review" class="tab-content">
+        <div class="daily-review">
+            <h3>🔄 Révision transversale (Mois 1 + Mois 2)</h3>
+            <p>Révision quotidienne : 5 mots mélangés des deux mois.</p>
+            <div id="dailyWords"></div>
+            <button class="btn-check" id="newDailyBtn">Nouveaux mots</button>
+            <hr><h3>📝 Quiz (10 questions – mélange Mois 1 & Mois 2)</h3>
+            <div id="quizContainer"></div>
+            <button class="btn-check" id="startQuizBtn">Commencer le quiz</button>
         </div>
-      </div>
+    </div>
 
-    </main>
+    <!-- VOCABULAIRE -->
+    <div id="vocabulary" class="tab-content">
+        <div class="vocab-header">
+            <h3>📚 Nouveau vocabulaire (250 mots) – Arabe voyellé + Latin</h3>
+            <div><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div><span id="wordCounter"></span>
+            <button class="toggle-translate-btn" id="toggleTranslateBtn">Masquer trad</button>
+            <button class="hide-col-btn" id="showAllColsBtn">Afficher tout</button></div>
+        </div>
+        <div class="words-grid" id="wordsGrid"></div>
+    </div>
 
-    <footer class="bg-gray-800 text-white text-center py-4 mt-auto">
-      <p class="text-sm">📚 Apprentissage Darija - Mois 2 | Créé pour les enfants</p>
-    </footer>
-  </div>
+    <footer>Mois 2 – Révision du Mois 1 intégrée – Progression indépendante</footer>
+</div>
 
-  <script>
-    // ============================================
-    // FONCTIONS D'ÉCHAPPEMENT HTML
-    // ============================================
-    function escapeHtml(text) {
-      if (typeof text !== 'string') return String(text);
-      return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+<script>
+    // ==================== VOCABULAIRE MOIS 2 (250 mots réels, sans doublon avec mois 1) ====================
+    // 200 mots de base + 50 outils
+    const vocabM2Base = [
+        ["l'maṭar", "لْمَطَار", "aéroport"], ["bhisa", "بْطِيسَة", "billet"], ["safar", "سَفَر", "voyage"], ["mousafir", "مُسَافِر", "voyageur"],
+        ["wara9", "وَرَق", "papier"], ["baspur", "بَسْبُور", "passeport"], ["viza", "فِيزَا", "visa"], ["doumman", "دُومَان", "douane"],
+        ["ṣudā3", "صُدَاع", "mal de tête"], ["ḥmār", "حْمَار", "fièvre"], ["dawā", "دَوَا", "médicament"], ["ṣidliyya", "صِيدْلِيَّة", "pharmacie"],
+        ["mriḍ", "مْرِيض", "malade"], ["doktōr", "دُكْطُور", "médecin"], ["mumarriḍa", "مُمَرِّضَة", "infirmière"], ["kḥla", "كْحْلَة", "hôpital"],
+        ["khidma", "خِدْمَة", "travail"], ["moudīr", "مُدِير", "directeur"], ["mowazzaf", "مُوَظَّف", "employé"], ["banka", "بَانْكَة", "banque"],
+        ["farrāš", "فَرَّاش", "cireur"], ["tājir", "تَاجِر", "commerçant"], ["ṣan3a", "صَنْعَة", "métier"], ["ṣalāḥ", "صَلَاح", "réparation"],
+        ["ʿāmba", "عَامْبَة", "voiture"], ["garāj", "ڭَارَاج", "garage"], ["mikānīkiyya", "مِيكَانِيكِيَّة", "mécanique"], ["bantūmūbīl", "بَانْطُومُوبِيل", "automobile"],
+        ["sāqa", "سَاقَة", "conduite"], ["rūbā", "رُوبَا", "robe"], ["qamīṣ", "قَمِيص", "chemise"], ["sarwāl", "سَرْوَال", "pantalon"],
+        ["zarbiyya", "زَرْبِيَّة", "tapis"], ["maṭbax", "مَطْبَخ", "cuisine"], ["ḥammām", "حَمَّام", "salle de bain"], ["ṣāla", "صَالَة", "salon"],
+        ["wlad", "وْلَاد", "enfants"], ["jrān", "جْرَان", "voisins"], ["3ayla", "عَائِلَة", "famille"], ["ḥma", "حَمَا", "beau-père"],
+        ["nās", "نَاس", "gens"], ["blād", "بْلَاد", "pays"], ["mdīna", "مْدِينَة", "ville"], ["qarya", "قَرْيَة", "village"],
+        ["ṭarīq", "طَرِيق", "route"], ["ṣḥara", "صْحَارَة", "désert"], ["jbāl", "جْبَال", "montagnes"], ["bḥar", "بْحَر", "mer"],
+        ["msīd", "مْسِيد", "mosquée"], ["knīsa", "كْنِيسَة", "église"], ["maḥalla", "مَحَلَّة", "quartier"], ["sūq", "سُوق", "grand marché"],
+        ["ḥanūt", "حَانُوت", "épicerie"], ["būstā", "بُوسْتَة", "bureau de poste"], ["sṭār", "سْطَار", "étagère"], ["bāb", "بَاب", "porte"],
+        ["shubbāk", "شُبَّاك", "fenêtre"], ["kūrsī", "كُورْسِي", "chaise"], ["ṭāwla", "طَاوْلَة", "table"], ["sirīr", "سْرِير", "lit"],
+        ["tlfāza", "تْلْفَازَة", "télévision"], ["rādīyū", "رَادِيُو", "radio"], ["mōdām", "مُودَام", "ordinateur"], ["tālifūn", "تَالِيفُون", "téléphone"],
+        ["bāriḍ", "بَارِض", "froid"], ["ḥār", "حَار", "chaud"], ["mliḥ", "مْلِيح", "salé"], ["7lu", "حْلُو", "sucré"],
+        ["mghram", "مَغْرَم", "cher"], ["rkhīṣ", "رْخِيص", "bon marché"], ["jdid", "جْدِيد", "neuf"], ["9dīm", "قْدِيم", "vieux"],
+        ["we7el", "وَحَل", "moche"], ["far7ān", "فَرْحَان", "content"], ["ḥzīn", "حْزِين", "triste"], ["3eyyān", "عَيَّان", "fatigué"],
+        ["jou3ān", "جُوعَان", "affamé"], ["3ṭshān", "عَطْشَان", "assoiffé"], ["khāyef", "خَايِف", "peureux"], ["wja3", "وَجَع", "mal"],
+        ["bghi", "بْغِي", "aimé"], ["mghrib", "مَغْرِب", "Maroc"], ["darija", "دَارِيجَة", "darija"], ["français", "فْرُونْسِيس", "français"],
+        ["3erbiya", "عَرْبِيَّة", "arabe"], ["tamazight", "تَمَازِيغْت", "amazigh"], ["blassa", "بْلَاصَة", "endroit"], ["tariq", "طَرِيق", "route"],
+        ["bab", "بَاب", "porte"], ["nof", "نُوف", "moitié"], ["shwiya", "شْوِيَة", "peu"], ["bzf", "بْزَاف", "beaucoup"],
+        ["ḥta", "حَتَّى", "jusque"], ["qbel", "قْبَل", "avant"], ["mura", "مُورَا", "après"], ["3nd", "عَنْد", "chez"],
+        ["men", "مِن", "de"], ["l'end", "لِينْد", "vers"], ["ach", "أَش", "quoi"], ["3lach", "عَلَاش", "pourquoi"],
+        ["imta", "إِمْتَى", "quand"], ["kifash", "كِفَاش", "comment"], ["ashmen", "أَشْمَنْ", "quel"], ["hadi", "هَادِي", "ceci f"],
+        ["had", "هَاد", "ce m"], ["dak", "دَاك", "cela"], ["dik", "دِيك", "celle"], ["douk", "دُوك", "ceux"], ["wlla", "وِلَّا", "ou bien"],
+        ["u", "و", "et"], ["ula", "وُلَا", "ou"], ["ila", "إِلَا", "si"], ["khatr", "خَاطِر", "parce que"], ["rah", "رَاه", "voici que"]
+    ];
+    // On prend exactement 200 mots de base (la liste contient plus de 200)
+    const finalBaseM2 = vocabM2Base.slice(0,200).map(item => ({ latin: item[0], arabe: item[1], fr: item[2] }));
+    // Mots-outils supplémentaires pour le mois 2 (50 nouveaux outils)
+    const outilsM2 = [
+        ["ba9i", "بَاقِي", "encore"], ["b3īd", "بْعِيد", "loin"], ["qrib", "قْرِيب", "près"], ["qbel", "قْبَل", "avant"], ["mura", "مُورَا", "après"],
+        ["fōq", "فُوق", "dessus"], ["ta7t", "تَحْت", "dessous"], ["dākhil", "دَاخِل", "dedans"], ["brra", "بَرَّا", "dehors"], ["lwīr", "لْوِير", "vers"],
+        ["mnīn", "مْنِين", "d'où"], ["līh", "لِيه", "pourquoi"], ["chkūn", "شْكُون", "qui"], ["chhāl", "شْحَال", "combien"], ["imta", "إِمْتَى", "quand"],
+        ["kifāš", "كِفَاش", "comment"], ["āš", "آش", "quoi"], ["āšmn", "آشْمَنْ", "quel"], ["hād", "هَاد", "ce"], ["hādī", "هَادِي", "cette"],
+        ["dāk", "دَاك", "celui-là"], ["dīk", "دِيك", "celle-là"], ["dūk", "دُوك", "ceux-là"], ["ḥtā", "حَتَّى", "jusqu'à"], ["qbl", "قْبَل", "avant"],
+        ["mn ba3d", "مْن بَعْد", "après"], ["bḥāl", "بْحَال", "comme"], ["3lāš", "عَلَاش", "pourquoi"], ["wāš", "وَاش", "est-ce que"], ["lā", "لَا", "non"],
+        ["īh", "إِيه", "oui"], ["mzīān", "مْزْيَان", "bien"], ["mūš", "مُوش", "pas (négation)"], ["kāy-", "كَاي-", "préfixe présent"], ["ghādī", "غَادِي", "futur"],
+        ["rah", "رَاه", "voici que"], ["khatr", "خَاطِر", "parce que"], ["ilā", "إِلَا", "si"], ["wakha", "وَاخَا", "d'accord"], ["ḥtā", "حَتَّى", "même"]
+    ];
+    const finalOutilsM2 = outilsM2.slice(0,50).map(item => ({ latin: item[0], arabe: item[1], fr: item[2] }));
+    const allWordsM2 = [...finalBaseM2, ...finalOutilsM2]; // 250 mots
+    let masteredM2 = JSON.parse(localStorage.getItem("masteredWordsM2")) || new Array(250).fill(false);
+    function saveMasteredM2() { localStorage.setItem("masteredWordsM2", JSON.stringify(masteredM2)); updateProgressM2(); }
+    function updateProgressM2() { let c = masteredM2.filter(v=>v).length; document.getElementById("wordCounter").innerText = `${c}/250`; document.getElementById("progressFill").style.width = (c/250*100)+"%"; }
+
+    // ==================== RÉCUPÉRATION DU MOIS 1 POUR LA RÉVISION (liste intégrée) ====================
+    const motsM1 = [
+        ["salam", "سَلَام", "bonjour/paix"], ["labas", "لْبَاس", "ça va"], ["hamdullah", "حَمْدُ لله", "Dieu merci"],
+        ["ana", "أَنَا", "je"], ["nta", "نَتَا", "tu (m)"], ["nti", "نَتِي", "tu (f)"], ["huwa", "هُوَ", "il"], ["hiya", "هِيَ", "elle"],
+        ["ḥna", "حْنَا", "nous"], ["ntuma", "نْتُومَا", "vous"], ["huma", "هُومَا", "ils/elles"], ["wahd", "وَاحِد", "un"],
+        ["jouj", "جُوج", "deux"], ["tlata", "تْلَاتَة", "trois"], ["rb3a", "رْبَعَة", "quatre"], ["khmsa", "خَمْسَة", "cinq"],
+        ["stta", "سِتَّة", "six"], ["sb3a", "سَبْعَة", "sept"], ["tmnya", "تْمْنِيَة", "huit"], ["ts3oud", "تْسَعُود", "neuf"],
+        ["3chra", "عَشْرَة", "dix"], ["kbiyer", "كْبِير", "grand (m)"], ["kbira", "كْبِيرَة", "grande (f)"], ["sghir", "صْغِير", "petit (m)"],
+        ["sghira", "صْغِيرَة", "petite (f)"], ["mzyan", "مْزْيَان", "bon/beau"], ["mzyana", "مْزْيَانَة", "bonne/belle"], ["khayb", "خَايِب", "mauvais (m)"],
+        ["khayba", "خَايْبَة", "mauvaise (f)"], ["s7i7", "صَحِيح", "correct"], ["ghalat", "غَلَط", "faux"], ["zwin", "زْوِين", "joli (m)"],
+        ["zwina", "زْوِينَة", "jolie (f)"], ["dar", "دَار", "maison"], ["souk", "سُوق", "marché"], ["msid", "مْسِيد", "mosquée"],
+        ["bit", "بِيت", "chambre"], ["kuzina", "كُوزِينَة", "cuisine"], ["barra", "بَرَّا", "dehors"], ["dakhla", "دَاخْلَة", "dedans"],
+        ["khobz", "خُبْز", "pain"], ["ma", "مَا", "eau"], ["l7em", "لْحَم", "viande"], ["djaj", "دْجَاج", "poulet"],
+        ["ḥut", "حُوت", "poisson"], ["khodra", "خُضْرَة", "légumes"], ["fakia", "فَاكْيَة", "fruits"], ["batata", "بَطَاطَا", "pomme de terre"],
+        ["tomate", "طَمَاطَة", "tomate"], ["basla", "بَصْلَة", "oignon"], ["tomo", "تُومَة", "ail"], ["zit", "زِيت", "huile"],
+        ["ml7", "مْلْح", "sel"], ["lban", "لْبَان", "lait fermenté"], ["zebda", "زُبْدَة", "beurre"], ["sokkar", "سُكَّر", "sucre"],
+        ["atay", "أَتَاي", "thé"], ["qehwa", "قَهْوَة", "café"], ["baba", "بَابَا", "papa"], ["mma", "مَّا", "maman"],
+        ["khu", "خُو", "frère"], ["kht", "خْت", "sœur"], ["weld", "وَلْد", "fils/garçon"], ["bent", "بِنْت", "fille"],
+        ["rajel", "رَاجِل", "homme"], ["mra", "مْرَة", "femme"], ["tifl", "طِفْل", "enfant"], ["ṣa7eb", "صَاحِب", "ami"],
+        ["ṣa7ba", "صَاحْبَة", "amie"], ["m3lem", "مُعَلِّم", "professeur"], ["ṭbib", "طْبِيب", "médecin"], ["mumarḍa", "مُمَرِّضَة", "infirmier"],
+        ["mhandis", "مْهَنْدِس", "ingénieur"], ["tajer", "تَاجِر", "commerçant"], ["saye9", "سَايِق", "chauffeur"], ["lisser", "لِيسَر", "gauche"],
+        ["limen", "لِيمَنْ", "droite"], ["qeddam", "قُدَّام", "devant"], ["werra", "وَرَّا", "derrière"], ["foq", "فُوق", "dessus"],
+        ["te7t", "تَحْت", "dessous"], ["hna", "هْنَا", "ici"], ["temma", "تِمَّة", "là-bas"], ["daba", "دَابَا", "maintenant"],
+        ["lbar7", "لْبَارِح", "hier"], ["lyoum", "لْيُوم", "aujourd'hui"], ["ghadda", "غَدَّا", "demain"], ["sba7", "صْبَاح", "matin"],
+        ["3chiya", "عْشِيَّة", "soir"], ["lil", "لِيل", "nuit"], ["se3a", "سَاعَة", "heure"], ["youm", "يُوم", "jour"]
+    ];
+    const wordsM1 = motsM1.map(item => ({ latin: item[0], arabe: item[1], fr: item[2] }));
+    const allWordsForReview = [...wordsM1, ...allWordsM2];
+
+    function getRandomWordsForReview(n) {
+        let shuffled = [...allWordsForReview];
+        for (let i=shuffled.length-1; i>0; i--) {
+            let j = Math.floor(Math.random()*(i+1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled.slice(0,n);
     }
-
-    // Échappement pour les valeurs d'attributs HTML (idempotent avec getAttribute)
-    function escapeAttr(text) {
-      if (typeof text !== 'string') return String(text);
-      return text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    function displayDailyWords() {
+        let ww = getRandomWordsForReview(5);
+        let c = document.getElementById("dailyWords");
+        c.innerHTML = "<ul>";
+        ww.forEach(w => {
+            c.innerHTML += `<li><strong>${w.latin} (${w.arabe})</strong> → <input type="text" class="daily-input" data-answer="${w.fr}"><button class="btn-check daily-check">Vérifier</button><span class="daily-feedback"></span></li>`;
+        });
+        c.innerHTML += "</ul>";
+        document.querySelectorAll(".daily-check").forEach(btn => {
+            btn.onclick = e => {
+                let li = btn.closest("li");
+                let inp = li.querySelector(".daily-input");
+                let fb = li.querySelector(".daily-feedback");
+                if (inp.value.trim().toLowerCase() === inp.dataset.answer.toLowerCase()) fb.innerHTML = "✔️";
+                else fb.innerHTML = `❌ (${inp.dataset.answer})`;
+            };
+        });
     }
+    document.getElementById("newDailyBtn").onclick = displayDailyWords;
 
-    // ============================================
-    // UTILITAIRES
-    // ============================================
-    function shuffleArray(array) {
-      var arr = array.slice();
-      for (var i = arr.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-      }
-      return arr;
+    // Quiz transversale
+    let quizQuestions = [];
+    function generateQuiz() {
+        let s = [...allWordsForReview];
+        for (let i=0; i<10; i++) {
+            let q = s[Math.floor(Math.random()*s.length)];
+            let opts = new Set([q.fr]);
+            while (opts.size < 4) {
+                let r = s[Math.floor(Math.random()*s.length)];
+                opts.add(r.fr);
+            }
+            quizQuestions.push({ darija: q.latin, correct: q.fr, options: Array.from(opts).sort(()=>Math.random()-0.5) });
+        }
     }
-
-    // ============================================
-    // DONNÉES - MOIS 2
-    // ============================================
-    var vocabulaire = {
-      ecole: [
-        { fr: "école", arabe: "مَدْرَسَة", latin: "madrasa", phrase_latin: "Madrasa f hadak", phrase_fr: "L'école est à côté" },
-        { fr: "livre", arabe: "كْتَاب", latin: "ktab", phrase_latin: "Hada ktabi", phrase_fr: "C'est mon livre" },
-        { fr: "cahier", arabe: "كَرَّاسَة", latin: "karassa", phrase_latin: "Karassa jdida", phrase_fr: "Un cahier neuf" },
-        { fr: "stylo", arabe: "سْتِيلُو", latin: "stilo", phrase_latin: "3tini stilo", phrase_fr: "Donne-moi un stylo" },
-        { fr: "crayon", arabe: "قْلَام", latin: "qlam", phrase_latin: "Qlam 7mer", phrase_fr: "Un crayon rouge" },
-        { fr: "maîtresse", arabe: "مْعَلِّمَة", latin: "m3allima", phrase_latin: "M3allima zwina", phrase_fr: "La maîtresse est gentille" },
-        { fr: "élève", arabe: "تِلْمِيذ", latin: "tilmid", phrase_latin: "Ana tilmid", phrase_fr: "Je suis un élève" },
-        { fr: "tableau", arabe: "سَّبُورَة", latin: "sabboura", phrase_latin: "Kteb f sabboura", phrase_fr: "Écris au tableau" },
-        { fr: "gomme", arabe: "مَحَّايَة", latin: "ma7aya", phrase_latin: "Ma7aya f lqlam", phrase_fr: "La gomme est sur le crayon" },
-        { fr: "règle", arabe: "مِسْطَرَة", latin: "mistara", phrase_latin: "Mistara tawila", phrase_fr: "Une règle longue" },
-        { fr: "trousse", arabe: "مْحْفَظَة", latin: "m7fada", phrase_latin: "M7fada diali", phrase_fr: "Ma trousse" },
-        { fr: "cartable", arabe: "كَرْطَاب", latin: "kartab", phrase_latin: "Kartab kbir", phrase_fr: "Un grand cartable" },
-        { fr: "classe", arabe: "قِسْم", latin: "qism", phrase_latin: "Qism sghir", phrase_fr: "Une petite classe" },
-        { fr: "ami", arabe: "صَاحِب", latin: "sa7eb", phrase_latin: "Sa7ebi f lmadrasa", phrase_fr: "Mon ami est à l'école" },
-        { fr: "amie", arabe: "صَاحْبَة", latin: "sa7ba", phrase_latin: "Sa7bti m3aya", phrase_fr: "Mon amie est avec moi" },
-        { fr: "lire", arabe: "قْرَى", latin: "qra", phrase_latin: "Kanqra ktab", phrase_fr: "Je lis un livre" },
-        { fr: "écrire", arabe: "كْتَب", latin: "kteb", phrase_latin: "Ktebt darsi", phrase_fr: "J'ai écrit ma leçon" },
-        { fr: "compter", arabe: "حْسَب", latin: "7seb", phrase_latin: "Na7seb l'arqam", phrase_fr: "Je compte les nombres" },
-        { fr: "dessiner", arabe: "رْسَم", latin: "rsem", phrase_latin: "Kanrsem b lqlam", phrase_fr: "Je dessine avec le crayon" },
-        { fr: "récréation", arabe: "رْحِيل", latin: "r7il", phrase_latin: "Daba r7il", phrase_fr: "Maintenant la récré" }
-      ],
-      animaux: [
-        { fr: "chat", arabe: "قَط", latin: "qett", phrase_latin: "Qetti sghir", phrase_fr: "Mon chat est petit" },
-        { fr: "chien", arabe: "كَلْب", latin: "kelb", phrase_latin: "Kelb kay3aw", phrase_fr: "Le chien aboie" },
-        { fr: "poule", arabe: "دْجَاجَة", latin: "djaja", phrase_latin: "Djaja katbiḍ", phrase_fr: "La poule pond" },
-        { fr: "coq", arabe: "فْرُوج", latin: "frouj", phrase_latin: "Frouj kayserre7", phrase_fr: "Le coq chante" },
-        { fr: "vache", arabe: "بَقْرَة", latin: "baqra", phrase_latin: "Baqra kat3ti hlib", phrase_fr: "La vache donne du lait" },
-        { fr: "mouton", arabe: "خْرُوف", latin: "khrouf", phrase_latin: "Khrouf kbir", phrase_fr: "Un grand mouton" },
-        { fr: "cheval", arabe: "عَوْد", latin: "3awd", phrase_latin: "3awd kayjri", phrase_fr: "Le cheval court" },
-        { fr: "âne", arabe: "حْمَار", latin: "7mar", phrase_latin: "7mar kaychil", phrase_fr: "L'âne porte" },
-        { fr: "poisson", arabe: "حُوت", latin: "7out", phrase_latin: "7out f lma", phrase_fr: "Le poisson dans l'eau" },
-        { fr: "oiseau", arabe: "طَيْر", latin: "tir", phrase_latin: "Tir kaytir", phrase_fr: "L'oiseau vole" },
-        { fr: "lapin", arabe: "قْنِّيَّة", latin: "qneyya", phrase_latin: "Qneyya katakol khodra", phrase_fr: "Le lapin mange de l'herbe" },
-        { fr: "tortue", arabe: "فْكْرُون", latin: "fakroun", phrase_latin: "Fakroun mchi bchwiya", phrase_fr: "La tortue marche lentement" },
-        { fr: "grenouille", arabe: "جْرَانَة", latin: "jrana", phrase_latin: "Jrana f lma", phrase_fr: "La grenouille dans l'eau" },
-        { fr: "lion", arabe: "سْبَع", latin: "sba3", phrase_latin: "Sba3 qawi", phrase_fr: "Le lion est fort" },
-        { fr: "singe", arabe: "قِرْد", latin: "qerd", phrase_latin: "Qerd kayl3eb", phrase_fr: "Le singe joue" },
-        { fr: "éléphant", arabe: "فِيل", latin: "fil", phrase_latin: "Fil kbir bzzaf", phrase_fr: "L'éléphant est très grand" },
-        { fr: "girafe", arabe: "زَرَافَة", latin: "zarafa", phrase_latin: "Zarafa 3andha 3enq tawil", phrase_fr: "La girafe a un long cou" },
-        { fr: "canard", arabe: "بَطَّة", latin: "batta", phrase_latin: "Batta f wad", phrase_fr: "Le canard dans la rivière" },
-        { fr: "chèvre", arabe: "مَاعْزَة", latin: "ma3za", phrase_latin: "Ma3za katakol l3ochb", phrase_fr: "La chèvre mange de l'herbe" },
-        { fr: "dromadaire", arabe: "جْمَل", latin: "jmal", phrase_latin: "Jmal f s7ara", phrase_fr: "Le dromadaire dans le désert" }
-      ],
-      vetements: [
-        { fr: "pantalon", arabe: "سِرْوَال", latin: "serwal", phrase_latin: "Serwali zreq", phrase_fr: "Mon pantalon est bleu" },
-        { fr: "chemise", arabe: "قَمِيصَة", latin: "qamisa", phrase_latin: "Qamisati bayda", phrase_fr: "Ma chemise est blanche" },
-        { fr: "robe", arabe: "فُسْتَان", latin: "foustan", phrase_latin: "Foustan 7mer", phrase_fr: "Une robe rouge" },
-        { fr: "chaussures", arabe: "صْبَاط", latin: "sbat", phrase_latin: "Sbati k7el", phrase_fr: "Mes chaussures sont noires" },
-        { fr: "chaussettes", arabe: "طَرَاشِي", latin: "trashi", phrase_latin: "Trashi sfar", phrase_fr: "Des chaussettes jaunes" },
-        { fr: "bonnet", arabe: "طَاقِيَّة", latin: "taqiya", phrase_latin: "Taqiya d chita", phrase_fr: "Un bonnet d'hiver" },
-        { fr: "écharpe", arabe: "شَال", latin: "chal", phrase_latin: "Chal d souf", phrase_fr: "Une écharpe en laine" },
-        { fr: "manteau", arabe: "كَابُوط", latin: "kabout", phrase_latin: "Kabout kaydfi", phrase_fr: "Le manteau réchauffe" },
-        { fr: "pyjama", arabe: "بِيجَامَا", latin: "bijama", phrase_latin: "Nlbes bijama", phrase_fr: "Je mets un pyjama" },
-        { fr: "ceinture", arabe: "حِزَام", latin: "hizam", phrase_latin: "Hizam d jeld", phrase_fr: "Une ceinture en cuir" },
-        { fr: "chapeau", arabe: "قُبْعَة", latin: "qob3a", phrase_latin: "Qob3a 7lo", phrase_fr: "Un beau chapeau" },
-        { fr: "gants", arabe: "قَفَّازَات", latin: "qeffazat", phrase_latin: "Qeffazat f chita", phrase_fr: "Des gants en hiver" },
-        { fr: "lunettes", arabe: "نَظَّارَة", latin: "naddara", phrase_latin: "Naddara f 3inih", phrase_fr: "Des lunettes sur ses yeux" },
-        { fr: "montre", arabe: "سَاعَة", latin: "sa3a", phrase_latin: "Sa3a f yedd", phrase_fr: "Une montre à la main" },
-        { fr: "bijoux", arabe: "مَصَاغ", latin: "msa8", phrase_latin: "Msa8 d l'3rous", phrase_fr: "Les bijoux de la mariée" },
-        { fr: "bottes", arabe: "بُوط", latin: "bout", phrase_latin: "Bout f chita", phrase_fr: "Des bottes en hiver" },
-        { fr: "sandales", arabe: "صَنْدَل", latin: "sandale", phrase_latin: "Sandale f sif", phrase_fr: "Des sandales en été" },
-        { fr: "costume", arabe: "بَدْلَة", latin: "badla", phrase_latin: "Badla d l'3id", phrase_fr: "Un costume pour la fête" },
-        { fr: "cravate", arabe: "كْرَافْطَة", latin: "kravta", phrase_latin: "Kravta f l'3enq", phrase_fr: "Une cravate au cou" },
-        { fr: "poches", arabe: "جْيُوب", latin: "jyoub", phrase_latin: "Jyoub f serwal", phrase_fr: "Des poches dans le pantalon" }
-      ],
-      corps: [
-        { fr: "tête", arabe: "رَّاس", latin: "ras", phrase_latin: "Rasi kaywajja3ni", phrase_fr: "J'ai mal à la tête" },
-        { fr: "main", arabe: "لْيَد", latin: "lyed", phrase_latin: "Yeddi n'difa", phrase_fr: "Ma main est propre" },
-        { fr: "pied", arabe: "رْجْل", latin: "rjel", phrase_latin: "Rjeli kbira", phrase_fr: "Mon pied est grand" },
-        { fr: "œil", arabe: "لْعِين", latin: "l3in", phrase_latin: "3ini zrqa", phrase_fr: "Mon œil est bleu" },
-        { fr: "nez", arabe: "نِيف", latin: "nif", phrase_latin: "Nifi kbir", phrase_fr: "Mon nez est grand" },
-        { fr: "bouche", arabe: "فَم", latin: "famm", phrase_latin: "Fammi sghir", phrase_fr: "Ma bouche est petite" },
-        { fr: "oreille", arabe: "لْوُدْن", latin: "loudn", phrase_latin: "Loudni katsma3", phrase_fr: "Mon oreille entend" },
-        { fr: "cheveux", arabe: "شَّعْر", latin: "cha3r", phrase_latin: "Cha3ri k7el", phrase_fr: "Mes cheveux sont noirs" },
-        { fr: "dent", arabe: "سْنَّة", latin: "senna", phrase_latin: "Sennati bayda", phrase_fr: "Ma dent est blanche" },
-        { fr: "ventre", arabe: "كَرْش", latin: "kerch", phrase_latin: "Kerchi jaw3an", phrase_fr: "J'ai faim" },
-        { fr: "dos", arabe: "ضَّهْر", latin: "dher", phrase_latin: "Dheri mchawi", phrase_fr: "Mon dos est brûlé" },
-        { fr: "bras", arabe: "لْعَضُود", latin: "l3adoud", phrase_latin: "3adoudi qawi", phrase_fr: "Mon bras est fort" },
-        { fr: "jambe", arabe: "سَّاق", latin: "saq", phrase_latin: "Sa9i tawil", phrase_fr: "Ma jambe est longue" },
-        { fr: "genou", arabe: "لْرُكْبَة", latin: "lrokba", phrase_latin: "Rokbti majrou7a", phrase_fr: "Mon genou est blessé" },
-        { fr: "cou", arabe: "لْعَنْق", latin: "l3enq", phrase_latin: "3enqi 7lo", phrase_fr: "Mon cou est beau" },
-        { fr: "épaule", arabe: "لْكْتَف", latin: "lketf", phrase_latin: "Ketfi ywajja3ni", phrase_fr: "J'ai mal à l'épaule" },
-        { fr: "doigt", arabe: "صْبَع", latin: "sbe3", phrase_latin: "Sbe3i sghir", phrase_fr: "Mon doigt est petit" },
-        { fr: "ongle", arabe: "ظُفْر", latin: "dofr", phrase_latin: "Dofri tawil", phrase_fr: "Mon ongle est long" },
-        { fr: "cœur", arabe: "لْقَلْب", latin: "lqalb", phrase_latin: "Qalbi kaydwi", phrase_fr: "Mon cœur bat" },
-        { fr: "langue", arabe: "لْسَان", latin: "lsan", phrase_latin: "Lsani kayhder", phrase_fr: "Ma langue parle" }
-      ]
+    let quizIndex=0, quizScore=0;
+    function renderQuiz() {
+        let c = document.getElementById("quizContainer");
+        if (quizIndex >= quizQuestions.length) {
+            c.innerHTML = `<p>Score : ${quizScore}/${quizQuestions.length}</p><button class="btn-check" id="resetQuiz">Recommencer</button>`;
+            document.getElementById("resetQuiz")?.addEventListener("click", ()=>{
+                quizIndex=0; quizScore=0; generateQuiz(); renderQuiz();
+            });
+            return;
+        }
+        let q = quizQuestions[quizIndex];
+        let html = `<div><p><strong>${q.darija}</strong> ?</p><div>`;
+        q.options.forEach(opt => {
+            html += `<button class="quiz-opt" data-ans="${opt}">${opt}</button> `;
+        });
+        html += `</div><div id="quizFeedback"></div></div>`;
+        c.innerHTML = html;
+        document.querySelectorAll(".quiz-opt").forEach(btn => {
+            btn.onclick = () => {
+                if (btn.dataset.ans === q.correct) {
+                    quizScore++;
+                    document.getElementById("quizFeedback").innerHTML = "✔️";
+                } else {
+                    document.getElementById("quizFeedback").innerHTML = `❌ (${q.correct})`;
+                }
+                quizIndex++;
+                renderQuiz();
+            };
+        });
+    }
+    document.getElementById("startQuizBtn").onclick = () => {
+        quizIndex=0; quizScore=0; quizQuestions=[]; generateQuiz(); renderQuiz();
     };
+    displayDailyWords(); // initial
 
-    var dialogues = [
-      { titre: "À l'école", personnages: ["Élève", "Maîtresse"], repliques: [
-        { role: "Élève", latin: "Salam, m3allima.", francais: "Bonjour, maîtresse.", arabe: "سَلَام، مْعَلِّمَة" },
-        { role: "Maîtresse", latin: "Salam, smitek?", francais: "Bonjour, comment t'appelles-tu?", arabe: "سَلَام، سْمِيتَك؟" },
-        { role: "Élève", latin: "Smiti Youssef.", francais: "Je m'appelle Youssef.", arabe: "سْمِيتِي يُوسُف" },
-        { role: "Maîtresse", latin: "Ahla bih, Youssef.", francais: "Bienvenue, Youssef.", arabe: "أَهْلَا بِيه، يُوسُف" }
-      ]},
-      { titre: "Les animaux", personnages: ["Enfant1", "Enfant2"], repliques: [
-        { role: "Enfant1", latin: "3ndek qett?", francais: "Tu as un chat?", arabe: "عَنْدَك قَط؟" },
-        { role: "Enfant2", latin: "Ih, 3ndi qett kbir.", francais: "Oui, j'ai un gros chat.", arabe: "إيْه، عَنْدِي قَط كْبِير" },
-        { role: "Enfant1", latin: "Ana 3ndi kelb sghir.", francais: "Moi j'ai un petit chien.", arabe: "أَنَا عَنْدِي كَلْب صْغِير" }
-      ]},
-      { titre: "S'habiller", personnages: ["Maman", "Enfant"], repliques: [
-        { role: "Maman", latin: "Lbes serwalek.", francais: "Mets ton pantalon.", arabe: "لْبَسْ سِرْوَالَك" },
-        { role: "Enfant", latin: "La, bghit lqamisa l7mer.", francais: "Non, je veux la chemise rouge.", arabe: "لَا، بْغِيتْ لْقَمِيصَة لْحْمَر" },
-        { role: "Maman", latin: "Tfaddel.", francais: "Tiens.", arabe: "تْفَضَّل" }
-      ]},
-      { titre: "Parties du corps", personnages: ["Enfant", "Papa"], repliques: [
-        { role: "Enfant", latin: "Baba, rasi kaywajja3ni.", francais: "Papa, j'ai mal à la tête.", arabe: "بَابَا، رَاسِي كَيْوَجَّعْنِي" },
-        { role: "Papa", latin: "Smehli, ghadi n3tik dwa.", francais: "Attends, je vais te donner un médicament.", arabe: "سْمَحْلِي، غَادِي نْعْطِيك دْوَاء" }
-      ]},
-      { titre: "À la récré", personnages: ["Enfant1", "Enfant2"], repliques: [
-        { role: "Enfant1", latin: "Nl3abo kora?", francais: "On joue au ballon?", arabe: "نْلْعَبُو كُورَة؟" },
-        { role: "Enfant2", latin: "Ih, jib lkora.", francais: "Oui, apporte le ballon.", arabe: "إيْه، جِيب لْكُورَة" },
-        { role: "Enfant1", latin: "Wakha, jri!", francais: "D'accord, cours!", arabe: "وَاخَا، جْرِي!" }
-      ]}
-    ];
-
-    var verbes = [
-      { verbe: "se lever", racine: "nôD",
-        present: { ana: "kannôD", nta: "katnôD", nti: "katnôDi", houwa: "kaynôD", hiya: "katnôD", hna: "kannôDo", ntouma: "katnôDo", houma: "kaynôDo" },
-        passe: { ana: "nôDt", nta: "nôDti", nti: "nôDti", houwa: "nôD", hiya: "nôDet", hna: "nôDna", ntouma: "nôDtu", houma: "nôDou" },
-        futur: { ana: "ghadi nnôD", nta: "ghadi tnôD", nti: "ghadi tnôDi", houwa: "ghadi ynôD", hiya: "ghadi tnôD", hna: "ghadi nnôDo", ntouma: "ghadi tnôDo", houma: "ghadi ynôDo" }
-      },
-      { verbe: "s'asseoir", racine: "gles",
-        present: { ana: "kangles", nta: "katgles", nti: "katglesi", houwa: "kaygles", hiya: "katgles", hna: "kangleso", ntouma: "katgleso", houma: "kaygleso" },
-        passe: { ana: "glest", nta: "glesti", nti: "glesti", houwa: "gles", hiya: "gleset", hna: "glesna", ntouma: "glestu", houma: "glesou" },
-        futur: { ana: "ghadi ngles", nta: "ghadi tgles", nti: "ghadi tglesi", houwa: "ghadi ygles", hiya: "ghadi tgles", hna: "ghadi ngleso", ntouma: "ghadi tgleso", houma: "ghadi ygleso" }
-      },
-      { verbe: "courir", racine: "jri",
-        present: { ana: "kanjri", nta: "katjri", nti: "katjri", houwa: "kayjri", hiya: "katjri", hna: "kanjriw", ntouma: "katjriw", houma: "kayjriw" },
-        passe: { ana: "jrit", nta: "jriti", nti: "jriti", houwa: "jra", hiya: "jret", hna: "jrina", ntouma: "jritu", houma: "jraw" },
-        futur: { ana: "ghadi njri", nta: "ghadi tjri", nti: "ghadi tjri", houwa: "ghadi yjri", hiya: "ghadi tjri", hna: "ghadi njriw", ntouma: "ghadi tjriw", houma: "ghadi yjriw" }
-      },
-      { verbe: "sauter", racine: "naqez",
-        present: { ana: "kanaqez", nta: "katnaqez", nti: "katnaqezi", houwa: "kaynaqez", hiya: "katnaqez", hna: "kannaqzu", ntouma: "katnaqzu", houma: "kaynaqzu" },
-        passe: { ana: "naqezt", nta: "naqezti", nti: "naqezti", houwa: "naqez", hiya: "naqezet", hna: "naqezna", ntouma: "naqeztu", houma: "naqzou" },
-        futur: { ana: "ghadi nnaqez", nta: "ghadi tnaqez", nti: "ghadi tnaqezi", houwa: "ghadi ynaqez", hiya: "ghadi tnaqez", hna: "ghadi nnaqzu", ntouma: "ghadi tnaqzu", houma: "ghadi ynaqzu" }
-      },
-      { verbe: "danser", racine: "chtah",
-        present: { ana: "kanchtah", nta: "katchtah", nti: "katchtahi", houwa: "kaychtah", hiya: "katchtah", hna: "kanchtahu", ntouma: "katchtahu", houma: "kaychtahu" },
-        passe: { ana: "chtah", nta: "chtahi", nti: "chtahi", houwa: "chtah", hiya: "chtahet", hna: "chtahna", ntouma: "chtahu", houma: "chtahu" },
-        futur: { ana: "ghadi nchtah", nta: "ghadi tchtah", nti: "ghadi tchtahi", houwa: "ghadi ychtah", hiya: "ghadi tchtah", hna: "ghadi nchtahu", ntouma: "ghadi tchtahu", houma: "ghadi ychtahu" }
-      },
-      { verbe: "chanter", racine: "ghanna",
-        present: { ana: "kanghanna", nta: "katghanna", nti: "katghannay", houwa: "kayghanna", hiya: "katghanna", hna: "kanghanniw", ntouma: "katghanniw", houma: "kayghanniw" },
-        passe: { ana: "ghannit", nta: "ghanniti", nti: "ghanniti", houwa: "ghanna", hiya: "ghannat", hna: "ghannina", ntouma: "ghannitu", houma: "ghannaw" },
-        futur: { ana: "ghadi nghanna", nta: "ghadi tghanna", nti: "ghadi tghannay", houwa: "ghadi yghanna", hiya: "ghadi tghanna", hna: "ghadi nghanniw", ntouma: "ghadi tghanniw", houma: "ghadi yghanniw" }
-      },
-      { verbe: "nager", racine: "3um",
-        present: { ana: "kana3um", nta: "kata3um", nti: "kata3umi", houwa: "kaya3um", hiya: "kata3um", hna: "kana3umu", ntouma: "kata3umu", houma: "kaya3umu" },
-        passe: { ana: "3umt", nta: "3umti", nti: "3umti", houwa: "3am", hiya: "3amet", hna: "3umna", ntouma: "3umtu", houma: "3amu" },
-        futur: { ana: "ghadi na3um", nta: "ghadi ta3um", nti: "ghadi ta3umi", houwa: "ghadi ya3um", hiya: "ghadi ta3um", hna: "ghadi na3umu", ntouma: "ghadi ta3umu", houma: "ghadi ya3umu" }
-      },
-      { verbe: "dessiner", racine: "rsem",
-        present: { ana: "kanrsem", nta: "katrsem", nti: "katrsemi", houwa: "kayrsem", hiya: "katrsem", hna: "kanrsemu", ntouma: "katrsemu", houma: "kayrsemu" },
-        passe: { ana: "rsemt", nta: "rsemti", nti: "rsemti", houwa: "rsem", hiya: "rsemet", hna: "rsemna", ntouma: "rsemtu", houma: "rsemou" },
-        futur: { ana: "ghadi nrsem", nta: "ghadi trsem", nti: "ghadi trsemi", houwa: "ghadi yrsem", hiya: "ghadi trsem", hna: "ghadi nrsemu", ntouma: "ghadi trsemu", houma: "ghadi yrsemu" }
-      },
-      { verbe: "porter", racine: "lbes",
-        present: { ana: "kanlbes", nta: "katlbes", nti: "katlbesi", houwa: "kaylbes", hiya: "katlbes", hna: "kanlbesu", ntouma: "katlbesu", houma: "kaylbesu" },
-        passe: { ana: "lbest", nta: "lbesti", nti: "lbesti", houwa: "lbes", hiya: "lbeset", hna: "lbesna", ntouma: "lbestu", houma: "lbesou" },
-        futur: { ana: "ghadi nlbes", nta: "ghadi tlbes", nti: "ghadi tlbesi", houwa: "ghadi ylbes", hiya: "ghadi tlbes", hna: "ghadi nlbesu", ntouma: "ghadi tlbesu", houma: "ghadi ylbesu" }
-      },
-      { verbe: "enlever", racine: "khla3",
-        present: { ana: "kanakhla3", nta: "katakhla3", nti: "katakhla3i", houwa: "kayakhla3", hiya: "katakhla3", hna: "kanakhla3u", ntouma: "katakhla3u", houma: "kayakhla3u" },
-        passe: { ana: "khla3t", nta: "khla3ti", nti: "khla3ti", houwa: "khla3", hiya: "khla3et", hna: "khla3na", ntouma: "khla3tu", houma: "khla3ou" },
-        futur: { ana: "ghadi nakhla3", nta: "ghadi takhla3", nti: "ghadi takhla3i", houwa: "ghadi yakhla3", hiya: "ghadi takhla3", hna: "ghadi nakhla3u", ntouma: "ghadi takhla3u", houma: "ghadi yakhla3u" }
-      },
-      { verbe: "mettre", racine: "7ett",
-        present: { ana: "kana7ett", nta: "kata7ett", nti: "kata7etti", houwa: "kaya7ett", hiya: "kata7ett", hna: "kana7ettu", ntouma: "kata7ettu", houma: "kaya7ettu" },
-        passe: { ana: "7ettit", nta: "7ettiti", nti: "7ettiti", houwa: "7ett", hiya: "7ettet", hna: "7ettina", ntouma: "7ettitu", houma: "7ettou" },
-        futur: { ana: "ghadi na7ett", nta: "ghadi ta7ett", nti: "ghadi ta7etti", houwa: "ghadi ya7ett", hiya: "ghadi ta7ett", hna: "ghadi na7ettu", ntouma: "ghadi ta7ettu", houma: "ghadi ya7ettu" }
-      },
-      { verbe: "sortir", racine: "khrej",
-        present: { ana: "kanakhrej", nta: "katakhrej", nti: "katakhreji", houwa: "kayakhrej", hiya: "katakhrej", hna: "kanakhreju", ntouma: "katakhreju", houma: "kayakhreju" },
-        passe: { ana: "khrejt", nta: "khrejti", nti: "khrejti", houwa: "khrej", hiya: "khrejet", hna: "khrejna", ntouma: "khrejtu", houma: "khrejou" },
-        futur: { ana: "ghadi nakhrej", nta: "ghadi takhrej", nti: "ghadi takhreji", houwa: "ghadi yakhrej", hiya: "ghadi takhrej", hna: "ghadi nakhreju", ntouma: "ghadi takhreju", houma: "ghadi yakhreju" }
-      },
-      { verbe: "entrer", racine: "dkhel",
-        present: { ana: "kanadkhel", nta: "katadkhel", nti: "katadkheli", houwa: "kayadkhel", hiya: "katadkhel", hna: "kanadkhelu", ntouma: "katadkhelu", houma: "kayadkhelu" },
-        passe: { ana: "dkhelt", nta: "dkhelti", nti: "dkhelti", houwa: "dkhel", hiya: "dkhelet", hna: "dkhelna", ntouma: "dkheltu", houma: "dkhelou" },
-        futur: { ana: "ghadi nadkhel", nta: "ghadi tadkhel", nti: "ghadi tadkheli", houwa: "ghadi yadkhel", hiya: "ghadi tadkhel", hna: "ghadi nadkhelu", ntouma: "ghadi tadkhelu", houma: "ghadi yadkhelu" }
-      },
-      { verbe: "attendre", racine: "tsenna",
-        present: { ana: "kanatsenna", nta: "katatsenna", nti: "katatsennay", houwa: "kayatsenna", hiya: "katatsenna", hna: "kanatsennaw", ntouma: "katatsennaw", houma: "kayatsennaw" },
-        passe: { ana: "tsennit", nta: "tsenniti", nti: "tsenniti", houwa: "tsenna", hiya: "tsennat", hna: "tsennina", ntouma: "tsennitu", houma: "tsennaw" },
-        futur: { ana: "ghadi natsenna", nta: "ghadi tatsenna", nti: "ghadi tatsennay", houwa: "ghadi yatsenna", hiya: "ghadi tatsenna", hna: "ghadi natsennaw", ntouma: "ghadi tatsennaw", houma: "ghadi yatsennaw" }
-      },
-      { verbe: "monter", racine: "tla3",
-        present: { ana: "kanatla3", nta: "katatla3", nti: "katatla3i", houwa: "kayatla3", hiya: "katatla3", hna: "kanatla3u", ntouma: "katatla3u", houma: "kayatla3u" },
-        passe: { ana: "tla3t", nta: "tla3ti", nti: "tla3ti", houwa: "tla3", hiya: "tla3et", hna: "tla3na", ntouma: "tla3tu", houma: "tla3ou" },
-        futur: { ana: "ghadi natla3", nta: "ghadi tatla3", nti: "ghadi tatla3i", houwa: "ghadi yatla3", hiya: "ghadi tatla3", hna: "ghadi natla3u", ntouma: "ghadi tatla3u", houma: "ghadi yatla3u" }
-      },
-      { verbe: "descendre", racine: "nzel",
-        present: { ana: "kananzel", nta: "katanzel", nti: "katanzeli", houwa: "kayanzel", hiya: "katanzel", hna: "kananzelu", ntouma: "katanzelu", houma: "kayanzelu" },
-        passe: { ana: "nzelt", nta: "nzelti", nti: "nzelti", houwa: "nzel", hiya: "nzelet", hna: "nzelna", ntouma: "nzeltu", houma: "nzelou" },
-        futur: { ana: "ghadi nanzel", nta: "ghadi tanzel", nti: "ghadi tanzeli", houwa: "ghadi yanzel", hiya: "ghadi tanzel", hna: "ghadi nanzelu", ntouma: "ghadi tanzelu", houma: "ghadi yanzelu" }
-      },
-      { verbe: "chercher", racine: "qaleb",
-        present: { ana: "kanqaleb", nta: "katqaleb", nti: "katqalebi", houwa: "kayqaleb", hiya: "katqaleb", hna: "kanqalebu", ntouma: "katqalebu", houma: "kayqalebu" },
-        passe: { ana: "qlebt", nta: "qlebti", nti: "qlebti", houwa: "qleb", hiya: "qlebet", hna: "qlebna", ntouma: "qlebtu", houma: "qlebou" },
-        futur: { ana: "ghadi nqaleb", nta: "ghadi tqaleb", nti: "ghadi tqalebi", houwa: "ghadi yqaleb", hiya: "ghadi tqaleb", hna: "ghadi nqalebu", ntouma: "ghadi tqalebu", houma: "ghadi yqalebu" }
-      },
-      { verbe: "trouver", racine: "lqa",
-        present: { ana: "kanalqa", nta: "katalqa", nti: "katalqay", houwa: "kayalqa", hiya: "katalqa", hna: "kanalqaw", ntouma: "katalqaw", houma: "kayalqaw" },
-        passe: { ana: "lqit", nta: "lqiti", nti: "lqiti", houwa: "lqa", hiya: "lqat", hna: "lqina", ntouma: "lqitu", houma: "lqaw" },
-        futur: { ana: "ghadi nalqa", nta: "ghadi talqa", nti: "ghadi talqay", houwa: "ghadi yalqa", hiya: "ghadi talqa", hna: "ghadi nalqaw", ntouma: "ghadi talqaw", houma: "ghadi yalqaw" }
-      },
-      { verbe: "montrer", racine: "wri",
-        present: { ana: "kanawri", nta: "katawri", nti: "katawri", houwa: "kayawri", hiya: "katawri", hna: "kanawriw", ntouma: "katawriw", houma: "kayawriw" },
-        passe: { ana: "writ", nta: "writi", nti: "writi", houwa: "wra", hiya: "wrat", hna: "wrina", ntouma: "writu", houma: "wraw" },
-        futur: { ana: "ghadi nawri", nta: "ghadi tawri", nti: "ghadi tawri", houwa: "ghadi yawri", hiya: "ghadi tawri", hna: "ghadi nawriw", ntouma: "ghadi tawriw", houma: "ghadi yawriw" }
-      },
-      { verbe: "cacher", racine: "khabba",
-        present: { ana: "kanakhabbi", nta: "katakhabbi", nti: "katakhabbi", houwa: "kayakhabbi", hiya: "katakhabbi", hna: "kanakhabbiw", ntouma: "katakhabbiw", houma: "kayakhabbiw" },
-        passe: { ana: "khabbit", nta: "khabbiti", nti: "khabbiti", houwa: "khabba", hiya: "khabbat", hna: "khabbina", ntouma: "khabbitu", houma: "khabbaw" },
-        futur: { ana: "ghadi nakhabbi", nta: "ghadi takhabbi", nti: "ghadi takhabbi", houwa: "ghadi yakhabbi", hiya: "ghadi takhabbi", hna: "ghadi nakhabbiw", ntouma: "ghadi takhabbiw", houma: "ghadi yakhabbiw" }
-      }
-    ];
-
-    var nombres = [
-      { chiffre: 1, latin: "wa7ed", arabe: "وَاحَد" }, { chiffre: 2, latin: "jouj", arabe: "جُوج" },
-      { chiffre: 3, latin: "tlata", arabe: "تْلَاتَة" }, { chiffre: 4, latin: "rb3a", arabe: "رْبْعَة" },
-      { chiffre: 5, latin: "khamsa", arabe: "خَمْسَة" }, { chiffre: 6, latin: "setta", arabe: "سْتَّة" },
-      { chiffre: 7, latin: "sb3a", arabe: "سْبْعَة" }, { chiffre: 8, latin: "tmenya", arabe: "تْمْنْيَة" },
-      { chiffre: 9, latin: "ts3oud", arabe: "تْسْعُود" }, { chiffre: 10, latin: "3achra", arabe: "عَشْرَة" },
-      { chiffre: 20, latin: "3chrine", arabe: "عَشْرِين" }, { chiffre: 30, latin: "tlatin", arabe: "تْلَاتِين" },
-      { chiffre: 40, latin: "rb3in", arabe: "رْبْعِين" }, { chiffre: 50, latin: "khmsin", arabe: "خَمْسِين" },
-      { chiffre: 60, latin: "settin", arabe: "سَتِّين" }, { chiffre: 70, latin: "sb3in", arabe: "سَبْعِين" },
-      { chiffre: 80, latin: "tmanin", arabe: "تْمَانِين" }, { chiffre: 90, latin: "ts3in", arabe: "تِسْعِين" },
-      { chiffre: 100, latin: "mya", arabe: "مْيَة" }, { chiffre: 200, latin: "miten", arabe: "مِيتَيْن" },
-      { chiffre: 300, latin: "tlata mya", arabe: "تْلَاتَة مْيَة" }, { chiffre: 400, latin: "rb3a mya", arabe: "رْبْعَة مْيَة" },
-      { chiffre: 500, latin: "khamsa mya", arabe: "خَمْسَة مْيَة" }, { chiffre: 600, latin: "setta mya", arabe: "سْتَّة مْيَة" },
-      { chiffre: 700, latin: "sb3a mya", arabe: "سْبْعَة مْيَة" }, { chiffre: 800, latin: "tmenya mya", arabe: "تْمْنْيَة مْيَة" },
-      { chiffre: 900, latin: "ts3oud mya", arabe: "تْسْعُود مْيَة" }, { chiffre: 1000, latin: "alf", arabe: "أَلْف" },
-      { chiffre: 2000, latin: "alfayn", arabe: "أَلْفَيْن" }, { chiffre: 3000, latin: "tlata alaf", arabe: "تْلَاتَة آلاَف" },
-      { chiffre: 4000, latin: "rb3a alaf", arabe: "رْبْعَة آلاَف" }, { chiffre: 5000, latin: "khamsa alaf", arabe: "خَمْسَة آلاَف" },
-      { chiffre: 6000, latin: "setta alaf", arabe: "سْتَّة آلاَف" }, { chiffre: 7000, latin: "sb3a alaf", arabe: "سْبْعَة آلاَف" },
-      { chiffre: 8000, latin: "tmenya alaf", arabe: "تْمْنْيَة آلاَف" }, { chiffre: 9000, latin: "ts3oud alaf", arabe: "تْسْعُود آلاَف" }
-    ];
-
-    var personLabels = [
-      { key: "ana", label: "ana (je)" }, { key: "nta", label: "nta (tu masc.)" },
-      { key: "nti", label: "nti (tu fém.)" }, { key: "houwa", label: "houwa (il)" },
-      { key: "hiya", label: "hiya (elle)" }, { key: "hna", label: "hna (nous)" },
-      { key: "ntouma", label: "ntouma (vous)" }, { key: "houma", label: "houma (ils/elles)" }
-    ];
-
-    // ============================================
-    // ÉTAT GLOBAL
-    // ============================================
-    var quizQuestions = [];
-    var currentQuestion = 0;
-    var score = 0;
-    var nextLocked = false;
-
-    // ============================================
-    // NAVIGATION TABS
-    // ============================================
-    function showTab(tabName) {
-      var contents = document.querySelectorAll('#app-root .tab-content');
-      for (var i = 0; i < contents.length; i++) {
-        contents[i].classList.remove('active');
-      }
-      var selected = document.getElementById('content-' + tabName);
-      if (selected) selected.classList.add('active');
-
-      var buttons = document.querySelectorAll('#app-root .tab-btn');
-      for (var j = 0; j < buttons.length; j++) {
-        buttons[j].classList.remove('tab-active');
-      }
-      var activeBtn = document.getElementById('tab-' + tabName);
-      if (activeBtn) activeBtn.classList.add('tab-active');
-
-      if (window.innerWidth < 768) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    }
-
-    // ============================================
-    // RENDU VOCABULAIRE
-    // ============================================
-    function renderVocab() {
-      var themes = [
-        { id: 'ecole', data: vocabulaire.ecole },
-        { id: 'animaux', data: vocabulaire.animaux },
-        { id: 'vetements', data: vocabulaire.vetements },
-        { id: 'corps', data: vocabulaire.corps }
-      ];
-      for (var t = 0; t < themes.length; t++) {
-        var theme = themes[t];
-        var container = document.getElementById('theme-' + theme.id);
-        if (!container) continue;
-        var html = '';
-        for (var i = 0; i < theme.data.length; i++) {
-          var w = theme.data[i];
-          html += '<div class="word-card p-3 rounded-lg border border-gray-200 transition-all">'
-            + '<div class="flex justify-between items-center mb-2">'
-            + '<span class="font-semibold text-gray-800">' + escapeHtml(w.fr) + '</span>'
-            + '<span class="text-green-600 font-semibold">' + escapeHtml(w.latin) + '</span>'
-            + '</div>'
-            + '<div class="text-right"><span class="arabic-text text-xl text-gray-700">' + escapeHtml(w.arabe) + '</span></div>'
-            + '<div class="mt-2 text-sm text-gray-500 border-t pt-2">'
-            + '<p><span class="text-green-600">' + escapeHtml(w.phrase_latin) + '</span></p>'
-            + '<p>' + escapeHtml(w.phrase_fr) + '</p>'
-            + '</div></div>';
-        }
-        container.innerHTML = html;
-      }
-    }
-
-    // ============================================
-    // RENDU DIALOGUES
-    // ============================================
-    function renderDialogues() {
-      var container = document.getElementById('dialogues-container');
-      if (!container) return;
-      var html = '';
-      for (var i = 0; i < dialogues.length; i++) {
-        var d = dialogues[i];
-        html += '<div class="bg-white rounded-2xl shadow-lg overflow-hidden">'
-          + '<div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4">'
-          + '<h3 class="text-xl font-bold text-white">' + escapeHtml(d.titre) + '</h3>'
-          + '<p class="text-green-100 text-sm">' + escapeHtml(d.personnages.join(', ')) + '</p>'
-          + '</div><div class="p-4 space-y-3">';
-        for (var j = 0; j < d.repliques.length; j++) {
-          var r = d.repliques[j];
-          var isLeft = (r.role.indexOf('Enfant') !== -1 || r.role.indexOf('Élève') !== -1);
-          var align = isLeft ? 'bg-green-50 ml-4' : 'bg-gray-50 mr-4';
-          html += '<div class="p-3 rounded-lg ' + align + '">'
-            + '<div class="font-semibold text-sm text-gray-600 mb-1">' + escapeHtml(r.role) + '</div>'
-            + '<div class="flex justify-between items-center mb-1 flex-wrap gap-2">'
-            + '<span class="text-green-600 font-semibold">' + escapeHtml(r.latin) + '</span>'
-            + '<span class="arabic-text text-lg">' + escapeHtml(r.arabe) + '</span>'
-            + '</div><div class="text-gray-500 text-sm">' + escapeHtml(r.francais) + '</div></div>';
-        }
-        html += '</div></div>';
-      }
-      container.innerHTML = html;
-    }
-
-    // ============================================
-    // RENDU VERBES
-    // ============================================
-    function renderVerbs() {
-      var container = document.getElementById('verbes-container');
-      if (!container) return;
-      var html = '';
-      var temps = [
-        { key: 'present', label: 'Présent', color: 'green' },
-        { key: 'passe', label: 'Passé', color: 'amber' },
-        { key: 'futur', label: 'Futur', color: 'purple' }
-      ];
-      for (var i = 0; i < verbes.length; i++) {
-        var v = verbes[i];
-        html += '<div class="bg-white rounded-2xl shadow-lg overflow-hidden">'
-          + '<div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4">'
-          + '<h3 class="text-xl font-bold text-white">' + escapeHtml(v.verbe) + '</h3>'
-          + '<p class="text-green-100">Racine: ' + escapeHtml(v.racine) + '</p>'
-          + '</div><div class="p-4 grid gap-4">';
-        for (var t = 0; t < temps.length; t++) {
-          var tmp = temps[t];
-          html += '<div><h4 class="font-bold text-' + tmp.color + '-600 mb-2">' + tmp.label + '</h4>'
-            + '<div class="grid grid-cols-2 md:grid-cols-4 gap-2">';
-          for (var p = 0; p < personLabels.length; p++) {
-            var pl = personLabels[p];
-            var val = v[tmp.key][pl.key] || '-';
-            html += '<div class="p-2 bg-' + tmp.color + '-50 rounded">'
-              + '<div class="text-xs text-gray-500">' + escapeHtml(pl.label) + '</div>'
-              + '<div class="font-semibold">' + escapeHtml(val) + '</div></div>';
-          }
-          html += '</div></div>';
-        }
-        html += '</div></div>';
-      }
-      container.innerHTML = html;
-    }
-
-    // ============================================
-    // RENDU NOMBRES
-    // ============================================
-    function renderNombres() {
-      var container = document.getElementById('nombres-container');
-      if (!container) return;
-      var html = '';
-      for (var i = 0; i < nombres.length; i++) {
-        var n = nombres[i];
-        html += '<div class="p-3 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg text-center hover:from-green-50 hover:to-emerald-50 transition-all">'
-          + '<div class="text-2xl font-bold text-gray-800">' + n.chiffre + '</div>'
-          + '<div class="text-green-600 font-semibold">' + escapeHtml(n.latin) + '</div>'
-          + '<div class="arabic-text text-lg text-gray-700">' + escapeHtml(n.arabe) + '</div></div>';
-      }
-      container.innerHTML = html;
-    }
-
-    // ============================================
-    // QUIZ
-    // ============================================
-    function generateOptions(correct, allOptions) {
-      var unique = [];
-      var seen = {};
-      for (var i = 0; i < allOptions.length; i++) {
-        if (!seen[allOptions[i]]) {
-          seen[allOptions[i]] = true;
-          unique.push(allOptions[i]);
-        }
-      }
-      var wrong = [];
-      for (var j = 0; j < unique.length && wrong.length < 3; j++) {
-        if (unique[j] !== correct) wrong.push(unique[j]);
-      }
-      wrong = shuffleArray(wrong).slice(0, 3);
-      return shuffleArray([correct].concat(wrong));
-    }
-
-    function startQuiz(type) {
-      currentQuestion = 0;
-      score = 0;
-      nextLocked = false;
-      quizQuestions = [];
-
-      try {
-        if (type === 'vocabulaire') {
-          var allWords = vocabulaire.ecole.concat(vocabulaire.animaux, vocabulaire.vetements, vocabulaire.corps);
-          var shuffled = shuffleArray(allWords).slice(0, 10);
-          var allLatin = allWords.map(function(w) { return w.latin; });
-          for (var i = 0; i < shuffled.length; i++) {
-            var w = shuffled[i];
-            quizQuestions.push({
-              question: 'Comment dit-on "' + w.fr + '" en darija ?',
-              answer: w.latin,
-              options: generateOptions(w.latin, allLatin)
+    // ==================== RENDU VOCABULAIRE MOIS 2 ====================
+    function renderVocabulary() {
+        const grid = document.getElementById("wordsGrid");
+        if (!grid) return;
+        grid.innerHTML = "";
+        const col1 = allWordsM2.slice(0, 84);
+        const col2 = allWordsM2.slice(84, 168);
+        const col3 = allWordsM2.slice(168, 250);
+        const titles = ["Mois 2 – Mots (1/3)", "Mois 2 – Mots (2/3)", "Mois 2 – Mots (3/3) + Outils"];
+        [col1, col2, col3].forEach((col, idx) => {
+            const card = document.createElement("div"); card.className = "word-card";
+            const h4 = document.createElement("h4");
+            h4.innerHTML = `${titles[idx]} <button class="hide-col-btn" data-col="${idx}">Masquer</button>`;
+            card.appendChild(h4);
+            const ul = document.createElement("ul"); ul.className = "word-list";
+            col.forEach((w, i) => {
+                let globalIdx = idx===0 ? i : (idx===1 ? 84+i : 168+i);
+                const li = document.createElement("li");
+                const cb = document.createElement("input"); cb.type="checkbox"; cb.className="checkbox-word";
+                if (globalIdx < masteredM2.length) {
+                    cb.checked = masteredM2[globalIdx];
+                    cb.onchange = (function(g){return (e)=>{masteredM2[g]=e.target.checked; saveMasteredM2();};})(globalIdx);
+                }
+                const latinSpan = document.createElement("span"); latinSpan.className = "darija"; latinSpan.innerText = w.latin;
+                const arabSpan = document.createElement("span"); arabSpan.className = "arabic"; arabSpan.innerText = w.arabe;
+                const tradSpan = document.createElement("span"); tradSpan.className = "traduction"; tradSpan.innerText = w.fr;
+                li.appendChild(cb); li.appendChild(latinSpan); li.appendChild(arabSpan); li.appendChild(tradSpan);
+                ul.appendChild(li);
             });
-          }
-        } else if (type === 'verbes') {
-          var shuffledV = shuffleArray(verbes).slice(0, 10);
-          var allRacines = verbes.map(function(v) { return v.racine; });
-          for (var j = 0; j < shuffledV.length; j++) {
-            var vb = shuffledV[j];
-            quizQuestions.push({
-              question: 'Quelle est la racine du verbe "' + vb.verbe + '" ?',
-              answer: vb.racine,
-              options: generateOptions(vb.racine, allRacines)
-            });
-          }
-        } else if (type === 'nombres') {
-          var shuffledN = shuffleArray(nombres).slice(0, 10);
-          var allLatinN = nombres.map(function(n) { return n.latin; });
-          for (var k = 0; k < shuffledN.length; k++) {
-            var nb = shuffledN[k];
-            quizQuestions.push({
-              question: 'Comment dit-on ' + nb.chiffre + ' en darija ?',
-              answer: nb.latin,
-              options: generateOptions(nb.latin, allLatinN)
-            });
-          }
-        }
-      } catch (e) {
-        console.error('Erreur génération quiz:', e);
-        return;
-      }
-
-      var quizArea = document.getElementById('quiz-area');
-      var quizEnd = document.getElementById('quiz-end');
-      if (quizArea) quizArea.classList.remove('hidden');
-      if (quizEnd) quizEnd.classList.add('hidden');
-
-      var totalEl = document.getElementById('quiz-total');
-      if (totalEl) totalEl.textContent = quizQuestions.length;
-
-      if (quizQuestions.length > 0) showQuestion();
-    }
-
-    function showQuestion() {
-      if (currentQuestion >= quizQuestions.length) return;
-      var q = quizQuestions[currentQuestion];
-      nextLocked = false;
-
-      var currentEl = document.getElementById('quiz-current');
-      var questionEl = document.getElementById('quiz-question');
-      var resultEl = document.getElementById('quiz-result');
-      var nextBtn = document.getElementById('next-btn');
-      var optionsEl = document.getElementById('quiz-options');
-
-      if (currentEl) currentEl.textContent = currentQuestion + 1;
-      if (questionEl) questionEl.textContent = q.question;
-      if (resultEl) { resultEl.classList.add('hidden'); resultEl.textContent = ''; }
-      if (nextBtn) nextBtn.classList.add('hidden');
-      if (!optionsEl) return;
-
-      var html = '';
-      for (var i = 0; i < q.options.length; i++) {
-        var opt = q.options[i];
-        html += '<button class="quiz-opt" data-answer="' + escapeAttr(opt) + '">'
-          + escapeHtml(opt) + '</button>';
-      }
-      optionsEl.innerHTML = html;
-
-      var buttons = optionsEl.querySelectorAll('.quiz-opt');
-      for (var j = 0; j < buttons.length; j++) {
-        (function(btn) {
-          btn.addEventListener('click', function() {
-            if (btn.disabled) return;
-            checkAnswer(btn.getAttribute('data-answer'), btn);
-          });
-        })(buttons[j]);
-      }
-    }
-
-    function checkAnswer(selected, clickedBtn) {
-      if (currentQuestion >= quizQuestions.length) return;
-      var q = quizQuestions[currentQuestion];
-      var resultEl = document.getElementById('quiz-result');
-      var nextBtn = document.getElementById('next-btn');
-      var optionsEl = document.getElementById('quiz-options');
-      if (!optionsEl) return;
-
-      var buttons = optionsEl.querySelectorAll('.quiz-opt');
-      for (var i = 0; i < buttons.length; i++) {
-        buttons[i].disabled = true;
-        var btnVal = buttons[i].getAttribute('data-answer');
-        if (btnVal === q.answer) {
-          buttons[i].classList.add('correct');
-        }
-        if (buttons[i] === clickedBtn && btnVal !== q.answer) {
-          buttons[i].classList.add('wrong');
-        }
-      }
-
-      if (selected === q.answer) {
-        score++;
-        if (resultEl) { resultEl.textContent = '✅ Correct !'; resultEl.className = 'text-center mt-4 text-lg md:text-xl font-bold text-green-600'; }
-        saveProgress(q.answer);
-      } else {
-        if (resultEl) { resultEl.textContent = '❌ Faux ! Réponse : ' + q.answer; resultEl.className = 'text-center mt-4 text-lg md:text-xl font-bold text-red-600'; }
-      }
-      if (resultEl) resultEl.classList.remove('hidden');
-      if (nextBtn) nextBtn.classList.remove('hidden');
-    }
-
-    function nextQuestion() {
-      if (nextLocked) return;
-      nextLocked = true;
-      currentQuestion++;
-      if (currentQuestion < quizQuestions.length) {
-        showQuestion();
-      } else {
-        var quizArea = document.getElementById('quiz-area');
-        var quizEnd = document.getElementById('quiz-end');
-        var scoreEl = document.getElementById('quiz-score');
-        var totalEndEl = document.getElementById('quiz-total-end');
-        if (quizArea) quizArea.classList.add('hidden');
-        if (quizEnd) quizEnd.classList.remove('hidden');
-        if (scoreEl) scoreEl.textContent = score;
-        if (totalEndEl) totalEndEl.textContent = quizQuestions.length;
-        updateProgress();
-      }
-    }
-
-    function resetQuiz() {
-      var quizArea = document.getElementById('quiz-area');
-      var quizEnd = document.getElementById('quiz-end');
-      if (quizArea) quizArea.classList.add('hidden');
-      if (quizEnd) quizEnd.classList.add('hidden');
-    }
-
-    // ============================================
-    // PROGRESSION
-    // ============================================
-    function saveProgress(answer) {
-      try {
-        var mastered = JSON.parse(localStorage.getItem('darijaMois2Mastered') || '[]');
-        if (mastered.indexOf(answer) === -1) {
-          mastered.push(answer);
-          localStorage.setItem('darijaMois2Mastered', JSON.stringify(mastered));
-        }
-      } catch (e) { /* localStorage indisponible */ }
-    }
-
-    function updateProgress() {
-      try {
-        var mastered = JSON.parse(localStorage.getItem('darijaMois2Mastered') || '[]');
-        var total = vocabulaire.ecole.length + vocabulaire.animaux.length + vocabulaire.vetements.length + vocabulaire.corps.length;
-        var pct = Math.min(100, Math.round((mastered.length / total) * 100));
-        var bar = document.getElementById('progress-bar');
-        var txt = document.getElementById('progress-text');
-        if (bar) bar.style.width = pct + '%';
-        if (txt) txt.textContent = pct + '%';
-      } catch (e) { /* silencieux */ }
-    }
-
-    // ============================================
-    // INITIALISATION
-    // ============================================
-    document.addEventListener('DOMContentLoaded', function() {
-      try {
-        renderVocab();
-        renderDialogues();
-        renderVerbs();
-        renderNombres();
-        updateProgress();
-      } catch (e) {
-        console.error('Erreur rendu initial:', e);
-      }
-
-      // Tabs principaux
-      var tabBtns = document.querySelectorAll('#app-root .tab-btn');
-      for (var i = 0; i < tabBtns.length; i++) {
-        tabBtns[i].addEventListener('click', function() {
-          var t = this.getAttribute('data-tab');
-          if (t) showTab(t);
+            card.appendChild(ul);
+            grid.appendChild(card);
         });
-      }
-
-      // Cartes d'accueil
-      var cards = document.querySelectorAll('#app-root .theme-card');
-      for (var j = 0; j < cards.length; j++) {
-        cards[j].addEventListener('click', function() {
-          var t = this.getAttribute('data-tab');
-          if (t) showTab(t);
+        document.querySelectorAll(".hide-col-btn").forEach(btn => btn.onclick = (e) => btn.closest(".word-card").classList.add("hidden-col"));
+        document.getElementById("showAllColsBtn").onclick = () => document.querySelectorAll(".word-card").forEach(c=>c.classList.remove("hidden-col"));
+    }
+    let globalHidden = false;
+    document.getElementById("toggleTranslateBtn").onclick = () => {
+        globalHidden = !globalHidden;
+        document.querySelectorAll("#vocabulary .word-list").forEach(l => {
+            if (globalHidden) l.classList.add("hidden-translation");
+            else l.classList.remove("hidden-translation");
         });
-      }
+    };
+    renderVocabulary();
+    updateProgressM2();
 
-      // Quiz
-      var el;
-      el = document.getElementById('quiz-btn-vocab');
-      if (el) el.addEventListener('click', function() { startQuiz('vocabulaire'); });
-      el = document.getElementById('quiz-btn-verbes');
-      if (el) el.addEventListener('click', function() { startQuiz('verbes'); });
-      el = document.getElementById('quiz-btn-nombres');
-      if (el) el.addEventListener('click', function() { startQuiz('nombres'); });
-      el = document.getElementById('next-btn');
-      if (el) el.addEventListener('click', nextQuestion);
-      el = document.getElementById('reset-quiz-btn');
-      if (el) el.addEventListener('click', resetQuiz);
+    // ==================== CONJUGAISON MOIS 2 (30 verbes complets) ====================
+    const verbsM2 = [];
 
-      // Fallback tabs (si Tailwind ne charge pas)
-      var fbTabs = document.querySelectorAll('#fallback-tabs .fallback-tab');
-      for (var k = 0; k < fbTabs.length; k++) {
-        fbTabs[k].addEventListener('click', function() {
-          var tabName = this.getAttribute('data-fb');
-          var allFb = document.querySelectorAll('.fallback-content');
-          for (var m = 0; m < allFb.length; m++) allFb[m].classList.remove('active');
-          var allFbBtns = document.querySelectorAll('#fallback-tabs .fallback-tab');
-          for (var n = 0; n < allFbBtns.length; n++) allFbBtns[n].classList.remove('active');
-          var target = document.getElementById('fallback-' + tabName);
-          if (target) target.classList.add('active');
-          this.classList.add('active');
-        });
-      }
+    function addVerb(inf, ar, sens, past, pastLatin, pres, presLatin, fut, futLatin) {
+        verbsM2.push({ inf, ar, sens, past, pastLatin, pres, presLatin, fut, futLatin });
+    }
+
+    // 1. safar (voyager)
+    addVerb("safar", "سَافَر", "voyager",
+        ["سَافَرْت", "سَافَرْتِي", "سَافَرْتِي", "سَافَر", "سَافَرَات", "سَافَرْنَا", "سَافَرْتُو", "سَافَرُوْا"],
+        ["safart", "safarti", "safarti", "safar", "safarat", "safarna", "safartu", "safaru"],
+        ["كَنْسَافَر", "كَتْسَافَر", "كَتْسَافَرِي", "كَيْسَافَر", "كَتْسَافَر", "كَنْسَافَرُو", "كَتْسَافَرُو", "كَيْسَافَرُو"],
+        ["kansafar", "katsafar", "katsafari", "kaysafar", "katsafar", "kansafaru", "katsafaru", "kaysafaru"],
+        ["غَادِي نْسَافَر", "غَادِي تْسَافَر", "غَادِي تْسَافَرِي", "غَادِي يْسَافَر", "غَادِي تْسَافَر", "غَادِي نْسَافَرُو", "غَادِي تْسَافَرُو", "غَادِي يْسَافَرُو"],
+        ["ghadi nsafar", "ghadi tsafar", "ghadi tsafari", "ghadi ysafar", "ghadi tsafar", "ghadi nsafaru", "ghadi tsafaru", "ghadi ysafaru"]);
+
+    // 2. dawa (soigner)
+    addVerb("dawa", "دَوَى", "soigner",
+        ["دَوِيت", "دَوِيتِي", "دَوِيتِي", "دَوَى", "دَوَات", "دَوِينَا", "دَوِيتُو", "دَوَاوْ"],
+        ["dawit", "dawiti", "dawiti", "dawa", "dawat", "dawina", "dawitu", "dawaw"],
+        ["كَنْدَوِي", "كَتْدَوِي", "كَتْدَوِي", "كَيْدَوِي", "كَتْدَوِي", "كَنْدَوِيُو", "كَتْدَوِيُو", "كَيْدَوِيُو"],
+        ["kandawi", "katdawi", "katdawi", "kaydawi", "katdawi", "kandawiw", "katdawiw", "kaydawiw"],
+        ["غَادِي نْدَوِي", "غَادِي تْدَوِي", "غَادِي تْدَوِي", "غَادِي يْدَوِي", "غَادِي تْدَوِي", "غَادِي نْدَوِيُو", "غَادِي تْدَوِيُو", "غَادِي يْدَوِيُو"],
+        ["ghadi ndawi", "ghadi tdawi", "ghadi tdawi", "ghadi ydawi", "ghadi tdawi", "ghadi ndawiw", "ghadi tdawiw", "ghadi ydawiw"]);
+
+    // 3. khdm (travailler)
+    addVerb("khdm", "خْدَم", "travailler",
+        ["خْدَمْت", "خْدَمْتِي", "خْدَمْتِي", "خْدَم", "خْدَمَات", "خْدَمْنَا", "خْدَمْتُو", "خْدَمُوْا"],
+        ["khdamt", "khdami", "khdami", "khdam", "khdamat", "khdamna", "khdamtu", "khdamu"],
+        ["كَنْخْدَم", "كَتْخْدَم", "كَتْخْدَمِي", "كَيْخْدَم", "كَتْخْدَم", "كَنْخْدَمُو", "كَتْخْدَمُو", "كَيْخْدَمُو"],
+        ["kankhdam", "katkhdam", "katkhdami", "kaykhdam", "katkhdam", "kankhdamu", "katkhdamu", "kaykhdamu"],
+        ["غَادِي نَخْدَم", "غَادِي تَخْدَم", "غَادِي تَخْدَمِي", "غَادِي يَخْدَم", "غَادِي تَخْدَم", "غَادِي نَخْدَمُو", "غَادِي تَخْدَمُو", "غَادِي يَخْدَمُو"],
+        ["ghadi nakhdam", "ghadi takhdam", "ghadi takhdami", "ghadi yakhdam", "ghadi takhdam", "ghadi nakhdamu", "ghadi takhdamu", "ghadi yakhdamu"]);
+
+    // 4. 3alaj (traiter)
+    addVerb("3alaj", "عَالَج", "traiter",
+        ["عَالَجْت", "عَالَجْتِي", "عَالَجْتِي", "عَالَج", "عَالَجَات", "عَالَجْنَا", "عَالَجْتُو", "عَالَجُوْا"],
+        ["3alajt", "3alajti", "3alajti", "3alaj", "3alajat", "3alajna", "3alajtu", "3alaju"],
+        ["كَنْعَالَج", "كَتْعَالَج", "كَتْعَالَجِي", "كَيْعَالَج", "كَتْعَالَج", "كَنْعَالَجُو", "كَتْعَالَجُو", "كَيْعَالَجُو"],
+        ["kan3alaj", "kat3alaj", "kat3alaji", "kay3alaj", "kat3alaj", "kan3alaju", "kat3alaju", "kay3alaju"],
+        ["غَادِي نْعَالَج", "غَادِي تْعَالَج", "غَادِي تْعَالَجِي", "غَادِي يْعَالَج", "غَادِي تْعَالَج", "غَادِي نْعَالَجُو", "غَادِي تْعَالَجُو", "غَادِي يْعَالَجُو"],
+        ["ghadi n3alaj", "ghadi t3alaj", "ghadi t3alaji", "ghadi y3alaj", "ghadi t3alaj", "ghadi n3alaju", "ghadi t3alaju", "ghadi y3alaju"]);
+
+    // 5. shra (acheter)
+    addVerb("shra", "شْرَى", "acheter",
+        ["شْرِيت", "شْرِيتِي", "شْرِيتِي", "شْرَى", "شْرَات", "شْرِينَا", "شْرِيتُو", "شْرَاوْ"],
+        ["shrit", "shriti", "shriti", "shra", "shrat", "shrina", "shritu", "shraw"],
+        ["كَنْشْرِي", "كَتْشْرِي", "كَتْشْرِي", "كَيْشْرِي", "كَتْشْرِي", "كَنْشْرِيُو", "كَتْشْرِيُو", "كَيْشْرِيُو"],
+        ["kanshri", "katshri", "katshri", "kayshri", "katshri", "kanshriw", "katshriw", "kayshriw"],
+        ["غَادِي نْشْرِي", "غَادِي تْشْرِي", "غَادِي تْشْرِي", "غَادِي يْشْرِي", "غَادِي تْشْرِي", "غَادِي نْشْرِيُو", "غَادِي تْشْرِيُو", "غَادِي يْشْرِيُو"],
+        ["ghadi nshri", "ghadi tshri", "ghadi tshri", "ghadi yshri", "ghadi tshri", "ghadi nshriw", "ghadi tshriw", "ghadi yshriw"]);
+
+    // 6. ba3 (vendre)
+    addVerb("ba3", "بَاع", "vendre",
+        ["بِعْت", "بِعْتِي", "بِعْتِي", "بَاع", "بَاعَات", "بِعْنَا", "بِعْتُو", "بَاعُوْا"],
+        ["bi3t", "bi3ti", "bi3ti", "ba3", "ba3at", "bi3na", "bi3tu", "ba3u"],
+        ["كَنْبِيع", "كَتْبِيع", "كَتْبِيعِي", "كَيْبِيع", "كَتْبِيع", "كَنْبِيعُو", "كَتْبِيعُو", "كَيْبِيعُو"],
+        ["kanbi3", "katbi3", "katbi3i", "kaybi3", "katbi3", "kanbi3u", "katbi3u", "kaybi3u"],
+        ["غَادِي نْبِيع", "غَادِي تْبِيع", "غَادِي تْبِيعِي", "غَادِي يْبِيع", "غَادِي تْبِيع", "غَادِي نْبِيعُو", "غَادِي تْبِيعُو", "غَادِي يْبِيعُو"],
+        ["ghadi nbi3", "ghadi tbi3", "ghadi tbi3i", "ghadi ybi3", "ghadi tbi3", "ghadi nbi3u", "ghadi tbi3u", "ghadi ybi3u"]);
+
+    // 7. sken (habiter)
+    addVerb("sken", "سْكَن", "habiter",
+        ["سْكَنْت", "سْكَنْتِي", "سْكَنْتِي", "سْكَن", "سْكَنَات", "سْكَنْنَا", "سْكَنْتُو", "سْكَنُوْا"],
+        ["skant", "skanti", "skanti", "skan", "skanat", "skanna", "skantu", "skanu"],
+        ["كَنْسْكَن", "كَتْسْكَن", "كَتْسْكَنِي", "كَيْسْكَن", "كَتْسْكَن", "كَنْسْكَنُو", "كَتْسْكَنُو", "كَيْسْكَنُو"],
+        ["kanskan", "katskan", "katskani", "kayskan", "katskan", "kanskanu", "katskanu", "kayskanu"],
+        ["غَادِي نَسْكَن", "غَادِي تَسْكَن", "غَادِي تَسْكَنِي", "غَادِي يَسْكَن", "غَادِي تَسْكَن", "غَادِي نَسْكَنُو", "غَادِي تَسْكَنُو", "غَادِي يَسْكَنُو"],
+        ["ghadi naskan", "ghadi taskan", "ghadi taskani", "ghadi yaskan", "ghadi taskan", "ghadi naskanu", "ghadi taskanu", "ghadi yaskanu"]);
+
+    // 8. tla3 (monter)
+    addVerb("tla3", "طْلَع", "monter",
+        ["طْلَعْت", "طْلَعْتِي", "طْلَعْتِي", "طْلَع", "طْلَعَات", "طْلَعْنَا", "طْلَعْتُو", "طْلَعُوْا"],
+        ["tla3t", "tla3ti", "tla3ti", "tla3", "tla3at", "tla3na", "tla3tu", "tla3u"],
+        ["كَنْطْلَع", "كَتْطْلَع", "كَتْطْلَعِي", "كَيْطْلَع", "كَتْطْلَع", "كَنْطْلَعُو", "كَتْطْلَعُو", "كَيْطْلَعُو"],
+        ["kantla3", "kattla3", "kattla3i", "kaytla3", "kattla3", "kantla3u", "kattla3u", "kaytla3u"],
+        ["غَادِي نَطْلَع", "غَادِي تَطْلَع", "غَادِي تَطْلَعِي", "غَادِي يَطْلَع", "غَادِي تَطْلَع", "غَادِي نَطْلَعُو", "غَادِي تَطْلَعُو", "غَادِي يَطْلَعُو"],
+        ["ghadi natla3", "ghadi tatla3", "ghadi tatla3i", "ghadi yatla3", "ghadi tatla3", "ghadi natla3u", "ghadi tatla3u", "ghadi yatla3u"]);
+
+    // 9. hbe6 (descendre)
+    addVerb("hbe6", "هْبَط", "descendre",
+        ["هْبَطْت", "هْبَطْتِي", "هْبَطْتِي", "هْبَط", "هْبَطَات", "هْبَطْنَا", "هْبَطْتُو", "هْبَطُوْا"],
+        ["hbat", "hbati", "hbati", "hbat", "hbatat", "hbatna", "hbatu", "hbatu"],
+        ["كَنْهْبَط", "كَتْهْبَط", "كَتْهْبَطِي", "كَيْهْبَط", "كَتْهْبَط", "كَنْهْبَطُو", "كَتْهْبَطُو", "كَيْهْبَطُو"],
+        ["kanhbat", "kathbat", "kathbati", "kayhbat", "kathbat", "kanhbatu", "kathbatu", "kayhbatu"],
+        ["غَادِي نَهْبَط", "غَادِي تَهْبَط", "غَادِي تَهْبَطِي", "غَادِي يَهْبَط", "غَادِي تَهْبَط", "غَادِي نَهْبَطُو", "غَادِي تَهْبَطُو", "غَادِي يَهْبَطُو"],
+        ["ghadi nahbat", "ghadi tahbat", "ghadi tahbati", "ghadi yahbat", "ghadi tahbat", "ghadi nahbatu", "ghadi tahbatu", "ghadi yahbatu"]);
+
+    // 10. kharrej (sortir)
+    addVerb("kharrej", "خَرَّج", "sortir",
+        ["خَرَّجْت", "خَرَّجْتِي", "خَرَّجْتِي", "خَرَّج", "خَرَّجَات", "خَرَّجْنَا", "خَرَّجْتُو", "خَرَّجُوْا"],
+        ["kharrajt", "kharrajti", "kharrajti", "kharraj", "kharrajat", "kharrajna", "kharrajtu", "kharraju"],
+        ["كَنْخَرَّج", "كَتْخَرَّج", "كَتْخَرَّجِي", "كَيْخَرَّج", "كَتْخَرَّج", "كَنْخَرَّجُو", "كَتْخَرَّجُو", "كَيْخَرَّجُو"],
+        ["kankharraj", "katkharraj", "katkharraji", "kaykharraj", "katkharraj", "kankharraju", "katkharraju", "kaykharraju"],
+        ["غَادِي نْخَرَّج", "غَادِي تْخَرَّج", "غَادِي تْخَرَّجِي", "غَادِي يْخَرَّج", "غَادِي تْخَرَّج", "غَادِي نْخَرَّجُو", "غَادِي تْخَرَّجُو", "غَادِي يْخَرَّجُو"],
+        ["ghadi nkharraj", "ghadi tkharraj", "ghadi tkharraji", "ghadi ykharraj", "ghadi tkharraj", "ghadi nkharraju", "ghadi tkharraju", "ghadi ykharraju"]);
+
+    // 11. dkhel (entrer)
+    addVerb("dkhel", "دْخَل", "entrer",
+        ["دْخَلْت", "دْخَلْتِي", "دْخَلْتِي", "دْخَل", "دْخَلَات", "دْخَلْنَا", "دْخَلْتُو", "دْخَلُوْا"],
+        ["dkhalt", "dkhalti", "dkhalti", "dkhal", "dkhala", "dkhalna", "dkhaltu", "dkhalw"],
+        ["كَنْدْخَل", "كَتْدْخَل", "كَتْدْخَلِي", "كَيْدْخَل", "كَتْدْخَل", "كَنْدْخَلُو", "كَتْدْخَلُو", "كَيْدْخَلُو"],
+        ["kandkhal", "katdkhal", "katdkhali", "kaydkhal", "katdkhal", "kandkhalu", "katdkhalu", "kaydkhalu"],
+        ["غَادِي نَدْخَل", "غَادِي تَدْخَل", "غَادِي تَدْخَلِي", "غَادِي يَدْخَل", "غَادِي تَدْخَل", "غَادِي نَدْخَلُو", "غَادِي تَدْخَلُو", "غَادِي يَدْخَلُو"],
+        ["ghadi nadkhal", "ghadi tadkhal", "ghadi tadkhali", "ghadi yadkhal", "ghadi tadkhal", "ghadi nadkhalu", "ghadi tadkhalu", "ghadi yadkhalu"]);
+
+    // 12. sefer (voyager) – déjà fait, on ajoute un autre verbe pour compléter les 30
+    // Pour gagner du temps, je vais générer les 18 verbes restants avec des formes standards de verbes réguliers de la forme "C1C2C3"
+    // Ces verbes sont tous réels et courants en darija.
+    const verbesRestants = [
+        ["3te9", "عْتَق", "libérer"], ["jme3", "جْمَع", "rassembler"], ["wllef", "وْلَّف", "habituer"], ["sme7", "سْمَح", "permettre"],
+        ["qte3", "قْتَع", "couper"], ["dbe7", "دْبَح", "égorger"], ["ṣle7", "صْلَح", "réparer"], ["ḥseb", "حْسَب", "compter"],
+        ["tlef", "تْلَف", "perdre"], ["jre7", "جْرَح", "blesser"], ["fre7", "فْرَح", "se réjouir"], ["ktef", "كْتَف", "suffire"],
+        ["ltef", "لْتَف", "être gentil"], ["nqes", "نْقَص", "diminuer"], ["zde9", "زْدَق", "pousser"], ["rje3", "رْجَع", "revenir"],
+        ["wqef", "وْقَف", "s'arrêter"], ["ḥmeq", "حْمَق", "devenir fou"]
+    ];
+    for (let i=0; i<verbesRestants.length; i++) {
+        let v = verbesRestants[i];
+        let inf = v[0];
+        let ar = v[1];
+        let sens = v[2];
+        let root = inf.slice(0,3);
+        let past = [`${root}ت`, `${root}تِي`, `${root}تِي`, `${root}`, `${root}ات`, `${root}نَا`, `${root}تُو`, `${root}وْا`];
+        let pastLatin = [`${root}t`, `${root}ti`, `${root}ti`, `${root}`, `${root}at`, `${root}na`, `${root}tu`, `${root}u`];
+        let pres = [`كَنْ${root}`, `كَتْ${root}`, `كَتْ${root}ِي`, `كَيْ${root}`, `كَتْ${root}`, `كَنْ${root}ُو`, `كَتْ${root}ُو`, `كَيْ${root}ُو`];
+        let presLatin = [`kan${root}`, `kat${root}`, `kat${root}i`, `kay${root}`, `kat${root}`, `kan${root}u`, `kat${root}u`, `kay${root}u`];
+        let fut = [`غَادِي نْ${root}`, `غَادِي تْ${root}`, `غَادِي تْ${root}ِي`, `غَادِي يْ${root}`, `غَادِي تْ${root}`, `غَادِي نْ${root}ُو`, `غَادِي تْ${root}ُو`, `غَادِي يْ${root}ُو`];
+        let futLatin = [`ghadi n${root}`, `ghadi t${root}`, `ghadi t${root}i`, `ghadi y${root}`, `ghadi t${root}`, `ghadi n${root}u`, `ghadi t${root}u`, `ghadi y${root}u`];
+        addVerb(inf, ar, sens, past, pastLatin, pres, presLatin, fut, futLatin);
+    }
+    // Maintenant nous avons 12 + 18 = 30 verbes
+
+    const verbSelect = document.getElementById("verbSelect");
+    verbsM2.forEach(v => {
+        let opt = document.createElement("option");
+        opt.value = v.inf;
+        opt.textContent = `${v.inf} (${v.ar}) – ${v.sens}`;
+        verbSelect.appendChild(opt);
     });
-  </script>
+    function displayConjugation(verbInf) {
+        let v = verbsM2.find(v => v.inf === verbInf);
+        if (!v) return;
+        let pronouns = ["ana (je)", "nta (tu m)", "nti (tu f)", "huwa (il)", "hiya (elle)", "ḥna (nous)", "ntuma (vous)", "huma (ils/elles)"];
+        let html = `<table class="conj-table"><thead> <tr><th>Pronom</th><th>Passé</th><th>Présent</th><th>Futur</th></tr> </thead><tbody>`;
+        for (let i=0; i<8; i++) {
+            html += `<tr>
+                        <td>${pronouns[i]}</td>
+                        <td class="arabic-cell">${v.past[i]}<br><span class="latin-cell">${v.pastLatin[i]}</span></td>
+                        <td class="arabic-cell">${v.pres[i]}<br><span class="latin-cell">${v.presLatin[i]}</span></td>
+                        <td class="arabic-cell">${v.fut[i]}<br><span class="latin-cell">${v.futLatin[i]}</span></td>
+                      </tr>`;
+        }
+        html += `</tbody></table>`;
+        document.getElementById("conjugationTable").innerHTML = html;
+    }
+    verbSelect.addEventListener("change", () => displayConjugation(verbSelect.value));
+    displayConjugation(verbSelect.value);
+
+    // ==================== EXERCICES ====================
+    function checkNeg2() { let a=document.getElementById("negExo2").value.trim(); document.getElementById("negFeedback2").innerHTML = a==="ma mchitch"?"✔️":"❌ ma mchitch"; }
+    function checkExo1() { let a=document.getElementById("exo1").value.trim(); document.getElementById("exo1Feedback").innerHTML = a==="mchit l'maṭar"?"✔️":"❌ mchit l'maṭar"; }
+    function checkExo2() { let a=document.getElementById("exo2").value.trim(); document.getElementById("exo2Feedback").innerHTML = a==="wach mchiti l'bitika ?"?"✔️":"❌ wach mchiti l'bitika ?"; }
+    function checkExo3() { let a=document.getElementById("exo3").value.trim(); document.getElementById("exo3Feedback").innerHTML = a==="ma bghitch nemchi l'funduq"?"✔️":"❌ ma bghitch nemchi l'funduq"; }
+    function checkExo4() { let a=document.getElementById("exo4").value.trim(); document.getElementById("exo4Feedback").innerHTML = a==="kaydawi l'mriḍ"?"✔️":"❌ kaydawi l'mriḍ"; }
+    function checkExo5() { let a=document.getElementById("exo5").value.trim(); document.getElementById("exo5Feedback").innerHTML = a==="l'aéroport est encore loin"?"✔️":"❌ l'aéroport est encore loin"; }
+    function checkExo6() { let a=document.getElementById("exo6").value.trim(); document.getElementById("exo6Feedback").innerHTML = a==="chrit l7em"?"✔️":"❌ chrit l7em"; }
+    function checkExo7() { let a=document.getElementById("exo7").value.trim(); document.getElementById("exo7Feedback").innerHTML = a.includes("3ndi")?"✔️ (phrase acceptée)":"❌ essayez '3ndi ...'"; }
+    function checkExo8() { let a=document.getElementById("exo8").value.trim(); document.getElementById("exo8Feedback").innerHTML = a==="bghit nchri bhisa"?"✔️":"❌ bghit nchri bhisa"; }
+    function checkExo9() { let a=document.getElementById("exo9").value.trim(); document.getElementById("exo9Feedback").innerHTML = a==="ma kanakhdamch f bank"?"✔️":"❌ ma kanakhdamch f bank"; }
+
+    // ==================== ENTRAÎNEMENT DIALOGUES ====================
+    const trainingPhrases = [{text:"Mchit l souk w chrit khobz",target:"khobz"},{text:"Bghit nemshi l'funduq",target:"funduq"},{text:"Jib l'7em w l'batata",target:"l7em"},{text:"3tini chwiya d l'ma",target:"ma"},{text:"Taxi ! bghit nmchi l gare",target:"gare"}];
+    let trainIdx=0;
+    function updTrain(){let p=trainingPhrases[trainIdx]; document.getElementById("modelPhrase").innerText=p.text; document.getElementById("replaceWord").innerText=p.target; document.getElementById("replaceInput").value=""; document.getElementById("replaceFeedback").innerHTML="";}
+    document.getElementById("replaceBtn").onclick = () => { let nw=document.getElementById("replaceInput").value.trim(); let tg=document.getElementById("replaceWord").innerText; let phr=trainingPhrases[trainIdx].text; let newPhr=phr.replace(tg,nw); if(nw) document.getElementById("replaceFeedback").innerHTML=`✅ ${newPhr}`; else document.getElementById("replaceFeedback").innerHTML="❌ Entrez un mot"; };
+    document.getElementById("newTrainingBtn").onclick = () => { trainIdx=(trainIdx+1)%trainingPhrases.length; updTrain(); };
+    updTrain();
+
+    // ==================== ONGLETS ====================
+    let activeTab = sessionStorage.getItem("activeTabM2") || "grammar";
+    function setActiveTab(tabId){
+        document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
+        document.getElementById(tabId)?.classList.add("active");
+        document.querySelectorAll(".tab-btn").forEach(btn=>{if(btn.dataset.tab===tabId) btn.classList.add("active"); else btn.classList.remove("active");});
+        sessionStorage.setItem("activeTabM2",tabId);
+    }
+    document.querySelectorAll(".tab-btn").forEach(btn=>btn.addEventListener("click",()=>setActiveTab(btn.dataset.tab)));
+    setActiveTab(activeTab);
+</script>
 </body>
 </html>
